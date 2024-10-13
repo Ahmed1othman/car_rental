@@ -90,98 +90,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Pricing Information -->
-                                    <div class="form-row">
-                                        <div class="form-group col-md-3">
-                                            <label for="dialy_main_price">السعر اليومي الرئيسي</label>
-                                            <input type="text" name="dialy_main_price" class="form-control @error('dialy_main_price') is-invalid @enderror" id="dialy_main_price" value="{{ old('dialy_main_price') }}" placeholder="أدخل السعر اليومي الرئيسي">
-                                            @error('dialy_main_price')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="dialy_dell_price">السعر اليومي مع التوصيل</label>
-                                            <input type="text" name="dialy_dell_price" class="form-control @error('dialy_dell_price') is-invalid @enderror" id="dialy_dell_price" value="{{ old('dialy_dell_price') }}" placeholder="أدخل السعر اليومي مع التوصيل">
-                                            @error('dialy_dell_price')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="monthly_main_price">السعر الشهري الرئيسي</label>
-                                            <input type="text" name="monthly_main_price" class="form-control @error('monthly_main_price') is-invalid @enderror" id="monthly_main_price" value="{{ old('monthly_main_price') }}" placeholder="أدخل السعر الشهري الرئيسي">
-                                            @error('monthly_main_price')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="monthly_dell_price">السعر الشهري مع التوصيل</label>
-                                            <input type="text" name="monthly_dell_price" class="form-control @error('monthly_dell_price') is-invalid @enderror" id="monthly_dell_price" value="{{ old('monthly_dell_price') }}" placeholder="أدخل السعر الشهري مع التوصيل">
-                                            @error('monthly_dell_price')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
 
-                                    <!-- Additional Information -->
-                                    <div class="form-row">
-                                        <div class="form-group col-md-3">
-                                            <label for="door_num">عدد الأبواب</label>
-                                            <input type="number" name="door_num" class="form-control @error('door_num') is-invalid @enderror" id="door_num" value="{{ old('door_num') }}" placeholder="أدخل عدد الأبواب">
-                                            @error('door_num')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="luggages">عدد الحقائب</label>
-                                            <input type="number" name="luggages" class="form-control @error('luggages') is-invalid @enderror" id="luggages" value="{{ old('luggages') }}" placeholder="أدخل عدد الحقائب">
-                                            @error('luggages')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="gear_type">نوع ناقل الحركة</label>
-                                            <input type="text" name="gear_type" class="form-control @error('gear_type') is-invalid @enderror" id="gear_type" value="{{ old('gear_type') }}" placeholder="أدخل نوع ناقل الحركة">
-                                            @error('gear_type')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="passenger_num">عدد الركاب</label>
-                                            <input type="number" name="passenger_num" class="form-control @error('passenger_num') is-invalid @enderror" id="passenger_num" value="{{ old('passenger_num') }}" placeholder="أدخل عدد الركاب">
-                                            @error('passenger_num')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <!-- Car Features -->
-                                    <div class="form-group">
-                                        <label>الميزات:</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="have_insurance_included" id="have_insurance_included" {{ old('have_insurance_included') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="have_insurance_included">
-                                                متضمن التأمين
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="have_free_delivery" id="have_free_delivery" {{ old('have_free_delivery') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="have_free_delivery">
-                                                توصيل مجاني
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" {{ old('is_featured') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_featured">
-                                                مميز
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="is_flash_sale" id="is_flash_sale" {{ old('is_flash_sale') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_flash_sale">
-                                                تخفيض لفترة محدودة
-                                            </label>
-                                        </div>
-                                    </div>
 
                                     <!-- Lookup Fields -->
                                     <div class="form-row">
@@ -225,16 +134,7 @@
                                         @endforeach
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="image-upload">صور السيارة</label>
-                                        <div class="custom-file">
-                                            <input type="file" name="images[]" class="custom-file-input" id="image-upload" multiple>
-                                            <label class="custom-file-label" for="image-upload">اختر الصور</label>
-                                        </div>
 
-                                    </div>
-                                    <div class="row" id="image-previews"></div>
-                                    <input type="hidden" id="removed-files" name="removed_files" value="">
 
                                     <hr style="margin-top: 10px;">
                                     <!-- SEO Fields -->

@@ -1,209 +1,136 @@
 <?php return array (
-  'menu' => 
+  'menu' =>
   array (
-    0 => 
+    0 =>
     array (
-      'title' => 'Main Settings',
-      'icon' => 'fas fa-cogs',
-      'subMenu' => 
-      array (
-      ),
+      'title' => 'Dashboard',
+      'icon' => 'fas fa-tachometer-alt',
+      'route' => 'admin.dashboard',
     ),
-    1 => 
+    1 =>
     array (
-      'title' => 'Language',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
+      'title' => 'Settings',
+      'icon' => 'fas fa-cogs',
+      'subMenu' =>
       array (
-        0 => 
+        0 =>
         array (
-          'title' => 'Add Language',
-          'route' => 'admin.languages.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Languages',
+          'title' => 'Languages Settings',
           'route' => 'admin.languages.index',
         ),
+        1 =>
+        array (
+          'title' => 'Currencies',
+          'route' => 'admin.currencies.index',
+        ),
       ),
     ),
-    2 => 
+    2 =>
     array (
-      'title' => 'Brand',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
+      'title' => 'Cars Management',
+      'icon' => 'fas fa-car',
+      'subMenu' =>
       array (
-        0 => 
+        0 =>
         array (
-          'title' => 'Add Brand',
-          'route' => 'admin.brands.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Brand',
+          'title' => 'Brands',
           'route' => 'admin.brands.index',
         ),
-      ),
-    ),
-    3 => 
-    array (
-      'title' => 'Models',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
-      array (
-        0 => 
+        1 =>
         array (
-          'title' => 'Add Models',
-          'route' => 'admin.car_models.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Models',
+          'title' => 'Models',
           'route' => 'admin.car_models.index',
         ),
-      ),
-    ),
-    4 => 
-    array (
-      'title' => 'Body_style',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
-      array (
-        0 => 
+        2 =>
         array (
-          'title' => 'Add Body_style',
-          'route' => 'admin.body_styles.create',
+          'title' => 'Car Categories',
+          'route' => 'admin.categories.index',
         ),
-        1 => 
+        3 =>
         array (
-          'title' => 'List Body_style',
-          'route' => 'admin.body_styles.index',
+          'title' => 'Gear Types',
+          'route' => 'admin.gear_types.index',
         ),
-      ),
-    ),
-    5 => 
-    array (
-      'title' => 'Maker',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
-      array (
-        0 => 
+        4 =>
         array (
-          'title' => 'Add Maker',
-          'route' => 'admin.makers.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Maker',
-          'route' => 'admin.makers.index',
-        ),
-      ),
-    ),
-    6 => 
-    array (
-      'title' => 'Feature',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
-      array (
-        0 => 
-        array (
-          'title' => 'Add Feature',
-          'route' => 'admin.features.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Feature',
-          'route' => 'admin.features.index',
-        ),
-      ),
-    ),
-    7 => 
-    array (
-      'title' => 'Car',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
-      array (
-        0 => 
-        array (
-          'title' => 'Add Car',
-          'route' => 'admin.cars.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Car',
+          'title' => 'Car Listings',
           'route' => 'admin.cars.index',
         ),
       ),
     ),
-    8 => 
+    3 =>
     array (
-      'title' => 'Category',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
+      'title' => 'Attributes',
+      'icon' => 'fas fa-sliders-h',
+      'subMenu' =>
       array (
-        0 => 
+        0 =>
         array (
-          'title' => 'Add Category',
-          'route' => 'admin.categories.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Category',
-          'route' => 'admin.categories.index',
-        ),
-      ),
-    ),
-    9 => 
-    array (
-      'title' => 'Gear_type',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
-      array (
-        0 => 
-        array (
-          'title' => 'Add Gear_type',
-          'route' => 'admin.gear_types.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Gear_type',
-          'route' => 'admin.gear_types.index',
-        ),
-      ),
-    ),
-    10 => 
-    array (
-      'title' => 'Color',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
-      array (
-        0 => 
-        array (
-          'title' => 'Add Color',
-          'route' => 'admin.colors.create',
-        ),
-        1 => 
-        array (
-          'title' => 'List Color',
+          'title' => 'Colors',
           'route' => 'admin.colors.index',
         ),
+        1 =>
+        array (
+          'title' => 'Locations',
+          'route' => 'admin.locations.index',
+        ),
+        2 =>
+        array (
+          'title' => 'Features',
+          'route' => 'admin.features.index',
+        ),
       ),
     ),
-    11 => 
+    4 =>
     array (
-      'title' => 'Location',
-      'icon' => 'fas fa-box',
-      'subMenu' => 
+      'title' => 'Blog & Content',
+      'icon' => 'fas fa-blog',
+      'subMenu' =>
       array (
-        0 => 
+        0 =>
         array (
-          'title' => 'Add Location',
-          'route' => 'admin.locations.create',
+          'title' => 'Blog Posts',
+          'route' => 'admin.blogs.index',
         ),
-        1 => 
+        1 =>
         array (
-          'title' => 'List Location',
-          'route' => 'admin.locations.index',
+          'title' => 'FAQs',
+          'route' => 'admin.faqs.index',
+        ),
+        2 =>
+        array (
+          'title' => 'Services',
+          'route' => 'admin.services.index',
+        ),
+        3 =>
+        array (
+          'title' => 'Required Documents',
+          'route' => 'admin.documents.index',
+        ),
+      ),
+    ),
+    5 =>
+    array (
+      'title' => 'Pages Settings',
+      'icon' => 'fas fa-cogs',
+      'subMenu' =>
+      array (
+        0 =>
+        array (
+          'title' => 'Home Page',
+          'route' => 'admin.homes.edit',
+            'parameter' => '1',
+        ),
+        1 =>
+        array (
+          'title' => 'Contact Page',
+          'route' => 'admin.contacts.edit',
+        ),
+        2 =>
+        array (
+          'title' => 'About Us Page',
+          'route' => 'admin.abouts.edit',
+          'parameter' => '1',
         ),
       ),
     ),

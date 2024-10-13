@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('color_code')->nullable();
             $table->timestamps();
-        $table->boolean('is_active')->default(true);
-});
+            $table->boolean('is_active')->default(true);
+        });
     }
 
     /**

@@ -79,29 +79,6 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-                                    <div class="form-group">
-                                        <label for="general_field" class="font-weight-bold">General Field</label>
-                                        <input type="text" name="general_field" class="form-control form-control-lg shadow-sm" id="general_field" value="{{ old('general_field') }}">
-                                    </div>
-
-
-                                    <div class="form-group text-center">
-                                        <!-- Image Preview with Circular Border and Placeholder -->
-                                        <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="https://via.placeholder.com/150" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
-                                        </div>
-
-                                        <!-- File Input for Logo Upload -->
-                                        <div class="custom-file">
-                                            <input type="file" name="logo_path" class="custom-file-input image-upload @error('logo_path') is-invalid @enderror" id="logo_path" data-preview="imagePreviewLogo">
-                                            <label class="custom-file-label" for="logo_path">Upload Logo</label>
-                                        </div>
-
-                                        <!-- Error Handling -->
-                                        @error('logo_path')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                        @enderror
-                                    </div>
 
                                     <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>

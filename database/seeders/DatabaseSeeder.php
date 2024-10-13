@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Gear_type;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,7 +15,15 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             LanguageSeeder::class,
+            CurrencySeeder::class,
             ColorSeeder::class,
+            ContactSeeder::class,
+            BrandSeeder::class,
+            GearTypeSeeder::class,
+            GearTypeSeeder::class,
+            AboutPageSeeder::class,
+            HomePageSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }

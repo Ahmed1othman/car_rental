@@ -75,42 +75,50 @@ class GenericController extends Controller
             $this->handleSEOQuestionsForEachLanguage($validatedData, $template);
 
 
-            foreach ($this->uploadedfiles as $fileField) {
+                foreach ($this->uploadedfiles as $fileField) {
+                    if ($request->hasFile($fileField)) {
+                        $data = $request->file($fileField);
+                        // Check if data is an array (multiple images or videos)
+                        if (is_array($data)) {
+                            $filePaths = [];
+                            foreach ($data as $item) {
+                                    $path = $item->store('images', 'public'); // Store the image
+                                    // Store image file path
+                                    $filePaths[] = [
+                                        'file_path' => $path,
+                                        'alt' => $request->alt?? null,
+                                        'type' => 'image'
+                                    ];
+                                    // Handle video URL
+                                }
+                            if ($request->has('youtube_links')){
+                                if ($request->input('youtube_links')) {
+                                    foreach ($request->input('youtube_links') as $link) {
+                                        $url = $this->getYouTubeVideoId($link);
+                                        $filePaths[] = [
+                                            'file_path' => $url,
+                                            'alt' => $request->alt?? null,
+                                            'type' => 'video'
+                                        ];
+                                    }
+                                }
 
-                // Check if the field is plural (indicating a many-to-many relationship)
-                if (Str::plural($fileField) === $fileField) {
+                            }
+                                // Attach the image or video paths to the template
+                                $template->$fileField()->createMany($filePaths);
+                            }
+                        } else {
+                            // Handle single file (e.g., 'logo' or single image)
+                            if ($request->hasFile($fileField)) {
+                                $file = $request->file($fileField);
+                                $path = $file->store('images', 'public'); // Store single file
 
-                    // Many-to-many relationship case (e.g., 'images' or 'documents')
-                    if (request()->hasFile($fileField)) {
-                        $files = request()->file($fileField); // Get the uploaded files
-                        $filePaths = [];
-
-                        foreach ($files as $file) {
-                            // Store each file and get its path
-                            $path = $file->store('images', 'public');
-                            $filePaths[] = ['file_path' => $path]; // Collect the file paths for attaching later
+                                // Save path to the model directly
+                                $template->$fileField = $path;
+                                $template->save();
+                            }
                         }
-
-                        // Assuming a many-to-many relation like 'files'
-                        // Attach the file paths to the related model (adjust the relationship name)
-                        $this->model->$fileField()->createMany($filePaths);
-                    }
-
-                } else {
-
-                    // Single field (file belongs directly to the same table, e.g., 'logo' or 'image')
-                    if (request()->hasFile($fileField)) {
-                        $file = request()->file($fileField); // Get the single file
-
-                        // Store the file in a specific directory
-                        $path = $file->store('images', 'public');
-
-                        // Save the path directly in the table's column for this field (e.g., 'logo_path')
-                        $template->$fileField = $path;
-                        $template->save();
-                    }
                 }
-            }
             // Commit the transaction
             DB::commit();
 
@@ -160,6 +168,61 @@ class GenericController extends Controller
             }
             $row->save();
 
+
+        foreach ($this->uploadedfiles as $fileField) {
+
+
+            // Check if the field is plural (indicating a many-to-many relationship)
+            if (Str::plural($fileField) === $fileField) {
+                // Many-to-many relationship case (e.g., 'images' or 'documents')
+                if (request()->has($fileField)) {
+                    $galleryItems = request()->input($fileField);
+                    $itemsToAttach = [];
+
+                    foreach ($galleryItems as $item) {
+                        if ($item['type'] === 'image' && isset($item['file_path'])) {
+                            // Handle image file upload
+                            $file = $item['file'];
+                            $path = $file->store('images', 'public');
+                            $itemsToAttach[] = [
+                                'file_path' => $path,
+                                'alt' => $item['alt'] ?? null,
+                                'type' => 'image'
+                            ];
+                        } elseif ($item['type'] === 'video' && isset($item['file_path'])) {
+                            // Handle video link
+                            $itemsToAttach[] = [
+                                'file_path' => $item['file_path'],
+                                'alt' => $item['alt'] ?? null,
+                                'type' => 'video'
+                            ];
+                        }
+                    }
+
+                    // Attach the items to the related model
+                    $row->$fileField()->createMany($itemsToAttach);
+                }
+            }else {
+
+                // Single field (file belongs directly to the same table, e.g., 'logo' or 'image')
+                if (request()->hasFile($fileField)) {
+                    $file = request()->file($fileField); // Get the single file
+
+                    if ($row->$fileField) {
+                        Storage::disk('public')->delete($row->$fileField);
+                    }
+
+                    // Store the file in a specific directory
+                    $path = $file->store('images', 'public');
+
+                    // Save the path directly in the table's column for this field (e.g., 'logo_path')
+                    $row->$fileField = $path;
+                    $row->save();
+                }
+            }
+        }
+
+
             if($this->translatableFields) {
                 // Update translated fields for each language
                 foreach ($this->data['activeLanguages'] as $language) {
@@ -172,7 +235,7 @@ class GenericController extends Controller
                         'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
                         'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                         'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
-                        'slug' => Str::slug($validatedData[$this->slugField][$langCode], '-')
+                        'slug' => Str::slug($validatedData[$this->slugField][$langCode]??Str::random(5), '-')
                     ];
 
                     // Update or create translations
@@ -279,12 +342,10 @@ class GenericController extends Controller
                 foreach ($this->translatableFields as $translatableField) {
                     $translatedData[$translatableField] = $validatedData[$translatableField][$langCode] ?? null;
                 }
-
                 $template->translations()->create(
                     $translatedData +
                     [
                     'locale' => $langCode,
-                    'name' => $validatedData['name'][$langCode],
                     'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
                     'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                     'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
@@ -292,5 +353,11 @@ class GenericController extends Controller
                 ]);
             }
         }
+    }
+
+    function getYouTubeVideoId($url) {
+        $regExp = '/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/';
+        preg_match($regExp, $url, $matches);
+        return $matches[1] ?? null; // Return the video ID or null
     }
 }

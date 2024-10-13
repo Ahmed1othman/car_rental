@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feature_translations', function (Blueprint $table) {
+        Schema::create('blog_translations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
+            $table->longText('content');
             $table->string('locale');  // e.g., 'en', 'ar'
             $table->text('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
             $table->string('slug')->unique()->nullable();
             $table->timestamps();
-            $table->foreignId('feature_id')->constrained('features')->cascadeOnUpdate()->cascadeOnDelete();
-
+            $table->foreignId('blog_id')->constrained('blogs')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feature_translations');
+        Schema::dropIfExists('blog_translations');
     }
 };

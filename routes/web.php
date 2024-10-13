@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('pages/website/home');
-})->name('home');
+Route::fallback(function () {
+    return redirect('/admin/dashboard');
+});
 

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('color_translations', function (Blueprint $table) {
+        Schema::create('feature_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('locale');  // e.g., 'en', 'ar'
@@ -20,8 +20,7 @@ return new class extends Migration
             $table->text('meta_keywords')->nullable();
             $table->string('slug')->unique()->nullable();
             $table->timestamps();
-
-            $table->foreignId('color_id')->constrained('colors')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('feature_id')->constrained('features')->onDelete("cascade");
 
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('color_translations');
+        Schema::dropIfExists('feature_translations');
     }
 };

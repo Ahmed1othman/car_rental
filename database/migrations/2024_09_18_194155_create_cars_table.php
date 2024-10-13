@@ -29,16 +29,14 @@ return new class extends Migration
             $table->boolean('is_flash_sale')->default(false);
             $table->boolean('is_active')->default(true);
             $table->enum('status', ['available','not_available'])->default('available');
-
             $table->foreignId('gear_type_id')->constrained()->onDelete('no action'); //['manual', 'automatic']);
             $table->foreignId('brand_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('no action');
-            $table->unsignedBigInteger('body_style_id')->nullable();
-            $table->unsignedBigInteger('maker_id')->nullable();
-            $table->unsignedBigInteger('default_image_id')->nullable();
-
-            $table->foreign('body_style_id')->references('id')->on('body_styles')->onDelete('set null');
-            $table->foreign('maker_id')->references('id')->on('makers')->onDelete('set null');
+            $table->text('default_image_path')->nullable();
+//            $table->unsignedBigInteger('body_style_id')->nullable();
+//            $table->unsignedBigInteger('maker_id')->nullable();
+//            $table->foreign('body_style_id')->references('id')->on('body_styles')->onDelete('set null');
+//            $table->foreign('maker_id')->references('id')->on('makers')->onDelete('set null');
 
             $table->timestamps();
 });

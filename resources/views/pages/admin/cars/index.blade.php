@@ -74,9 +74,13 @@
                                                 <a href="{{ route('admin.' . $modelName . '.edit', $item->id) }}" class="btn btn-info btn-sm shadow-sm mr-1">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>
-                                                <button type="button" class="btn btn-danger btn-sm shadow-sm delete-btn" data-id="{{ $item->id }}" data-model="{{ $modelName }}">
+                                                <button type="button" class="btn btn-danger btn-sm shadow-sm delete-btn mr-1" data-id="{{ $item->id }}" data-model="{{ $modelName }}">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </button>
+
+                                                <a href="{{ route('admin.' . $modelName . '.edit_images', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">
+                                                    <i class="fas fa-images"></i> Images
+                                                </a>
 
                                             </div>
                                         </td>

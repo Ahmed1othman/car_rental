@@ -93,6 +93,9 @@
                                         @enderror
                                     </div>
 
+
+
+
                                     <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>
                                         <div class="custom-control custom-switch">

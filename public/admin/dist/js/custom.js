@@ -1,4 +1,13 @@
 $(document).ready(function() {
+
+    tinymce.init({
+        selector: '.teny-editor',
+        height: 400,           // You can adjust the height
+        plugins: 'lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+        toolbar: 'undo redo | formatselect | fontsize | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
+    });
+
     // Toggle Status
     $('.toggle-status').on('change', function() {
         var is_active = $(this).is(':checked') ? 1 : 0;
@@ -110,6 +119,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+//Initialize Select2 Elements
+$('.select2').select2()
+
+//Initialize Select2 Elements
+$('.select2bs4').select2({
+    theme: 'bootstrap4'
+})
+
 
 
 

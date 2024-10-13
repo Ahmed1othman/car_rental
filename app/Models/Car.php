@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\old\CarImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -23,5 +24,8 @@ class Car extends Model
         return $this->morphMany(SeoQuestion::class, 'seo_questionable');
     }
 
+    public function images(): HasMany{
+        return $this->hasMany(CarImage::class);
+    }
 
 }

@@ -6,10 +6,11 @@ class LocationController extends GenericController
 {
     public function __construct()
     {
-        parent::__construct('template');
+        parent::__construct('location');
         $this->seo_question =true;
         $this->slugField ='name';
-        $this->translatableFields = ['name','description'];
+        $this->translatableFields = ['name'];
+        $this->nonTranslatableFields = ['is_active'];
     }
 
     public function store(Request $request)
@@ -18,9 +19,7 @@ class LocationController extends GenericController
             'is_active' => $request->has('is_active') ? true : false,
         ]);
         $this->validationRules = [
-            'general_field' => 'required|string|max:255',
             'name.*' => 'required|string|max:255',
-            'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
@@ -39,9 +38,7 @@ class LocationController extends GenericController
     {
         // Define validation rules
         $this->validationRules = [
-            'general_field' => 'required|string|max:255',
             'name.*' => 'required|string|max:255',
-            'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',

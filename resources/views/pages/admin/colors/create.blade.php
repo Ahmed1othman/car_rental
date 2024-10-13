@@ -43,8 +43,6 @@
                     </div>
                 @endif
 
-
-
                 <div class="card card-primary card-outline card-tabs shadow-lg">
                     <div class="card-header p-0 pt-1 border-bottom-0 bg-light">
                         <!-- Tabs Header -->
@@ -79,11 +77,6 @@
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
 
                                     <div class="form-group">
-                                        <label for="color_code" class="font-weight-bold">Select Color</label>
-                                        <input type="color" name="color_code" class="form-control form-control-lg shadow-sm" id="color_code" value="{{ old('color_code', '#000000') }}">
-                                    </div>
-
-                                    <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active')}}>
@@ -112,7 +105,6 @@
                                         @endforeach
                                     </div>
                                 </div>
-
                                 <!-- SEO Data Tab Content -->
                                 <div class="tab-pane fade" id="custom-tabs-seo" role="tabpanel" aria-labelledby="custom-tabs-seo-tab">
                                     <ul class="nav nav-pills mb-3" id="pills-seo-tab" role="tablist">

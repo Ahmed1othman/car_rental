@@ -20,6 +20,9 @@
         <!-- JQVMap -->
         <link rel="stylesheet" href="{{asset('admin/plugins/jqvmap/jqvmap.min.css')}}">
         <!-- Theme style -->
+        <!-- Select2 -->
+        <link rel="stylesheet" href="{{asset('admin/plugins/select2/css/select2.min.css')}}">
+        <link rel="stylesheet"  href="{{asset('admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
         <link rel="stylesheet" href="{{asset('admin/dist/css/adminlte.min.css')}}">
 
         <link rel="stylesheet" href="{{asset('admin/dist/css/custom.css')}}">
@@ -33,6 +36,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify@latest/dist/tagify.css">
 
 
+
+        @stack('styles')
     </head>
     <body class="hold-transition sidebar-mini layout-fixed">
         <div class="wrapper">
@@ -86,6 +91,9 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@latest/dist/tagify.min.js"></script>
+        <script src="https://cdn.tiny.cloud/1/5c135bzlciyk91vi7xrlsu8kg30bj232e5y5i5rw53oaztrj/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+        <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
         <script src="{{asset('admin/dist/js/custom.js')}}"></script>
         @stack('scripts')
     </body>

@@ -12,8 +12,8 @@ class BodyStyle extends Model
     protected $guarded = [];
 
     //rel
-    public function cars():HasMany
-    {
-        return $this->hasMany(Car::class, 'body_style_id');
-    }
+//    public function cars():HasMany
+//    {
+//        return $this->hasMany(Car::class, 'body_style_id');
+//    }
 }

@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('locations_translations', function (Blueprint $table) {
+        Schema::create('about_translations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->text('about_main_header_title')->nullable();
+            $table->longText('about_main_header_paragraph')->nullable();
+            $table->longText('why_choose_content')->nullable();
+            $table->longText('our_vision_content')->nullable();
+            $table->longText('our_mission_content')->nullable();
             $table->string('locale');  // e.g., 'en', 'ar'
             $table->text('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
             $table->string('slug')->unique()->nullable();
             $table->timestamps();
-            $table->foreignId('location_id')->constrained('locations')->cascadeOnUpdate()->cascadeOnDelete();
-
+            $table->foreignId('about_id')->constrained('abouts')->onDelete('cascade');
         });
     }
 
@@ -30,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('locations_translations');
+        Schema::dropIfExists('about_translations');
     }
 };
