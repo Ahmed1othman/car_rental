@@ -106,8 +106,7 @@ class GenericController extends Controller
                             }
                                 // Attach the image or video paths to the template
                                 $template->$fileField()->createMany($filePaths);
-                            }
-                        } else {
+                            } else {
                             // Handle single file (e.g., 'logo' or single image)
                             if ($request->hasFile($fileField)) {
                                 $file = $request->file($fileField);
@@ -118,6 +117,8 @@ class GenericController extends Controller
                                 $template->save();
                             }
                         }
+
+                    }
                 }
             // Commit the transaction
             DB::commit();

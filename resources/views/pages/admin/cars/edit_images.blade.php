@@ -60,6 +60,28 @@
                     </div>
                 </div>
 
+                <div class="card mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h3 class="card-title">Upload Default Image</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="uploadDefaultImageForm" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Default Image</label>
+                                <div class="custom-file">
+                                    <input type="file" name="default_image_path" class="custom-file-input image-upload" id="default_image_path" data-preview="imagePreviewLogo">
+                                    <label class="custom-file-label" for="default_image_path">Upload Default Image</label>
+                                </div>
+                                <div class="mt-3">
+                                    <img id="imagePreviewLogo" src="{{$item->default_image_path?asset('storage/'.$item->default_image_path):'https://via.placeholder.com/300'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-danger">Upload</button>
+                        </form>
+                    </div>
+                </div>
+
+
                 <!-- Upload Media -->
                 <div class="card mb-4">
                     <div class="card-header bg-success text-white">
@@ -128,6 +150,7 @@
             const addYouTubeUrlBtn = document.getElementById('addYouTubeUrl');
             const youtubeUrlsContainer = document.getElementById('youtubeUrlsContainer');
             const uploadMediaForm = document.getElementById('uploadMediaForm');
+            const uploadDefaultImageForm = document.getElementById('uploadDefaultImageForm');
             const youtubeForm = document.getElementById('youtubeForm');
             const mediaContainer = document.getElementById('media-container');
             const successAlert = document.getElementById('success-alert');
@@ -253,6 +276,24 @@
                         mediaContainer.innerHTML += response.data.html;
                         uploadMediaForm.reset();
                         mediaPreviews.innerHTML = '';
+                        location.reload();
+                    })
+                    .catch(error => {
+                        showErrorMessage('Error uploading media: ' + error.response.data.message);
+                    });
+            });
+            uploadDefaultImageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                formData.append('car_id', '{{ $item->id }}'); // Assuming 'car_id' for the item
+
+                axios.post('{{ route("admin." . $modelName . ".updateDefaultImage") }}', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(response => {
+                        showSuccessMessage('Media uploaded successfully');
                         location.reload();
                     })
                     .catch(error => {

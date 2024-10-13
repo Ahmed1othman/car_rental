@@ -30,6 +30,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->enum('status', ['available','not_available'])->default('available');
             $table->foreignId('gear_type_id')->constrained()->onDelete('no action'); //['manual', 'automatic']);
+            $table->foreignId('color_id')->constrained()->onDelete('cascade');
             $table->foreignId('brand_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('no action');
             $table->text('default_image_path')->nullable();

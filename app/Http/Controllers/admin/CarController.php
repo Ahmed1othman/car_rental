@@ -40,8 +40,6 @@ class CarController extends GenericController
             'brand_id',
             'color_id',
             'category_id',
-//            'body_style_id',
-//            'maker_id',
         ];
     }
 
@@ -77,8 +75,6 @@ class CarController extends GenericController
             $query->where('locale', $locale);}])->get();
 
         return parent::edit($id);
-
-        return $this->data['item']->images;
     }
 
     public function store(Request $request)
@@ -119,7 +115,7 @@ class CarController extends GenericController
             'category_id' => 'required|exists:categories,id',
 //            'body_style_id' => 'nullable|exists:body_styles,id',
             'maker_id' => 'nullable|exists:makers,id',
-            'default_image_id' => 'nullable|exists:images,id',
+            'default_image_path' => 'nullable',
             'seo_questions.*.*.question' => 'nullable|string|max:255',
             'seo_questions.*.*.answer' => 'nullable|string|max:255',
         ];
@@ -139,6 +135,7 @@ class CarController extends GenericController
             'is_flash_sale' => $request->has('is_flash_sale') ? true : false,
             'is_featured' => $request->has('is_featured') ? true : false,
             'free_delivery' => $request->has('free_delivery') ? true : false,
+            'is_active' => $request->has('is_active') ? true : false,
         ]);
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
@@ -256,5 +253,21 @@ class CarController extends GenericController
         return response()->json(['message' => 'Images uploaded successfully'], 200);
     }
 
+    public function updateDefaultImage(Request $request)
+    {
+
+
+        // Validate the request (Images should be passed as an array)
+        $request->validate([
+            'default_image_path' => 'required',
+            'car_id' => 'required|integer',
+        ]);
+        $car= Car::find($request->car_id);
+        Storage::disk('public')->delete($car->default_image_path);
+        $image= $request->file('default_image_path');
+        $imagePath = $image->store('images', 'public');
+        $car->update(['default_image_path'=>$imagePath]);
+        return response()->json(['message' => 'Default Image Updated successfully'], 200);
+    }
 
 }

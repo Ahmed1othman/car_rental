@@ -47,7 +47,9 @@
                                 <thead class="bg-dark text-light">
                                 <tr>
                                     <th>#</th>
+                                    <th>Default Image</th>
                                     <th>Name</th>
+                                    <th>Brand</th>
                                     <th>Status</th>
                                     <th>Created At</th>
                                     <th>Actions</th>
@@ -57,7 +59,15 @@
                                 @foreach ($items as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            @if ($item->default_image_path)
+                                                <img src="{{ asset('storage/' . $item->default_image_path) }}" alt="post_image" class="img-" style="width: 100px; height: 100px; object-fit: cover;">
+                                            @else
+                                                <span>N/A</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $item->translations->first()->name ?? 'N/A' }}</td>
+                                        <td>{{ $item->brand->translations->first()->name ?? 'N/A' }}</td>
                                         <td>
                                             <!-- Custom Toggle Switch -->
                                             <label class="switch">

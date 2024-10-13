@@ -59,6 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('cars/images/delete/{id}', [CarController::class, 'deleteImage'])->name('cars.delete_image');
 
     Route::get('cars/edit_images/{id}', [CarController::class, 'edit_images'])->name('cars.edit_images');
+    Route::post('cars/images/update-default-image', [CarController::class, 'updateDefaultImage'])->name('cars.updateDefaultImage');
     Route::post('cars/images', [CarController::class, 'storeImages'])->name('cars.storeImages');
     Route::post('cars/youtube', [CarController::class, 'storeYoutubeUrls'])->name('cars.storeYouTube');
     Route::resource('cars', 'App\Http\Controllers\admin\CarController');

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\old\CarImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -28,4 +29,18 @@ class Car extends Model
         return $this->hasMany(CarImage::class);
     }
 
+    public function brand():BelongsTo{
+        return $this->belongsTo(Brand::class);
+    }
+    public function color():BelongsTo{
+        return $this->belongsTo(Color::class);
+    }
+
+    public function gearType():BelongsTo{
+        return $this->belongsTo(Gear_type::class,'gear_type_id');
+    }
+
+    public function category():BelongsTo{
+        return $this->belongsTo(Category::class);
+    }
 }
