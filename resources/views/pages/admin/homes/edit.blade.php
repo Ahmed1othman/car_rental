@@ -3,6 +3,18 @@
 @section('title', 'Edit ' . $modelName)
 
 @section('content')
+    <style>
+        .select2-container .select2-selection--multiple .select2-selection__choice {
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container .select2-selection--multiple .select2-selection__choice img {
+            margin-right: 5px;
+        }
+    </style>
+
+
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
@@ -112,17 +124,29 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="cars">Select Cars</label>
-                                        <select name="item_ids[]" id="cars" class="form-control" multiple>
-                                            @foreach($cars as $car)
-                                                <option value="{{ $car->id }}">
-                                                    {{ $car->name }} - <img src="{{ asset($car->image_path) }}" width="50" height="30" alt="{{ $car->name }}">
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <small>Select one or more cars to add to the section.</small>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="card-title">Select Cars</h5>
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="cars" class="font-weight-bold">Cars</label>
+                                                <select class="form-control car-select" name="cars[]" multiple="multiple" style="width: 100%;">
+                                                    @foreach($cars as $car)
+                                                        <option value="{{ $car->id }}" data-image="{{ $car->default_image_path?asset('storage/' . $car->default_image_path):asset('/admin/dist/logo/empty_image.png') }}">
+                                                            {{ $car->translations->first()->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>
                                         <div class="custom-control custom-switch">
@@ -349,5 +373,30 @@
             }
             @endforeach
         });
+
+
     </script>
+    <script>
+        $(document).ready(function() {
+            function formatCar(car) {
+                if (!car.id) {
+                    return car.text;
+                }
+
+                var $car = $(
+                    '<span><img src="' + $(car.element).data('image') + '" style="width: 60px; height: 40px;" /> ' +
+                    $(car.element).text() + '</span>'
+                );
+                return $car;
+            }
+
+            $('.car-select').select2({
+                templateResult: formatCar,
+                templateSelection: formatCar,
+                allowClear: true,
+                placeholder: "Select cars"
+            });
+        });
+    </script>
+
 @endpush
