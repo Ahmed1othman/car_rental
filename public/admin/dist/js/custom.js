@@ -10,8 +10,9 @@ $(document).ready(function() {
 
     // Toggle Status
     $('.toggle-status').on('change', function() {
-        var is_active = $(this).is(':checked') ? 1 : 0;
+        var value = $(this).is(':checked') ? 1 : 0;
         var model = $(this).data('model'); // Get the model name dynamically
+        var attribute = $(this).data('attribute'); // Get the model name dynamically
         var id = $(this).data('id'); // Get the ID dynamically
 
         $.ajax({
@@ -21,7 +22,8 @@ $(document).ready(function() {
                 _token: $('meta[name="csrf-token"]').attr('content'), // Use CSRF token dynamically
                 model: model,
                 id: id,
-                is_active: is_active
+                value: value,
+                is_active: attribute
             },
             success: function(response) {
                 if (response.success) {

@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
+Route::get('brands',[\App\Http\Controllers\apis\BrandController::class,'index']);
+Route::get('categories',[\App\Http\Controllers\apis\CategoryController::class,'index']);
+Route::get('cars',[\App\Http\Controllers\apis\CarController::class,'index']);
+Route::get('blogs',[\App\Http\Controllers\apis\BlogController::class,'index']);

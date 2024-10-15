@@ -14,7 +14,8 @@ class HelperController extends Controller
         $request->validate([
             'model' => 'required|string',
             'id' => 'required|integer',
-            'is_active' => 'required|boolean',
+            'value' => 'required|boolean',
+            'attribute' => 'required',
         ]);
 
         // Resolve the fully qualified model class name dynamically
@@ -36,8 +37,10 @@ class HelperController extends Controller
             ], 404);
         }
 
+        $column = $request->attribute;
+        $value = $request->value;
         // Update the `is_active` or any other field
-        $modelInstance->is_active = $request->is_active;
+        $modelInstance->$column = $value;
         $modelInstance->save();
 
         return response()->json([

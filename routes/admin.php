@@ -29,7 +29,7 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::resource('templates', App\Http\Controllers\admin\TemplateController::class);
+//    Route::resource('templates', App\Http\Controllers\admin\TemplateController::class);
     Route::resource('admin.settings', App\Http\Controllers\admin\TemplateController::class);
 
 

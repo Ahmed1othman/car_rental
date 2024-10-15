@@ -314,6 +314,12 @@
                                                             <label class="custom-control-label" for="is_flash_sale">Flash Sale</label>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-3">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" name="only_on_afandina" class="custom-control-input" id="only_on_afandina" {{ old('only_on_afandina') ? 'checked' : '' }}>
+                                                            <label class="custom-control-label" for="only_on_afandina">Only On Afandina</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

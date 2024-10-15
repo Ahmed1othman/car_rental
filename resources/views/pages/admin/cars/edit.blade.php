@@ -302,68 +302,17 @@
                                                         <label class="custom-control-label" for="is_flash_sale">Flash Sale</label>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="only_on_afandina" class="custom-control-input" id="only_on_afandina" {{ old('is_flash_sale', $item->only_on_afandina) ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="only_on_afandina">Only On Afandina</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-{{--                                        --}}{{-- Edit Car Images & Videos --}}
-{{--                                    <div class="card mb-4">--}}
-{{--                                        <div class="card-header bg-light">--}}
-{{--                                            <h3 class="card-title">Edit Car Images & Videos</h3>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="card-body">--}}
-{{--                                            <div class="row">--}}
-{{--                                                <div class="col-md-12">--}}
-{{--                                                    <div class="form-group">--}}
-{{--                                                        <label for="file_path">Upload Images:</label>--}}
-{{--                                                        <input type="file" class="form-control" name="images[]" id="image-files" multiple>--}}
-{{--                                                    </div>--}}
-
-{{--                                                    <!-- YouTube Links -->--}}
-{{--                                                    <div class="form-group">--}}
-{{--                                                        <label for="youtube_links">YouTube Links:</label>--}}
-{{--                                                        <div id="youtube-links">--}}
-{{--                                                            @foreach ($item->images as $index => $media)--}}
-{{--                                                                @if ($media->type === 'video')--}}
-{{--                                                                    <input type="text" class="form-control youtube-link mt-2" name="youtube_links[]" value="{{ $media->file_path }}" placeholder="Enter YouTube link" data-index="{{ $index }}">--}}
-{{--                                                                @endif--}}
-{{--                                                            @endforeach--}}
-{{--                                                        </div>--}}
-{{--                                                        <button type="button" class="btn btn-secondary mt-2" id="add-link">Add Another Link</button>--}}
-{{--                                                    </div>--}}
-
-{{--                                                    <div class="form-group">--}}
-{{--                                                        <label for="alt">Alt Text (for all):</label>--}}
-{{--                                                        <input type="text" class="form-control" name="alt" placeholder="Add alt text for images or videos" value="{{ $item->alt }}">--}}
-{{--                                                    </div>--}}
-
-{{--                                                    <!-- Preview Section -->--}}
-{{--                                                    <h2 class="mt-5">Preview</h2>--}}
-{{--                                                    <div id="preview" class="row preview-grid">--}}
-{{--                                                        <!-- Existing Images and Videos Previews -->--}}
-{{--                                                        @foreach ($item->images as $index => $media)--}}
-{{--                                                            @if ($media->type === 'image')--}}
-{{--                                                                <div class="preview-item" data-type="image" data-index="{{ $index }}">--}}
-{{--                                                                    <img src="{{ asset('storage/'.$media->file_path) }}" class="img-fluid">--}}
-{{--                                                                    <button type="button" class="remove-preview" data-type="image" data-index="{{ $index }}">×</button>--}}
-{{--                                                                </div>--}}
-{{--                                                            @elseif ($media->type === 'video')--}}
-{{--                                                                <div class="preview-item" data-type="video" data-index="{{ $index }}">--}}
-{{--                                                                    <iframe src="https://www.youtube.com/embed/{{ $media->file_path }}" frameborder="0" allowfullscreen></iframe>--}}
-{{--                                                                    <button type="button" class="remove-preview" data-type="video" data-index="{{ $index }}">×</button>--}}
-{{--                                                                </div>--}}
-{{--                                                            @endif--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-
-
-
-
-                                    <!-- Activation Status -->
                                     <div class="card mb-4">
                                         <div class="card-header bg-light">
                                             <h3 class="card-title">Status</h3>

@@ -50,6 +50,9 @@
                                     <th>Default Image</th>
                                     <th>Name</th>
                                     <th>Brand</th>
+                                    <th>only On Afandina</th>
+                                    <th>Flash Sale</th>
+                                    <th>Featured Car</th>
                                     <th>Status</th>
                                     <th>Created At</th>
                                     <th>Actions</th>
@@ -69,9 +72,32 @@
                                         <td>{{ $item->translations->first()->name ?? 'N/A' }}</td>
                                         <td>{{ $item->brand->translations->first()->name ?? 'N/A' }}</td>
                                         <td>
-                                            <!-- Custom Toggle Switch -->
+                                            <!-- Only On Afandina -->
                                             <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
+                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="only_on_afandina" data-id="{{ $item->id }}" {{ $item->only_on_afandina ? 'checked' : '' }}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <!-- is flash sale -->
+                                            <label class="switch">
+                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_flash_sale" data-id="{{ $item->id }}" {{ $item->is_flash_sale ? 'checked' : '' }}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+
+                                        <td>
+                                            <!-- Is Featured -->
+                                            <label class="switch">
+                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_featured" data-id="{{ $item->id }}" {{ $item->is_featured ? 'checked' : '' }}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+
+                                        <td>
+                                            <!-- Is active -->
+                                            <label class="switch">
+                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_active" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
                                                 <span class="slider round"></span>
                                             </label>
                                         </td>
@@ -91,11 +117,8 @@
                                                 <a href="{{ route('admin.' . $modelName . '.edit_images', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">
                                                     <i class="fas fa-images"></i> Images
                                                 </a>
-
                                             </div>
                                         </td>
-
-
                                     </tr>
                                 @endforeach
                                 </tbody>

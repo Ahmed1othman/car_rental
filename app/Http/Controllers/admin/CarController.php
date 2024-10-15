@@ -34,6 +34,7 @@ class CarController extends GenericController
             'free_delivery',
             'is_featured',
             'is_flash_sale',
+            'only_on_afandina',
             'is_active',
             'status',
             'gear_type_id',
@@ -54,10 +55,6 @@ class CarController extends GenericController
             $query->where('locale', $locale);}])->get();
         $this->data['colors'] = Color::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
-//        $this->data['makers'] = Maker::with(['translations' => function ($query) use ($locale) {
-//            $query->where('locale', $locale);}])->get();
-//        $this->data['bodyStyles'] = BodyStyle::with(['translations' => function ($query) use ($locale) {
-//            $query->where('locale', $locale);}])->get();
 
         return parent::create();
     }
@@ -85,6 +82,7 @@ class CarController extends GenericController
             'is_featured' => $request->has('is_featured') ? true : false,
             'free_delivery' => $request->has('free_delivery') ? true : false,
             'is_active' => $request->has('is_active') ? true : false,
+            'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
         ]);
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
@@ -109,6 +107,7 @@ class CarController extends GenericController
             'is_featured' => 'boolean',
             'is_flash_sale' => 'boolean',
             'is_active' => 'boolean',
+            'only_on_afandina' => 'boolean',
             'status' => 'required|in:available,not_available',
             'gear_type_id' => 'required|exists:gear_types,id',
             'brand_id' => 'required|exists:brands,id',
@@ -136,6 +135,7 @@ class CarController extends GenericController
             'is_featured' => $request->has('is_featured') ? true : false,
             'free_delivery' => $request->has('free_delivery') ? true : false,
             'is_active' => $request->has('is_active') ? true : false,
+            'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
         ]);
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
@@ -158,6 +158,7 @@ class CarController extends GenericController
             'free_delivery' => 'boolean',
             'is_featured' => 'boolean',
             'is_flash_sale' => 'boolean',
+            'only_on_afandina' => 'boolean',
             'is_active' => 'boolean',
             'status' => 'required|in:available,not_available',
             'gear_type_id' => 'required|exists:gear_types,id',
