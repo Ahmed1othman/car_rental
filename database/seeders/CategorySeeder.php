@@ -256,7 +256,7 @@ class CategorySeeder extends Seeder
 
         foreach ($categories as $model) {
             // Insert into Categories table
-            $carModelId = DB::table('Categories')->insertGetId([
+            $carModelId = DB::table('categories')->insertGetId([
                 'is_active' => $model['is_active'],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -268,7 +268,7 @@ class CategorySeeder extends Seeder
                     return ['value' => trim($keyword)];
                 }, $metaKeywordsArray);
                 // Insert translations into Category_translations table
-                DB::table('Category_translations')->insert([
+                DB::table('category_translations')->insert([
                     'category_id' => $carModelId,
                     'locale' => $translation['locale'],
                     'name' => $translation['name'],
