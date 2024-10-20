@@ -23,8 +23,8 @@ class Brand extends Model
         return $this->morphMany(SeoQuestion::class, 'seo_questionable');
     }
 
-    public function carModels(): HasMany{
-        return $this->hasMany(CarModel::class);
+    public function cars(): HasMany{
+        return $this->hasMany(Car::class);
     }
 
 }

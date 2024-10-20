@@ -10,12 +10,15 @@ class ServiceController extends GenericController
         $this->seo_question =true;
         $this->slugField ='name';
         $this->translatableFields = ['name','description'];
-        $this->nonTranslatableFields = ['is_active'];
+        $this->nonTranslatableFields = ['is_active','show_in_home'];
         $this->uploadedfiles = ['image_path'];
     }
 
     public function store(Request $request)
     {
+        $request->merge([
+            'show_in_home' => $request->has('show_in_home') ? true : false,
+        ]);
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
             'image_path' => 'required|mimes:jpeg,png,jpg,gif,svg,webp|max:8192',
@@ -36,6 +39,9 @@ class ServiceController extends GenericController
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'show_in_home' => $request->has('show_in_home') ? true : false,
+        ]);
         // Define validation rules
         $this->validationRules = [
             'name.*' => 'required|string|max:255',

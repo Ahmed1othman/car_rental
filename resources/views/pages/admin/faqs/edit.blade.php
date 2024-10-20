@@ -75,24 +75,27 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-                                    <div class="form-group">
-                                        <label for="brand_id" class="font-weight-bold">Brand</label>
-                                        <select name="brand_id" id="brand_id" class="form-control form-control-lg shadow-sm">
-                                            <option value="">-- Select Brand --</option>
-                                            @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}" {{ $item->brand_id == $brand->id ? 'selected' : '' }}>
-                                                    {{ $brand->translations()->first()->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
 
-                                    <div class="form-group">
-                                        <label for="is_active" class="font-weight-bold">Active</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" value="{{$item->is_active}}" {{$item->is_active?'checked':''}}>
-                                            <label class="custom-control-label" for="is_active">Active</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="is_active" class="font-weight-bold">Active</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" value="{{$item->is_active}}" {{$item->is_active?'checked':''}}>
+                                                    <label class="custom-control-label" for="is_active">Active</label>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="show_in_home" class="font-weight-bold">Show In Home</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="show_in_home" class="custom-control-input" id="show_in_home" value="{{$item->show_in_home}}" {{$item->show_in_home?'checked':''}}>
+                                                    <label class="custom-control-label" for="show_in_home">Show In Home</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -112,12 +115,12 @@
                                             @endphp
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
-                                                    <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.' . $lang->code, $translation->name ?? '') }}">
+                                                    <label for="question_{{ $lang->code }}" class="font-weight-bold">Question ({{ $lang->name }})</label>
+                                                    <input type="text" name="question[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="question_{{ $lang->code }}" value="{{ old('question.' . $lang->code, $translation->question ?? '') }}">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.' . $lang->code, $translation->description ?? '') }}</textarea>
+                                                    <label for="answer_{{ $lang->code }}" class="font-weight-bold">Answer ({{ $lang->name }})</label>
+                                                    <textarea name="answer[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="answer_{{ $lang->code }}" rows="4">{{ old('answer.' . $lang->code, $translation->answer ?? '') }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach

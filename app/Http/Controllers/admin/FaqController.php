@@ -10,16 +10,16 @@ class FaqController extends GenericController
         $this->seo_question =true;
         $this->slugField ='question';
         $this->translatableFields = ['question','answer'];
-        $this->nonTranslatableFields = ['is_active','order'];
+        $this->nonTranslatableFields = ['is_active','show_in_home'];
     }
 
     public function store(Request $request)
     {
         $request->merge([
             'is_active' => $request->has('is_active') ? true : false,
+            'show_in_home' => $request->has('show_in_home') ? true : false,
         ]);
         $this->validationRules = [
-            'order' => 'required|numeric',
             'question.*' => 'required|string|max:255',
             'answer.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
@@ -38,6 +38,10 @@ class FaqController extends GenericController
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+            'show_in_home' => $request->has('show_in_home') ? true : false,
+        ]);
         // Define validation rules
         $this->validationRules = [
             'order' => 'required|numeric',

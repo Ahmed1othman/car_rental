@@ -206,34 +206,41 @@
                                             </div>
                                         </div>
 
-                                        <!-- Car Details -->
-                                        <div class="card mb-4">
-                                            <div class="card-header bg-light">
-                                                <h3 class="card-title">Car Details</h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="door_count" class="font-weight-bold">Number of Doors</label>
-                                                            <input type="number" name="door_count" class="form-control shadow-sm" max="6" min="1" id="door_count" value="{{ old('door_count') }}">
+
+                                            <!-- Car Details -->
+                                            <div class="card mb-4">
+                                                <div class="card-header bg-light">
+                                                    <h3 class="card-title">Car Details</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="door_count" class="font-weight-bold">Number of Doors</label>
+                                                                <input type="number" name="door_count" class="form-control shadow-sm" max="6" min="1" id="door_count" value="{{ old('door_count') }}">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="luggage_capacity" class="font-weight-bold">Number of luggage_capacity</label>
-                                                            <input type="number" name="luggage_capacity" class="form-control shadow-sm" max="20" min="0" id="luggage_capacity" value="{{ old('luggage_capacity') }}">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="luggage_capacity" class="font-weight-bold">Number Of Luggage Capacity</label>
+                                                                <input type="number" name="luggage_capacity" class="form-control shadow-sm" max="20" min="0" id="luggage_capacity" value="{{ old('luggage_capacity') }}">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="passenger_capacity" class="font-weight-bold">Number of passenger</label>
-                                                            <input type="number" name="passenger_capacity" class="form-control shadow-sm" max="20" min="1" id="passenger_capacity" value="{{ old('passenger_capacity') }}">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="passenger_capacity" class="font-weight-bold">Number of passenger</label>
+                                                                <input type="number" name="passenger_capacity" class="form-control shadow-sm" max="20" min="1" id="passenger_capacity" value="{{ old('passenger_capacity') }}">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+
+
+
+
+
+
                                         <!-- Pricing Information -->
                                         <div class="card mb-4">
                                             <div class="card-header bg-light">
@@ -290,31 +297,31 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="row">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-6">
                                                         <div class="custom-control custom-switch">
                                                             <input type="checkbox" name="insurance_included" class="custom-control-input" id="insurance_included" {{ old('insurance_included') ? 'checked' : '' }}>
                                                             <label class="custom-control-label" for="insurance_included">Insurance Included</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-6">
                                                         <div class="custom-control custom-switch">
                                                             <input type="checkbox" name="free_delivery" class="custom-control-input" id="free_delivery" {{ old('free_delivery') ? 'checked' : '' }}>
                                                             <label class="custom-control-label" for="free_delivery">Free Delivery</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-6">
                                                         <div class="custom-control custom-switch">
                                                             <input type="checkbox" name="is_featured" class="custom-control-input" id="is_featured" {{ old('is_featured') ? 'checked' : '' }}>
                                                             <label class="custom-control-label" for="is_featured">Featured</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-6">
                                                         <div class="custom-control custom-switch">
                                                             <input type="checkbox" name="is_flash_sale" class="custom-control-input" id="is_flash_sale" {{ old('is_flash_sale') ? 'checked' : '' }}>
                                                             <label class="custom-control-label" for="is_flash_sale">Flash Sale</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-6">
                                                         <div class="custom-control custom-switch">
                                                             <input type="checkbox" name="only_on_afandina" class="custom-control-input" id="only_on_afandina" {{ old('only_on_afandina') ? 'checked' : '' }}>
                                                             <label class="custom-control-label" for="only_on_afandina">Only On Afandina</label>

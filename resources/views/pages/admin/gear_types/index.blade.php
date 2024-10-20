@@ -68,9 +68,9 @@
                                         <td>{{ $item->created_at ? $item->created_at->format('d M, Y') : 'N/A' }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.' . $modelName . '.show', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">
-                                                    <i class="fas fa-eye"></i> Show
-                                                </a>
+                                                {{--                                                <a href="{{ route('admin.' . $modelName . '.show', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">--}}
+{{--                                                    <i class="fas fa-eye"></i> Show--}}
+{{--                                                </a>--}}
                                                 <a href="{{ route('admin.' . $modelName . '.edit', $item->id) }}" class="btn btn-info btn-sm shadow-sm mr-1">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>

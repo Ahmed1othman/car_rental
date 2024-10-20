@@ -23,7 +23,7 @@ $(document).ready(function() {
                 model: model,
                 id: id,
                 value: value,
-                is_active: attribute
+                attribute: attribute
             },
             success: function(response) {
                 if (response.success) {

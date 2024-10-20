@@ -23,5 +23,9 @@ class Category extends Model
         return $this->morphMany(SeoQuestion::class, 'seo_questionable');
     }
 
+    public function cars(): HasMany{
+        return $this->hasMany(Car::class);
+    }
+
 
 }

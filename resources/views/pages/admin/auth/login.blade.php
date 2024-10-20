@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afandina | login</title>
+    <title>Afandina | Login</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600;900&display=swap');
 
@@ -36,7 +36,6 @@
             left: 0;
             width: 32px;
             height: 6px;
-            /*background: #2c4766;*/
             background: #111111;
             border-radius: 8px;
             transform-origin: 128px;
@@ -52,12 +51,8 @@
 
         .login-box {
             position: absolute;
-            width: 400px;
-        }
-
-        .login-box form {
-            width: 100%;
-            padding: 0 50px;
+            width: 90%; /* Adjusted to be responsive */
+            max-width: 400px;
         }
 
         h2 {
@@ -116,7 +111,6 @@
 
         .forgot-pass a {
             font-size: .85em;
-            /*color: #d5d5d5;*/
             background-color: transparent;
             text-decoration: none;
         }
@@ -153,6 +147,64 @@
         .signup-link a:hover {
             text-decoration: underline;
         }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .login-box {
+                width: 100%;
+                padding: 0 20px;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .input-box input {
+                height: 45px;
+            }
+
+            .btn {
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 160px;
+                height: 160px;
+            }
+
+            .login-box {
+                width: 100%;
+                padding: 0 10px;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+
+            .input-box input {
+                height: 40px;
+            }
+
+            .btn {
+                height: 38px;
+                font-size: 0.9em;
+            }
+
+            .signup-link a {
+                font-size: 0.9em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -183,17 +235,20 @@
             @enderror
 
             <div class="forgot-pass">
-{{--                <a href="#">Forgot your password?</a>--}}
+                {{-- <a href="#">Forgot your password?</a> --}}
             </div>
 
             <button class="btn" type="submit" style="margin-top: 5px">Login</button>
 
             <div class="signup-link">
-{{--                <a href="#">Sign up</a>--}}
+                {{-- <a href="#">Sign up</a> --}}
             </div>
         </form>
     </div>
 
+    <span style="--i:0;"></span>
+    <span style="--i:1;"></span>
+    <span style="--i:2;"></span>
     <span style="--i:0;"></span>
     <span style="--i:1;"></span>
     <span style="--i:2;"></span>

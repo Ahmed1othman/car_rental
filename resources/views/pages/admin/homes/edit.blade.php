@@ -234,6 +234,18 @@
                                                     <label for="required_documents_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Required Documents Section Paragraph ({{ $lang->name }})</label>
                                                     <textarea name="required_documents_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="required_documents_section_paragraph_{{ $lang->code }}" rows="4">{{ old('required_documents_section_paragraph.' . $lang->code, $translation->required_documents_section_paragraph ?? '') }}</textarea>
                                                 </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="instagram_section_title_[{{ $lang->code }}]" class="font-weight-bold">Instagram Section Title ({{ $lang->name }})</label>
+                                                    <input type="text" name="instagram_section_title[{{ $lang->code }}]" class="form-control shadow-sm" id=instagram_section_title_[{{ $lang->code }}]" value="{{ old('instagram_section_title.' . $lang->code ,$translation->instagram_section_title??'') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="footer_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Required Documents Section Paragraph ({{ $lang->name }})</label>
+                                                    <textarea name="footer_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="footer_section_paragraph_{{ $lang->code }}" rows="4">{{ old('footer_section_paragraph.' . $lang->code, $translation->footer_section_paragraph ?? '') }}</textarea>
+                                                </div>
+
+
                                             </div>
                                         @endforeach
                                     </div>

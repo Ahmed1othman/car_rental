@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
+            $table->boolean('show_in_home')->default(false);
             $table->text('image_path')->nullable();
             $table->timestamps();
         $table->boolean('is_active')->default(true);

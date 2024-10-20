@@ -97,11 +97,24 @@
                                         @enderror
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="is_active" class="font-weight-bold">Active</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active')}}>
-                                            <label class="custom-control-label" for="is_active">Active</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="is_active" class="font-weight-bold">Active</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active')}}>
+                                                    <label class="custom-control-label" for="is_active">Active</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="show_in_home" class="font-weight-bold">Shows In Home</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="show_in_home" class="custom-control-input" id="show_in_home" {{ old('show_in_home')}}>
+                                                    <label class="custom-control-label" for="show_in_home">Shows In Home</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

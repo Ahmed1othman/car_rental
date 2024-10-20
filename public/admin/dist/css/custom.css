@@ -1,10 +1,30 @@
+/* Switch Column Styling */
+.switch-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Adds space between switches */
+}
 
- .switch {
-     position: relative;
-     display: inline-block;
-     width: 60px;
-     height: 34px;
- }
+.switch-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.switch-wrapper label {
+    font-size: 14px; /* Adjust label font size */
+    color: #333; /* Label color */
+    font-weight: 500; /* Medium weight for better visibility */
+}
+
+/* Existing Switch Styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+}
 
 .switch input {
     opacity: 0;
@@ -21,32 +41,32 @@
     bottom: 0;
     background-color: #ccc;
     transition: 0.4s;
-    border-radius: 34px;
+    border-radius: 28px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
     background-color: white;
     transition: 0.4s;
     border-radius: 50%;
 }
 
 input:checked + .slider {
-    background-color: #28a745;
+    background-color: #28a745; /* Success green */
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(22px);
 }
 
 /* Rounded slider */
 .slider.round {
-    border-radius: 34px;
+    border-radius: 28px;
 }
 
 .slider.round:before {
@@ -55,7 +75,8 @@ input:checked + .slider:before {
 
 
 
- /* Customize the File Input Button */
+
+/* Customize the File Input Button */
  .custom-file-input {
      cursor: pointer;
  }

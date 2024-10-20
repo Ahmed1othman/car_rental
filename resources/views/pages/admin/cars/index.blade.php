@@ -12,7 +12,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">{{ $modelName }} List</li>
                         </ol>
                     </div>
@@ -50,10 +50,7 @@
                                     <th>Default Image</th>
                                     <th>Name</th>
                                     <th>Brand</th>
-                                    <th>only On Afandina</th>
-                                    <th>Flash Sale</th>
-                                    <th>Featured Car</th>
-                                    <th>Status</th>
+                                    <th>Options</th> <!-- New column header for all switches -->
                                     <th>Created At</th>
                                     <th>Actions</th>
                                 </tr>
@@ -64,7 +61,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             @if ($item->default_image_path)
-                                                <img src="{{ asset('storage/' . $item->default_image_path) }}" alt="post_image" class="img-" style="width: 100px; height: 100px; object-fit: cover;">
+                                                <img src="{{ asset('storage/' . $item->default_image_path) }}" alt="post_image" class="img-" style="width: 200px; height: 200px; object-fit: cover;">
                                             @else
                                                 <span>N/A</span>
                                             @endif
@@ -72,41 +69,48 @@
                                         <td>{{ $item->translations->first()->name ?? 'N/A' }}</td>
                                         <td>{{ $item->brand->translations->first()->name ?? 'N/A' }}</td>
                                         <td>
-                                            <!-- Only On Afandina -->
-                                            <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="only_on_afandina" data-id="{{ $item->id }}" {{ $item->only_on_afandina ? 'checked' : '' }}>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <!-- is flash sale -->
-                                            <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_flash_sale" data-id="{{ $item->id }}" {{ $item->is_flash_sale ? 'checked' : '' }}>
-                                                <span class="slider round"></span>
-                                            </label>
+                                            <!-- Combine all switches in one column -->
+                                            <div class="switch-column">
+                                                <div class="switch-wrapper">
+                                                    <label for="only_on_afandina">Only on Afandina</label>
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="toggle-status" id="only_on_afandina" data-model="{{ $modelName }}" data-attribute="only_on_afandina" data-id="{{ $item->id }}" {{ $item->only_on_afandina ? 'checked' : '' }}>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="switch-wrapper">
+                                                    <label for="is_flash_sale">Flash Sale</label>
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="toggle-status" id="is_flash_sale" data-model="{{ $modelName }}" data-attribute="is_flash_sale" data-id="{{ $item->id }}" {{ $item->is_flash_sale ? 'checked' : '' }}>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="switch-wrapper">
+                                                    <label for="is_featured">Featured</label>
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="toggle-status" id="is_featured" data-model="{{ $modelName }}" data-attribute="is_featured" data-id="{{ $item->id }}" {{ $item->is_featured ? 'checked' : '' }}>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="switch-wrapper">
+                                                    <label for="is_active">Active</label>
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="toggle-status" id="is_active" data-model="{{ $modelName }}" data-attribute="is_active" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </td>
 
-                                        <td>
-                                            <!-- Is Featured -->
-                                            <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_featured" data-id="{{ $item->id }}" {{ $item->is_featured ? 'checked' : '' }}>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </td>
-
-                                        <td>
-                                            <!-- Is active -->
-                                            <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_active" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </td>
                                         <td>{{ $item->created_at ? $item->created_at->format('d M, Y') : 'N/A' }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.' . $modelName . '.show', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">
-                                                    <i class="fas fa-eye"></i> Show
-                                                </a>
+                                                {{--                                                <a href="{{ route('admin.' . $modelName . '.show', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">--}}
+{{--                                                    <i class="fas fa-eye"></i> Show--}}
+{{--                                                </a>--}}
                                                 <a href="{{ route('admin.' . $modelName . '.edit', $item->id) }}" class="btn btn-info btn-sm shadow-sm mr-1">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>

@@ -71,16 +71,16 @@
                                         <td>
                                             <!-- Custom Toggle Switch -->
                                             <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
+                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_active" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
                                                 <span class="slider round"></span>
                                             </label>
                                         </td>
                                         <td>{{ $item->created_at ? $item->created_at->format('d M, Y') : 'N/A' }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.' . $modelName . '.show', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">
-                                                    <i class="fas fa-eye"></i> Show
-                                                </a>
+                                                {{--                                                <a href="{{ route('admin.' . $modelName . '.show', $item->id) }}" class="btn btn-primary btn-sm shadow-sm mr-1">--}}
+{{--                                                    <i class="fas fa-eye"></i> Show--}}
+{{--                                                </a>--}}
                                                 <a href="{{ route('admin.' . $modelName . '.edit', $item->id) }}" class="btn btn-info btn-sm shadow-sm mr-1">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>

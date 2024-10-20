@@ -79,35 +79,25 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-                                    <div class="form-group">
-                                        <label for="general_field" class="font-weight-bold">General Field</label>
-                                        <input type="text" name="general_field" class="form-control form-control-lg shadow-sm" id="general_field" value="{{ old('general_field') }}">
-                                    </div>
 
-
-                                    <div class="form-group text-center">
-                                        <!-- Image Preview with Circular Border and Placeholder -->
-                                        <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="https://via.placeholder.com/150" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="is_active" class="font-weight-bold">Active</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active')}}>
+                                                    <label class="custom-control-label" for="is_active">Active</label>
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <!-- File Input for Logo Upload -->
-                                        <div class="custom-file">
-                                            <input type="file" name="logo_path" class="custom-file-input image-upload @error('logo_path') is-invalid @enderror" id="logo_path" data-preview="imagePreviewLogo">
-                                            <label class="custom-file-label" for="logo_path">Upload Logo</label>
-                                        </div>
-
-                                        <!-- Error Handling -->
-                                        @error('logo_path')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="is_active" class="font-weight-bold">Active</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active')}}>
-                                            <label class="custom-control-label" for="is_active">Active</label>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="show_in_home" class="font-weight-bold">Shows In Home</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="show_in_home" class="custom-control-input" id="show_in_home" {{ old('show_in_home')}}>
+                                                    <label class="custom-control-label" for="show_in_home">Shows In Home</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -125,12 +115,12 @@
                                         @foreach($activeLanguages as $lang)
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
-                                                    <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.'.$lang->code) }}">
+                                                    <label for="question_{{ $lang->code }}" class="font-weight-bold">Question ({{ $lang->name }})</label>
+                                                    <input type="text" name="question[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="question_{{ $lang->code }}" value="{{ old('question.'.$lang->code) }}">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code) }}</textarea>
+                                                    <label for="answer_{{ $lang->code }}" class="font-weight-bold">Answer ({{ $lang->name }})</label>
+                                                    <textarea name="answer[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="answer_{{ $lang->code }}" rows="4">{{ old('answer.'.$lang->code) }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach

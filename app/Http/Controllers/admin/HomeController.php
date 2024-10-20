@@ -24,7 +24,8 @@ class HomeController extends GenericController
             'where_find_us_section_paragraph',
             'required_documents_section_title',
             'required_documents_section_paragraph',
-
+            'footer_section_paragraph',
+            'instagram_section_title',
         ];
         $this->nonTranslatableFields = ['page_name','is_active'];
         $this->uploadedfiles = [
@@ -60,6 +61,8 @@ class HomeController extends GenericController
             'required_documents_section_title.*' => 'nullable|string',
             'required_documents_section_paragraph.*' => 'nullable|string',
             'hero_header_title.*' => 'nullable|string',
+            'instagram_section_title.*' => 'nullable|string',
+            'footer_section_paragraph.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
@@ -92,6 +95,8 @@ class HomeController extends GenericController
             'required_documents_section_title.*' => 'nullable|string',
             'required_documents_section_paragraph.*' => 'nullable|string',
             'hero_header_title.*' => 'nullable|string',
+            'instagram_section_title.*' => 'nullable|string',
+            'footer_section_paragraph.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',

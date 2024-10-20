@@ -36,6 +36,10 @@ return new class extends Migration
             $table->longText('required_documents_section_title')->nullable();
             $table->longText('required_documents_section_paragraph')->nullable();
 
+            $table->longText('instagram_section_title')->nullable();
+
+            $table->longText('footer_section_paragraph')->nullable();
+
             $table->string('locale');  // e.g., 'en', 'ar'
             $table->text('meta_title')->nullable();
             $table->text('meta_description')->nullable();
