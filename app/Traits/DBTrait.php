@@ -151,12 +151,18 @@ trait DBTrait
                 'cars.status',
                 'cars.gear_type_id',
 
+                'color_translations.name as color_name',
+                'colors.color_code',
+                'brand_translations.name as brand_name',
+                'category_translations.name as category_name',
+
+
                 'cars.default_image_path',
                 'car_translations.slug',
                 'car_translations.name',
-                'car_images.file_path', // Image file path
-                'car_images.alt', // Image alt text
-                'car_images.type' // Image type
+                'car_images.file_path',
+                'car_images.alt',
+                'car_images.type'
             )
             ->leftJoin('car_translations', function ($join) use ($language) {
                 $join->on('cars.id', '=', 'car_translations.car_id')
@@ -166,9 +172,22 @@ trait DBTrait
             ->leftJoin('colors', 'colors.id', '=', 'cars.color_id')
             ->leftJoin('brands', 'brands.id', '=', 'cars.brand_id')
             ->leftJoin('categories', 'categories.id', '=', 'cars.category_id')
+
+            ->leftJoin('color_translations', function ($join) use ($language) {
+                $join->on('colors.id', '=', 'color_translations.color_id')
+                    ->where('color_translations.locale', '=', $language);
+            })
+            ->leftJoin('brand_translations', function ($join) use ($language) {
+                $join->on('brands.id', '=', 'brand_translations.brand_id')
+                    ->where('brand_translations.locale', '=', $language);
+            })
+            ->leftJoin('category_translations', function ($join) use ($language) {
+                $join->on('categories.id', '=', 'category_translations.category_id')
+                    ->where('category_translations.locale', '=', $language);
+            })
             ->where('cars.is_active', true)
             ->where('cars.'.$condition, true)
-            ->groupBy('cars.id', 'cars.default_image_path', 'car_translations.slug', 'car_translations.name', 'car_images.file_path', 'car_images.alt', 'car_images.type');
+            ->groupBy('cars.id','colors.color_code','color_translations.name','category_translations.name','brand_translations.name','cars.default_image_path', 'car_translations.slug', 'car_translations.name', 'car_images.file_path', 'car_images.alt', 'car_images.type');
 
         // Apply pagination or limit if provided
         if ($paginate) {
@@ -204,6 +223,10 @@ trait DBTrait
                     'is_featured' => $car->is_featured,
                     'is_flash_sale' => $car->is_flash_sale,
                    'status' => $car->status,
+                   'color_name' => $car->color_name,
+                   'color_code' => $car->color_code,
+                   'brand_name' => $car->brand_name,
+                   'category_name' => $car->category_name,
                    'gear_type_id' => $car->gear_type_id,
                     'images' => []
 

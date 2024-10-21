@@ -77,6 +77,7 @@ class CarController extends GenericController
 
     public function store(Request $request)
     {
+        return $request->all();
         $request->merge([
             'insurance_included' => $request->has('insurance_included') ? true : false,
             'is_flash_sale' => $request->has('is_flash_sale') ? true : false,
