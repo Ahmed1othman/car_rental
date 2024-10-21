@@ -239,6 +239,7 @@ class GenericController extends Controller
                         'slug' => Str::slug($validatedData[$this->slugField][$langCode]??Str::random(5), '-')
                     ];
 
+                    dd($translatedData);
                     // Update or create translations
                     $row->translations()->updateOrCreate(
                         ['locale' => $langCode],
