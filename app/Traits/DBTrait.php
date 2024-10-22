@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\DB;
 
 trait DBTrait
 {
+    public function getCurrency(){
+        if (app('currency_id'))
+            return DB::table('currencies')->where('id', app('currency_id'))->first();
+        else
+            return DB::table('currencies')->where('is_default',true)->first();
+    }
     public function getLanguagesList($language)
     {
         return DB::table('languages')
@@ -128,6 +134,7 @@ trait DBTrait
     }
     public function getCars($language, $condition, $limit = null, $paginate = null)
     {
+        $currentCurrency = $this->getCurrency($language);
         // Fetch the main car details along with image details
         $query = DB::table('cars')
             ->select(
@@ -209,12 +216,12 @@ trait DBTrait
                     'default_image_path' => $car->default_image_path,
                     'slug' => $car->slug,
                     'name' => $car->name,
-                    'daily_main_price'=> $car->daily_main_price,
-                    'daily_discount_price' => $car->daily_discount_price,
-                    'weekly_main_price' => $car->weekly_main_price,
-                    'weekly_discount_price' => $car->weekly_discount_price,
-                   'monthly_main_price' => $car->monthly_main_price,
-                   'monthly_discount_price' => $car->monthly_discount_price,
+                    'daily_main_price'=> $car->daily_main_price * $currentCurrency->exchange_rate,
+                    'daily_discount_price' => $car->daily_discount_price* $currentCurrency->exchange_rate,
+                    'weekly_main_price' => $car->weekly_main_price* $currentCurrency->exchange_rate,
+                    'weekly_discount_price' => $car->weekly_discount_price* $currentCurrency->exchange_rate,
+                    'monthly_main_price' => $car->monthly_main_price* $currentCurrency->exchange_rate,
+                    'monthly_discount_price' => $car->monthly_discount_price* $currentCurrency->exchange_rate,
                     'door_count' => $car->door_count,
                     'luggage_capacity' => $car->luggage_capacity,
                     'passenger_capacity' => $car->passenger_capacity,
@@ -227,9 +234,7 @@ trait DBTrait
                    'color_code' => $car->color_code,
                    'brand_name' => $car->brand_name,
                    'category_name' => $car->category_name,
-                   'gear_type_id' => $car->gear_type_id,
-                    'images' => []
-
+                   'gear_type_id' => $car->gear_type_id, 'images' => []
                 ];
             }
 

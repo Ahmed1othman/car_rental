@@ -44,7 +44,7 @@ class CurrencySeeder extends Seeder
         ];
 
         foreach ($currencies as $currency) {
-            DB::table('currencies')->insert($currency);
+            DB::table('currencies')->insert($currency + ['is_active'=>true]);
         }
     }
     }

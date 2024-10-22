@@ -23,6 +23,7 @@ class HomePageController extends Controller
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
 
+        $currentCurrency = $this->getCurrency();
         $languages = $this->getLanguagesList($language);
         $currencies = $this->getCurrenciesList($language);
         $brands = $this->getBrandsList($language);

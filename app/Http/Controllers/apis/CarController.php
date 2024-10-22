@@ -14,6 +14,7 @@ class CarController extends Controller
 {
 
     use DBTrait;
+
     public function advancedSearch(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
 
