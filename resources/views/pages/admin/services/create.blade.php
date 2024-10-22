@@ -82,13 +82,13 @@
                                     <div class="form-group text-center">
                                         <!-- Image Preview with Circular Border and Placeholder -->
                                         <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="https://via.placeholder.com/400" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 400px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                            <img id="imagePreviewLogo" src="https://via.placeholder.com/300" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
                                         </div>
 
                                         <!-- File Input for Logo Upload -->
                                         <div class="custom-file">
-                                            <input type="file" name="image_path" class="custom-file-input image-upload @error('image_path') is-invalid @enderror" id="logo_path" data-preview="imagePreviewLogo">
-                                            <label class="custom-file-label" for="logo_path">Upload Image</label>
+                                            <input type="file" name="image_path" class="custom-file-input image-upload @error('image_path') is-invalid @enderror" id="image_path" data-preview="imagePreviewLogo">
+                                            <label class="custom-file-label" for="image_path">Upload Logo</label>
                                         </div>
 
                                         <!-- Error Handling -->
