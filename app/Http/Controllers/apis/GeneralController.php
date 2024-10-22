@@ -18,8 +18,6 @@ class GeneralController extends Controller
     public function getMainSetting(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
 
-        $currentCurrency = $this->getCurrency();
-
         $languages = $this->getLanguagesList($language);
         $currencies = $this->getCurrenciesList($language);
 
