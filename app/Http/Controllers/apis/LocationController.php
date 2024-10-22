@@ -25,6 +25,8 @@ class LocationController extends Controller
         if ($request->has('filters')) {
             $filters = $request->input('filters');
             foreach ($filters as $key => $value) {
+                if ($key == 'show_in_home')
+                    $query->where('show_in_home', $value);
                 if ($key == 'name'){
                     $query->whereHas('translations', function ($q) use ($value) {
                         $q->where('name', 'like', '%' . $value . '%');
