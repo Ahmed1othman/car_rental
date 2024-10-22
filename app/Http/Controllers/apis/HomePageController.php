@@ -22,10 +22,6 @@ class HomePageController extends Controller
     use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
-
-        $currentCurrency = $this->getCurrency();
-        $languages = $this->getLanguagesList($language);
-        $currencies = $this->getCurrenciesList($language);
         $brands = $this->getBrandsList($language);
 
 
@@ -50,10 +46,6 @@ class HomePageController extends Controller
         $documents = $this->getDocumentsList($language);
         $locations = $this->getLocationsList($language);
         $response = [
-            'search_tab'=>[
-                'languages'=>$languages,
-                'currencies'=>$currencies,
-            ],
             'header_section'=>[
                 'hero_header_title' => $homeData->hero_header_title,
                 'hero_header_video_path' => $homeData->hero_header_video_path,

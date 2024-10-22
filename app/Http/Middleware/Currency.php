@@ -22,7 +22,10 @@ class Currency
             app()->singleton('currency_id', function () use ($currency) {
                 return $currency;
             });
-        }
+        }else
+            app()->singleton('currency_id', function () use ($currency) {
+                return 1;
+            });
 
         return $next($request);
     }
