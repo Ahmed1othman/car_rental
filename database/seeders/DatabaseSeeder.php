@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             AboutPageSeeder::class,
             HomePageSeeder::class,
             CategorySeeder::class,
+            LocationSeeder::class,
             UserSeeder::class,
         ]);
     }

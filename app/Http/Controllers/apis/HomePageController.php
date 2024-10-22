@@ -77,10 +77,10 @@ class HomePageController extends Controller
                 'why_choose_us_section_paragraph'=>$homeData->why_choose_us_section_paragraph,
                 'services'=> $services,
             ],
-            'blogs_section'=>[
-                'blogs_title'=>$homeData->blogs_title,
-                'blogs'=>$blogs,
-            ],
+//            'blogs_section'=>[
+//                'blogs_title'=>$homeData->blogs_title,
+//                'blogs'=>$blogs,
+//            ],
 //            'faqs_section'=>[
 //                'faqs_title'=>$homeData->faq_section_title,
 //                'faqs_section_paragraph'=>$homeData->faq_section_paragraph,

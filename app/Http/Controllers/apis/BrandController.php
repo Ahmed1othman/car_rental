@@ -12,7 +12,6 @@ class BrandController extends Controller
 
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
-
         // Start with a base query
         $query = Brand::where('is_active',true)->with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);
@@ -42,7 +41,8 @@ class BrandController extends Controller
             $brands = $query->get();
         }
 
-        // Return the results using a resource
-        return BrandResource::collection($brands);
+        return [
+            'brands'=> BrandResource::collection($brands)
+        ];
     }
 }

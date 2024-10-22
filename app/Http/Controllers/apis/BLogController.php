@@ -14,7 +14,7 @@ class BLogController extends Controller
 
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
-
+        $homeData = $this->getHome($language);
         // Start with a base query
         $query = Blog::where('is_active',true)->with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);
@@ -45,6 +45,10 @@ class BLogController extends Controller
         }
 
         // Return the results using a resource
-        return BlogResource::collection($brands);
+        return [
+            'section_title'=> $homeData->faq_section_title,
+            'section_description'=> $homeData->faq_section_paragraph,
+            'blogs'=> BlogResource::collection($brands)
+        ];
     }
 }

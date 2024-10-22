@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\CategoryResource;
 use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -43,7 +44,8 @@ class CategoryController extends Controller
             $brands = $query->get();
         }
 
-        // Return the results using a resource
-        return BrandResource::collection($brands);
+        return [
+            'faqs'=> CategoryResource::collection($brands)
+        ];
     }
 }
