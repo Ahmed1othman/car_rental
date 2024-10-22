@@ -26,7 +26,8 @@ class GeneralController extends Controller
                 'languages'=>$languages,
                 'currencies'=>$currencies,
                 'storage_base_url' => asset('storage/'),
-
+                'dark_logo' => asset('admin/dist/logo/website_logos/logo_dark.png'),
+                'light_logo' => asset('admin/dist/logo/website_logos/light.png'),
             ],
         ];
 
