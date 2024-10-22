@@ -14,7 +14,6 @@ class LocationController extends Controller
 
     use DBTrait;
     public function index(Request $request){
-        return $request->all();
         $language = $request->header('Accept-Language') ?? 'en';
 
         $homeData = $this->getHome($language);
