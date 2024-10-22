@@ -81,11 +81,11 @@ class HomePageController extends Controller
                 'blogs_title'=>$homeData->blogs_title,
                 'blogs'=>$blogs,
             ],
-            'faqs_section'=>[
-                'faqs_title'=>$homeData->faq_section_title,
-                'faqs_section_paragraph'=>$homeData->faq_section_paragraph,
-                'faqs'=>$faqs,
-            ],
+//            'faqs_section'=>[
+//                'faqs_title'=>$homeData->faq_section_title,
+//                'faqs_section_paragraph'=>$homeData->faq_section_paragraph,
+//                'faqs'=>$faqs,
+//            ],
             'location_section'=>[
                 'location_title'=>$homeData->where_find_us_section_title,
                 'location_paragraph'=>$homeData->where_find_us_section_paragraph,

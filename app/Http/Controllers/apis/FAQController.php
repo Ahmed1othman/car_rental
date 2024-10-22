@@ -8,11 +8,12 @@ use App\Http\Resources\FAQResource;
 use App\Http\Resources\LocationResource;
 use App\Models\Faq;
 use App\Models\Location;
+use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
 class FAQController extends Controller
 {
-
+    use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = $this->getHome($language);
