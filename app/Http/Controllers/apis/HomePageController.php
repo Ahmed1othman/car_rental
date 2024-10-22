@@ -35,10 +35,7 @@ class HomePageController extends Controller
 
         $faqs = $this->getFaqList($language,'show_in_home','10');
 
-        $homeData = Home::with(['translations' => function ($query) use ($language) {
-                $query->where('locale', $language);
-            }])
-            ->first();
+        $homeData = $this->getHome($language);
 
         $contactData = Contact::first();
 
@@ -70,7 +67,7 @@ class HomePageController extends Controller
                 'car_only_section_paragraph'=>$homeData->car_only_section_paragraph,
                 'only_on_afandina'=>$onlyOnAfandina,
             ],
-           'special_offers_section'=>[
+            'special_offers_section'=>[
                'special_offers_title'=>$homeData->special_offers_section_title,
                'special_offers_section_paragraph'=>$homeData->special_offers_section_paragraph,
                'special_offers'=>$specialOffers,
@@ -103,7 +100,6 @@ class HomePageController extends Controller
                 'instagram_title'=>"Instagram Videos",
                 'instagram_videos'=>[],
             ],
-
             'footer_section'=>[
                 'footer_section_paragraph'=>$homeData->footer_section_paragraph,
                 'social_media'=>[
@@ -116,7 +112,6 @@ class HomePageController extends Controller
                     'youtube'=>$contactData->youtube,
                     'tiktok'=>$contactData->tiktok,
                     ],
-
                 'contact_data'=>[
                     'phone' => $contactData->phone,
                     'email' => $contactData->email,
@@ -129,15 +124,14 @@ class HomePageController extends Controller
                     'state' => $contactData->state,
                     'postal_code' => $contactData->postal_code,
                     'country' => $contactData->country,
-                    ],
-                ],
+                    ]
+                ]
         ];
 
         return response()->json([
             'data' => $response,
             'status' =>'success'
         ]);
-
     }
 
     public function search(Request $request)
@@ -200,5 +194,8 @@ class HomePageController extends Controller
             'status' =>'success'
         ]);
     }
+
+
+
 
 }

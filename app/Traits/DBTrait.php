@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Home;
 use Illuminate\Support\Facades\DB;
 
 trait DBTrait
@@ -50,6 +51,13 @@ trait DBTrait
             ->where('brands.is_active', true)
             ->groupBy('brands.id', 'brand_translations.slug', 'brand_translations.name', 'brands.logo_path')
             ->get();
+    }
+
+    public function getHome($language)
+    {
+        return Home::with(['translations' => function ($query) use ($language) {
+            $query->where('locale', $language);
+        }])->first();
     }
 
     public function getCategoriesList($language)
