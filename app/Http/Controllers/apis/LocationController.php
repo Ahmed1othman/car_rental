@@ -34,7 +34,7 @@ class LocationController extends Controller
         }
 
         // 4. Pagination check
-        if ($request->has('paginate') && $request->input('paginate') == 'true') {
+        if ($request->has('paginate') && $request->input('paginate') == true) {
             // User wants pagination
             $perPage = $request->input('per_page', 10); // Default to 10 if not provided
             $rows = $query->paginate($perPage);
@@ -45,7 +45,6 @@ class LocationController extends Controller
 
         return [
             'section_title'=> $homeData->where_find_us_section_title,
-
             'section_description'=> $homeData->where_find_us_section_paragraph,
             'locations'=> LocationResource::collection($rows)
         ];
