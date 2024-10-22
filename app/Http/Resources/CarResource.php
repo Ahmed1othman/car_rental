@@ -18,7 +18,7 @@ class CarResource extends JsonResource
             'id' => $this->id,
             'name' => $this->translations->first()->name,
             'description' => $this->translations->first()->description,
-            'image' => asset('storage/'.$this->logo_path)
+            'image' => $this->logo_path
         ];
     }
 }
