@@ -87,7 +87,7 @@ class CarController extends GenericController
         ]);
         $this->validationRules = [
             'name.*' => [
-                'required|string|max:255',
+                'required','string','max:255',
                 function ($attribute, $value, $fail) {
                     // Similar logic as explained before
                     preg_match('/name\.(\w+)/', $attribute, $matches);
