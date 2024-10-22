@@ -132,6 +132,7 @@ trait DBTrait
             ->groupBy('locations.id', 'location_translations.slug', 'location_translations.name')
             ->get();
     }
+
     public function getCars($language, $condition, $limit = null, $paginate = null)
     {
         $currentCurrency = $this->getCurrency($language);
@@ -162,7 +163,6 @@ trait DBTrait
                 'colors.color_code',
                 'brand_translations.name as brand_name',
                 'category_translations.name as category_name',
-
 
                 'cars.default_image_path',
                 'car_translations.slug',
@@ -207,7 +207,6 @@ trait DBTrait
 
         // Now process the results to group images by car
         $carsGrouped = [];
-
         foreach ($cars as $car) {
             if (!isset($carsGrouped[$car->id])) {
                 // Initialize car entry with details and an empty images array
@@ -229,12 +228,12 @@ trait DBTrait
                     'free_delivery' => $car->free_delivery,
                     'is_featured' => $car->is_featured,
                     'is_flash_sale' => $car->is_flash_sale,
-                   'status' => $car->status,
-                   'color_name' => $car->color_name,
-                   'color_code' => $car->color_code,
-                   'brand_name' => $car->brand_name,
-                   'category_name' => $car->category_name,
-                   'gear_type_id' => $car->gear_type_id, 'images' => []
+                    'status' => $car->status,
+                    'color_name' => $car->color_name,
+                    'color_code' => $car->color_code,
+                    'brand_name' => $car->brand_name,
+                    'category_name' => $car->category_name,
+                    'gear_type_id' => $car->gear_type_id, 'images' => []
                 ];
             }
 
