@@ -239,7 +239,6 @@ class GenericController extends Controller
                         'slug' => Str::slug($validatedData[$this->slugField][$langCode]??Str::random(5), '-')
                     ];
 
-                    dd($translatedData);
                     // Update or create translations
                     $row->translations()->updateOrCreate(
                         ['locale' => $langCode],
@@ -341,18 +340,21 @@ class GenericController extends Controller
             // Handle translations for each active language
             foreach ($this->data['activeLanguages'] as $language) {
                 $langCode = $language->code;
+                $translatedData = [];
                 foreach ($this->translatableFields as $translatableField) {
                     $translatedData[$translatableField] = $validatedData[$translatableField][$langCode] ?? null;
                 }
-                $template->translations()->create(
-                    $translatedData +
-                    [
+
+                $metaData = [
                     'locale' => $langCode,
                     'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
                     'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                     'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
                     'slug' => Str::slug($validatedData[$this->slugField][$langCode], '-')
-                ]);
+                ];
+                $template->translations()->create(
+                    $translatedData + $metaData
+                    );
             }
         }
     }

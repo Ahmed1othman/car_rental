@@ -86,14 +86,29 @@ class CarController extends GenericController
             'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
         ]);
         $this->validationRules = [
-            'name.*' => 'required|string|max:255',
+            'name.*' => [
+                'required|string|max:255',
+                function ($attribute, $value, $fail) {
+                    // Similar logic as explained before
+                    preg_match('/name\.(\w+)/', $attribute, $matches);
+                    $locale = $matches[1] ?? null;
+
+                    if ($locale) {
+                        $exists = \App\Models\BrandTranslation::where('name', $value)
+                            ->where('locale', $locale)
+                            ->exists();
+
+                        if ($exists) {
+                            $fail("The name '{$value}' has already been taken for the locale '{$locale}'.");
+                        }
+                    }
+                }],
             'description.*' => 'nullable|string',
             'locale.*' => 'required|string|in:en,ar',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
             'slug' => 'nullable|string|unique:table_name,slug',
-//            'car_id' => 'required|exists:cars,id',
             'daily_main_price' => 'required|numeric|min:0',
             'daily_discount_price' => 'nullable|numeric|min:0|lt:daily_main_price',
             'weekly_main_price' => 'nullable|numeric|min:0',
@@ -141,7 +156,27 @@ class CarController extends GenericController
             'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
         ]);
         $this->validationRules = [
-            'name.*' => 'required|string|max:255',
+            'name.*' => [
+                'required','string','max:255',
+                function ($attribute, $value, $fail) use ($id) {
+                    // Extract the locale from the field name (e.g., name.en, name.fr)
+                    preg_match('/name\.(\w+)/', $attribute, $matches);
+                    $locale = $matches[1] ?? null;
+
+                    if ($locale) {
+                        // Get the brand ID being updated from the request or route
+
+                        // Check if a record with the same name and locale already exists
+                        $exists = \App\Models\BrandTranslation::where('name', $value)
+                            ->where('locale', $locale)
+                            ->where('brand_id', '!=', $id) // Ignore the current brand's translation
+                            ->exists();
+
+                        if ($exists) {
+                            $fail("The name '{$value}' has already been taken for the locale '{$locale}'.");
+                        }
+                    }
+                },],
             'description.*' => 'nullable|string',
             'locale.*' => 'required|string|in:en,ar',
             'meta_title.*' => 'nullable|string|max:255',
