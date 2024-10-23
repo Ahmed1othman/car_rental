@@ -51,6 +51,6 @@ class FAQController extends Controller
             'section_title'=> $homeData->faq_section_title,
             'section_description'=> $homeData->faq_section_paragraph,
             'faqs'=> FAQResource::collection($rows)
-            ];
+        ];
     }
 }

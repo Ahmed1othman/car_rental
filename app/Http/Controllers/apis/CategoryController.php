@@ -14,7 +14,7 @@ class CategoryController extends Controller
 
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
-
+        $homeData = $this->getHome($language);
         // Start with a base query
         $query = Category::where('is_active',true)->with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);
@@ -45,7 +45,9 @@ class CategoryController extends Controller
         }
 
         return [
-            'faqs'=> CategoryResource::collection($brands)
+            'section_title'=> $homeData->faq_section_title,
+            'section_description'=> $homeData->faq_section_paragraph,
+            'categories'=> CategoryResource::collection($brands)
         ];
     }
 }

@@ -241,6 +241,30 @@
                                                     <input type="text" name="instagram_section_title[{{ $lang->code }}]" class="form-control shadow-sm" id=instagram_section_title_[{{ $lang->code }}]" value="{{ old('instagram_section_title.' . $lang->code ,$translation->instagram_section_title??'') }}">
                                                 </div>
                                                 <div class="form-group">
+                                                    <label for="instagram_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Instagram Section Paragraph ({{ $lang->name }})</label>
+                                                    <textarea name="instagram_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="instagram_section_paragraph_{{ $lang->code }}" rows="4">{{ old('instagram_section_paragraph.' . $lang->code, $translation->instagram_section_paragraph ?? '') }}</textarea>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="category_section_title_[{{ $lang->code }}]" class="font-weight-bold">Category Section Title ({{ $lang->name }})</label>
+                                                    <input type="text" name="category_section_title[{{ $lang->code }}]" class="form-control shadow-sm" id=category_section_title_[{{ $lang->code }}]" value="{{ old('category_section_title.' . $lang->code ,$translation->category_section_title??'') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="category_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Category Section Paragraph ({{ $lang->name }})</label>
+                                                    <textarea name="category_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="category_section_paragraph_{{ $lang->code }}" rows="4">{{ old('category_section_paragraph.' . $lang->code, $translation->category_section_paragraph ?? '') }}</textarea>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="brand_section_title_[{{ $lang->code }}]" class="font-weight-bold">Brand Section Title ({{ $lang->name }})</label>
+                                                    <input type="text" name="brand_section_title[{{ $lang->code }}]" class="form-control shadow-sm" id=brand_section_title_[{{ $lang->code }}]" value="{{ old('brand_section_title.' . $lang->code ,$translation->brand_section_title??'') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="brand_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Brand Section Paragraph ({{ $lang->name }})</label>
+                                                    <textarea name="brand_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="brand_section_paragraph_{{ $lang->code }}" rows="4">{{ old('brand_section_paragraph.' . $lang->code, $translation->brand_section_paragraph ?? '') }}</textarea>
+                                                </div>
+
+
+                                                <div class="form-group">
                                                     <label for="footer_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Required Documents Section Paragraph ({{ $lang->name }})</label>
                                                     <textarea name="footer_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="footer_section_paragraph_{{ $lang->code }}" rows="4">{{ old('footer_section_paragraph.' . $lang->code, $translation->footer_section_paragraph ?? '') }}</textarea>
                                                 </div>
