@@ -18,7 +18,8 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->translations->first()->name,
             'description' => $this->translations->first()->description,
-            'image' => $this->image_path
+            'image' => $this->image_path,
+            'car_count'=>$this->cars->count(),
         ];
     }
 }
