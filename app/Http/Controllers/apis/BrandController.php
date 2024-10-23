@@ -5,11 +5,12 @@ namespace App\Http\Controllers\apis;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
+use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
-
+    use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = $this->getHome($language);

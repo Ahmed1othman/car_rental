@@ -7,11 +7,12 @@ use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-
+    use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = $this->getHome($language);

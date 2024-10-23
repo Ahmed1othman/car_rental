@@ -7,11 +7,12 @@ use App\Http\Resources\BlogResource;
 use App\Http\Resources\BrandResource;
 use App\Models\Blog;
 use App\Models\Brand;
+use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
 class BLogController extends Controller
 {
-
+    use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = $this->getHome($language);

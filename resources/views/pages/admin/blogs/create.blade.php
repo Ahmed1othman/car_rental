@@ -258,4 +258,27 @@
             @endforeach
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            function formatCar(car) {
+                if (!car.id) {
+                    return car.text;
+                }
+
+                var $car = $(
+                    '<span><img src="' + $(car.element).data('image') + '" style="width: 60px; height: 40px;" /> ' +
+                    $(car.element).text() + '</span>'
+                );
+                return $car;
+            }
+
+            $('.car-select').select2({
+                templateResult: formatCar,
+                templateSelection: formatCar,
+                allowClear: true,
+                placeholder: "Select cars"
+            });
+        });
+    </script>
 @endpush
