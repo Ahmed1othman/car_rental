@@ -25,15 +25,15 @@ class HomePageController extends Controller
         $brands = $this->getBrandsList($language);
 
 
-        $categories = $this->getCategoriesList($language);
+//        $categories = $this->getCategoriesList($language);
 
-        $blogs = $this->getBlogList($language);
+//        $blogs = $this->getBlogList($language);
 
         $onlyOnAfandina = $this->getCars($language,'only_on_afandina','10');
 
         $specialOffers = $this->getCars($language,'is_flash_sale','10');
 
-        $faqs = $this->getFaqList($language,'show_in_home','10');
+//        $faqs = $this->getFaqList($language,'show_in_home','10');
 
         $homeData = $this->getHome($language);
 
@@ -41,7 +41,7 @@ class HomePageController extends Controller
 
         $services = $this->getServicesList($language);
         $documents = $this->getDocumentsList($language);
-        $locations = $this->getLocationsList($language);
+//        $locations = $this->getLocationsList($language);
         $response = [
             'header_section'=>[
                 'hero_header_title' => $homeData->hero_header_title,
