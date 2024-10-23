@@ -81,9 +81,9 @@
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
 
                                     <div class="form-group text-center">
-                                        <!-- Image Preview with Circular Border and Placeholder -->
+                                        <!-- Image Preview with Circular Border and SVG Placeholder -->
                                         <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="https://via.placeholder.com/150" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
+                                            <img id="imagePreviewLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E150x150%3C/text%3E%3C/svg%3E" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
                                         </div>
 
                                         <!-- File Input for Logo Upload -->
@@ -97,6 +97,7 @@
                                         <span class="invalid-feedback">{{ $message }}</span>
                                         @enderror
                                     </div>
+
 
                                     <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>
