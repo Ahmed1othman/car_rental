@@ -120,6 +120,12 @@ class GenericController extends Controller
 
                     }
                 }
+
+                if ($this->modelName == 'blogs') {
+                    if ($request->has('cars')) {
+
+                    }
+                }
             // Commit the transaction
             DB::commit();
 

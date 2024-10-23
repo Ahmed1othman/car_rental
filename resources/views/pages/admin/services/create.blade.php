@@ -82,7 +82,7 @@
                                     <div class="form-group text-center">
                                         <!-- Image Preview with Circular Border and Placeholder -->
                                         <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="https://via.placeholder.com/300" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
+                                            <img id="imagePreviewLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='200' viewBox='0 0 300 300'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E600x200%3C/text%3E%3C/svg%3E" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
                                         </div>
 
                                         <!-- File Input for Logo Upload -->

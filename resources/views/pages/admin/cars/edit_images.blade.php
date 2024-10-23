@@ -73,7 +73,7 @@
                                     <label class="custom-file-label" for="default_image_path">Upload Default Image</label>
                                 </div>
                                 <div class="mt-3">
-                                    <img id="imagePreviewLogo" src="{{$item->default_image_path?asset('storage/'.$item->default_image_path):'https://via.placeholder.com/300'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                    <img id="imagePreviewLogo" src="{{$item->default_image_path?asset('storage/'.$item->default_image_path):'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x400%3C/text%3E%3C/svg%3E' }}" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-danger">Upload</button>

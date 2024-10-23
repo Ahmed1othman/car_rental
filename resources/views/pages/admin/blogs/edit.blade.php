@@ -78,8 +78,16 @@
                                     <div class="form-group text-center">
                                         <!-- Image Preview with Circular Border and Placeholder -->
                                         <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="{{$item->image_path?asset('storage/'.$item->image_path):'https://via.placeholder.com/400x300'}}" alt="Logo Preview" class=" shadow image-rectangle-preview" style="max-height: 400px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                            <img id="imagePreviewLogo"
+                                                 src="{{ $item->image_path
+                                                        ? asset('storage/' . $item->image_path)
+                                                        : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='400' viewBox='0 0 300 400'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E400x300%3C/text%3E%3C/svg%3E"
+                                                 }}"
+                                                 alt="Logo Preview"
+                                                 class="shadow image-rectangle-preview"
+                                                 style="max-height: 400px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
                                         </div>
+
 
                                         <!-- File Input for Logo Upload -->
                                         <div class="custom-file">

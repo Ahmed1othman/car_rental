@@ -82,7 +82,7 @@
                                     <div class="form-group text-center">
                                         <!-- Image Preview with Rectangular Border and Placeholder -->
                                         <div class="mb-3">
-                                            <img id="imagePreviewBanner" src="https://via.placeholder.com/600x200" alt="Banner Preview" class="rounded shadow image-preview" style="max-height: 200px; width: 600px; object-fit: cover; border: 2px solid #ddd;">
+                                            <img id="imagePreviewBanner" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E400x400%3C/text%3E%3C/svg%3E" alt="Banner Preview" class="rounded shadow image-preview" style="max-height: 400px; width: 400px; object-fit: cover; border: 2px solid #ddd;">
                                         </div>
 
                                         <!-- File Input for Banner Upload -->

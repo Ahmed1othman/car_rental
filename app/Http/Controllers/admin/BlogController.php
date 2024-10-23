@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\admin;
+use App\Models\Car;
 use Illuminate\Http\Request;
 
 class BlogController extends GenericController
@@ -12,6 +13,21 @@ class BlogController extends GenericController
         $this->translatableFields = ['title','content'];
         $this->nonTranslatableFields = ['is_active'];
         $this->uploadedfiles = ['image_path'];
+    }
+
+    public function create()
+    {
+        $locale = $this->data['defaultLocale'];
+        $this->data['cars'] = Car::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);}])->get();
+        return parent::create();
+    }
+
+    public function edit($id){
+        $locale = $this->data['defaultLocale'];
+        $this->data['cars'] = Car::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);}])->get();
+        return parent::edit($id);
     }
 
     public function store(Request $request)
@@ -30,7 +46,7 @@ class BlogController extends GenericController
         $this->validationMessages = [
 
         ];
-        return parent::store($request);
+        parent::store($request);
 
     }
 

@@ -82,9 +82,8 @@
                                     <div class="form-group text-center">
                                         <!-- Image Preview with Circular Border and Placeholder -->
                                         <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="https://via.placeholder.com/400" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 400px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                            <img id="imagePreviewLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='400' viewBox='0 0 300 400'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E400x300%3C/text%3E%3C/svg%3E" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 400px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
                                         </div>
-
                                         <!-- File Input for Logo Upload -->
                                         <div class="custom-file">
                                             <input type="file" name="image_path" class="custom-file-input image-upload @error('image_path') is-invalid @enderror" id="image_path" data-preview="imagePreviewLogo">
@@ -95,6 +94,19 @@
                                         @error('image_path')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                         @enderror
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="cars" class="font-weight-bold">Cars related to Post</label>
+                                            <select class="form-control car-select" name="cars[]" multiple="multiple" style="width: 100%;">
+                                                @foreach($cars as $car)
+                                                    <option value="{{ $car->id }}" data-image="{{ $car->default_image_path?asset('storage/' . $car->default_image_path):asset('/admin/dist/logo/empty_image.png') }}">
+                                                        {{ $car->translations->first()->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div class="row">

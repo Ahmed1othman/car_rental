@@ -92,7 +92,7 @@
                                             <div class="form-group text-center">
                                                 <!-- Image Preview with Circular Border and Placeholder -->
                                                 <div class="mb-3">
-                                                    <img id="imagePreview_why_choose_image_path" src="{{$item->why_choose_image_path?asset('storage/'.$item->why_choose_image_path):'https://via.placeholder.com/400'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                                    <img id="imagePreview_why_choose_image_path" src="{{$item->why_choose_image_path?asset('storage/'.$item->why_choose_image_path):'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'400\' viewBox=\'0 0 300 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x300%3C/text%3E%3C/svg%3E'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
                                                 </div>
 
                                                 <!-- File Input for Logo Upload -->
@@ -111,7 +111,7 @@
                                             <div class="form-group text-center">
                                                 <!-- Image Preview with Circular Border and Placeholder -->
                                                 <div class="mb-3">
-                                                    <img id="imagePreview_our_vision_image_path" src="{{$item->our_vision_image_path?asset('storage/'.$item->our_vision_image_path):'https://via.placeholder.com/400'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                                    <img id="imagePreview_our_vision_image_path" src="{{$item->our_vision_image_path?asset('storage/'.$item->our_vision_image_path):'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'400\' viewBox=\'0 0 300 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x300%3C/text%3E%3C/svg%3E'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
                                                 </div>
 
                                                 <!-- File Input for Logo Upload -->
@@ -131,7 +131,7 @@
                                             <div class="form-group text-center">
                                                 <!-- Image Preview with Circular Border and Placeholder -->
                                                 <div class="mb-3">
-                                                    <img id="imagePreview_our_mission_image_path" src="{{$item->our_mission_image_path?asset('storage/'.$item->our_mission_image_path):'https://via.placeholder.com/400'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                                    <img id="imagePreview_our_mission_image_path" src="{{$item->our_mission_image_path?asset('storage/'.$item->our_mission_image_path):'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'400\' viewBox=\'0 0 300 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x300%3C/text%3E%3C/svg%3E'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
                                                 </div>
 
                                                 <!-- File Input for Logo Upload -->

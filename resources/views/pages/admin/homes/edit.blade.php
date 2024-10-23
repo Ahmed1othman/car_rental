@@ -105,7 +105,7 @@
                                                 <!-- Video Preview with Placeholder -->
                                                 <div class="mb-3">
                                                     <video id="videoPreview_hero_header_video_path" controls style="height: 300px; width: 100%; object-fit: cover; border: 2px solid #ddd;">
-                                                        <source src="{{ $item->hero_header_video_path ? asset('storage/' . $item->hero_header_video_path) : 'https://via.placeholder.com/400' }}" type="video/mp4">
+                                                        <source src="{{ $item->hero_header_video_path ? asset('storage/' . $item->hero_header_video_path) : 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x300%3C/text%3E%3C/svg%3E'  }}" type="video/mp4">
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 </div>
@@ -131,18 +131,6 @@
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label for="cars" class="font-weight-bold">Cars</label>
-                                                <select class="form-control car-select" name="cars[]" multiple="multiple" style="width: 100%;">
-                                                    @foreach($cars as $car)
-                                                        <option value="{{ $car->id }}" data-image="{{ $car->default_image_path?asset('storage/' . $car->default_image_path):asset('/admin/dist/logo/empty_image.png') }}">
-                                                            {{ $car->translations->first()->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
                                             </div>
                                         </div>
                                     </div>

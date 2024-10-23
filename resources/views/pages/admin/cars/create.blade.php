@@ -349,7 +349,7 @@
                                                                 <label class="custom-file-label" for="default_image_path">Upload Default Image</label>
                                                             </div>
                                                             <div class="mt-3">
-                                                                <img id="imagePreviewLogo" src="https://via.placeholder.com/300" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 250px; width: 250px; object-fit: cover; border: 2px solid #ddd;">
+                                                                <img id="imagePreviewLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 250 250'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E600x200%3C/text%3E%3C/svg%3E" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 250px; width: 250px; object-fit: cover; border: 2px solid #ddd;">
                                                             </div>
                                                         </div>
                                                     </div>
