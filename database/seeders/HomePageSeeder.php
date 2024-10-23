@@ -40,6 +40,28 @@ class HomePageSeeder extends Seeder
                         'special_offers_section_title' => 'Special Offers',
                         'special_offers_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
 
+                        'why_choose_us_section_title' => 'Why Choose Us',
+                        'why_choose_us_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
+
+                        'faq_section_title' => 'FAQ Section',
+                        'faq_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
+
+
+                        'where_find_us_section_title' => 'Where to Find Us',
+                        'where_find_us_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
+
+                        'required_documents_section_title' => 'Special Offers',
+                        'required_documents_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
+
+                        'instagram_section_title' => 'Instagram Section',
+                        'instagram_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
+
+                        'category_section_title' => 'Category Section',
+                        'category_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
+
+                        'brand_section_title' => 'Brands Section',
+                        'brand_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
+
                         'meta_title' => 'Home Page - Monza Rent Car',
                         'meta_description' => 'Explore our exclusive collection of luxury cars and enjoy special offers.',
                         'meta_keywords' => 'car rental, luxury cars, special offers, rent car',
@@ -58,6 +80,31 @@ class HomePageSeeder extends Seeder
 
                         'special_offers_section_title' => 'عروض خاصة',
                         'special_offers_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+
+                        'why_choose_us_section_title' => 'من يتم الاستخدام',
+                        'why_choose_us_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+
+                        'faq_section_title' => 'الاسئلة المتكررة',
+                        'faq_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.  ',
+
+
+                        'where_find_us_section_title' => 'موجود فقط في افندينا لتأجير السيارات',
+                        'where_find_us_section_paragraph' => ' احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+
+                        'required_documents_section_title' => 'عروض خاصة',
+                        'required_documents_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+
+                        'instagram_section_title' => 'افندينا علي انستحرام',
+                        'instagram_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+
+                        'category_section_title' => 'فئات السيارات',
+                        'category_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+
+                        'brand_section_title' => 'براندات السيارات',
+                        'brand_section_paragraph' =>  'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+
+
+
 
                         'meta_title' => 'الصفحة الرئيسية - مونزا لتأجير السيارات',
                         'meta_description' => 'استكشف مجموعتنا الحصرية من السيارات الفاخرة وتمتع بالعروض الخاصة.',

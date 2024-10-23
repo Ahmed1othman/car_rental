@@ -15,6 +15,14 @@ return new class extends Migration
             $table->id();
             $table->text('hero_header_title')->nullable();
 
+            $table->longText('category_section_title')->nullable();
+            $table->longText('category_section_paragraph')->nullable();
+
+            $table->longText('brand_section_title')->nullable();
+            $table->longText('brand_section_paragraph')->nullable();
+
+
+
             $table->longText('car_only_section_title')->nullable();
             $table->longText('car_only_section_paragraph')->nullable();
 
@@ -37,6 +45,7 @@ return new class extends Migration
             $table->longText('required_documents_section_paragraph')->nullable();
 
             $table->longText('instagram_section_title')->nullable();
+            $table->longText('instagram_section_paragraph')->nullable();
 
             $table->longText('footer_section_paragraph')->nullable();
 
