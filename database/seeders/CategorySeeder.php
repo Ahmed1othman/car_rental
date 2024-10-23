@@ -258,6 +258,7 @@ class CategorySeeder extends Seeder
             // Insert into Categories table
             $carModelId = DB::table('categories')->insertGetId([
                 'is_active' => $model['is_active'],
+                'image_path' => "images/default_category.png",
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
