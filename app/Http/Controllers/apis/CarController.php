@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\CarResource;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Traits\DBTrait;
@@ -75,14 +76,14 @@ class CarController extends Controller
         if ($request->has('paginate') && $request->input('paginate') == 'true') {
             // User wants pagination
             $perPage = $request->input('per_page', 10); // Default to 10 if not provided
-            $brands = $query->paginate($perPage);
+            $cars = $query->paginate($perPage);
         } else {
             // No pagination, return all results
-            $brands = $query->get();
+            $cars = $query->get();
         }
 
         // Return the results using a resource
-        return BrandResource::collection($brands);
+        return CarResource::collection($cars);
     }
 
 

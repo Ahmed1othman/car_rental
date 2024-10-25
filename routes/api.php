@@ -28,5 +28,6 @@ Route::middleware(['language','currency'])->group(function () {
     Route::get('services', [\App\Http\Controllers\apis\ServiceController::class, 'index']);
 
     Route::get('cars', [\App\Http\Controllers\apis\CarController::class, 'index']);
+    Route::get('advanced-search', [\App\Http\Controllers\apis\CarController::class, 'advancedSearch']);
 
 });

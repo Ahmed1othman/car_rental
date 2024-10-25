@@ -45,8 +45,8 @@ class ServiceController extends Controller
         }
 
         return [
-            'section_title'=> $homeData->translations->first()->where_find_us_section_title,
-            'section_description'=> $homeData->translations->first()->where_find_us_section_paragraph,
+            'section_title'=> $homeData->translations->first()->why_choose_us_section_title,
+            'section_description'=> $homeData->translations->first()->why_choose_us_section_paragraph,
             'services'=> ServiceResource::collection($rows)
         ];
     }
