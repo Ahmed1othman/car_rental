@@ -202,7 +202,7 @@ trait DBTrait
                     ->where('category_translations.locale', '=', $language);
             })
             ->where('cars.is_active', true)
-            ->where('cars.'.$condition, true)
+            ->where('cars.'.$condition, true);
 //            ->groupBy('cars.id','colors.color_code','color_translations.name','category_translations.name','brand_translations.name','cars.default_image_path', 'car_translations.slug', 'car_translations.name', 'car_images.file_path', 'car_images.alt', 'car_images.type');
 
         // Apply pagination or limit if provided
