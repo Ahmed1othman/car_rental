@@ -141,22 +141,146 @@ trait DBTrait
             ->get();
     }
 
+//    public function getCars($language, $condition, $limit = null, $paginate = null)
+//    {
+//        $currentCurrency = $this->getCurrency($language);
+//        // Fetch the main car details along with image details
+//        $query = DB::table('cars')
+//            ->select(
+//                'cars.id',
+//                'cars.daily_main_price',
+//                'cars.daily_discount_price',
+//
+//                'cars.weekly_main_price',
+//                'cars.weekly_discount_price',
+//
+//                'cars.monthly_main_price',
+//                'cars.monthly_discount_price',
+//
+//                'cars.door_count',
+//                'cars.luggage_capacity',
+//                'cars.passenger_capacity',
+//                'cars.insurance_included',
+//                'cars.free_delivery',
+//                'cars.is_featured',
+//                'cars.is_flash_sale',
+//                'cars.status',
+//                'cars.gear_type_id',
+//
+//                'color_translations.name as color_name',
+//                'colors.color_code',
+//                'brand_translations.name as brand_name',
+//                'category_translations.name as category_name',
+//
+//                'cars.default_image_path',
+//                'car_translations.slug',
+//                'car_translations.name',
+//                'car_images.file_path',
+//                'car_images.alt',
+//                'car_images.type'
+//            )
+//            ->distinct()
+//            ->leftJoin('car_translations', function ($join) use ($language) {
+//                $join->on('cars.id', '=', 'car_translations.car_id')
+//                    ->where('car_translations.locale', '=', $language);
+//            })
+//            ->leftJoin('car_images', 'cars.id', '=', 'car_images.car_id')
+//            ->leftJoin('colors', 'colors.id', '=', 'cars.color_id')
+//            ->leftJoin('brands', 'brands.id', '=', 'cars.brand_id')
+//            ->leftJoin('categories', 'categories.id', '=', 'cars.category_id')
+//
+//            ->leftJoin('color_translations', function ($join) use ($language) {
+//                $join->on('colors.id', '=', 'color_translations.color_id')
+//                    ->where('color_translations.locale', '=', $language);
+//            })
+//            ->leftJoin('brand_translations', function ($join) use ($language) {
+//                $join->on('brands.id', '=', 'brand_translations.brand_id')
+//                    ->where('brand_translations.locale', '=', $language);
+//            })
+//            ->leftJoin('category_translations', function ($join) use ($language) {
+//                $join->on('categories.id', '=', 'category_translations.category_id')
+//                    ->where('category_translations.locale', '=', $language);
+//            })
+//            ->where('cars.is_active', true)
+//            ->where('cars.'.$condition, true);
+////            ->groupBy('cars.id','colors.color_code','color_translations.name','category_translations.name','brand_translations.name','cars.default_image_path', 'car_translations.slug', 'car_translations.name', 'car_images.file_path', 'car_images.alt', 'car_images.type');
+//
+//        // Apply pagination or limit if provided
+//        if ($paginate) {
+//            $cars = $query->paginate($paginate);
+//        } elseif ($limit) {
+//            $cars = $query->limit(10)->get();
+//        } else {
+//            $cars = $query->get();
+//        }
+//
+//        // Now process the results to group images by car
+//        $carsGrouped = [];
+//        foreach ($cars as $car) {
+//            if (!isset($carsGrouped[$car->id])) {
+//                // Initialize car entry with details and an empty images array
+//                $carsGrouped[$car->id] = [
+//                    'id' => $car->id,
+//                    'default_image_path' => $car->default_image_path,
+//                    'slug' => $car->slug,
+//                    'name' => $car->name,
+//                    'daily_main_price'=> ceil($car->daily_main_price * $currentCurrency->exchange_rate),
+//                    'daily_discount_price' => ceil($car->daily_discount_price* $currentCurrency->exchange_rate),
+//                    'weekly_main_price' => ceil($car->weekly_main_price* $currentCurrency->exchange_rate),
+//                    'weekly_discount_price' => ceil($car->weekly_discount_price* $currentCurrency->exchange_rate),
+//                    'monthly_main_price' => ceil($car->monthly_main_price* $currentCurrency->exchange_rate),
+//                    'monthly_discount_price' => ceil($car->monthly_discount_price* $currentCurrency->exchange_rate),
+//                    'door_count' => $car->door_count,
+//                    'luggage_capacity' => $car->luggage_capacity,
+//                    'passenger_capacity' => $car->passenger_capacity,
+//                    'insurance_included' => $car->insurance_included,
+//                    'free_delivery' => $car->free_delivery,
+//                    'is_featured' => $car->is_featured,
+//                    'is_flash_sale' => $car->is_flash_sale,
+//                    'status' => $car->status,
+//                    'color_name' => $car->color_name,
+//                    'color_code' => $car->color_code,
+//                    'brand_name' => $car->brand_name,
+//                    'category_name' => $car->category_name,
+//                    'gear_type_id' => $car->gear_type_id, 'images' => []
+//                ];
+//            }
+//
+//            // Add image to the car's images array (only if it exists)
+//            if ($car->file_path) {
+//                $carsGrouped[$car->id]['images'][] = [
+//                    'file_path' => $car->file_path,
+//                    'alt' => $car->alt,
+//                    'type' => $car->type
+//                ];
+//            }
+//        }
+//
+//        // If you're paginating, convert the results back into a Laravel paginator
+//        if ($paginate) {
+//            $paginatedResult = $cars->setCollection(collect(array_values($carsGrouped)));
+//            return $paginatedResult;
+//        }
+//
+//        // Return the grouped result as a collection
+//        return collect(array_values($carsGrouped));
+//    }
+
+
     public function getCars($language, $condition, $limit = null, $paginate = null)
     {
         $currentCurrency = $this->getCurrency($language);
-        // Fetch the main car details along with image details
-        $query = DB::table('cars')
+
+        // Fetch car details without images
+        $cars = DB::table('cars')
             ->select(
                 'cars.id',
                 'cars.daily_main_price',
                 'cars.daily_discount_price',
-
                 'cars.weekly_main_price',
                 'cars.weekly_discount_price',
-
                 'cars.monthly_main_price',
                 'cars.monthly_discount_price',
-
                 'cars.door_count',
                 'cars.luggage_capacity',
                 'cars.passenger_capacity',
@@ -166,29 +290,21 @@ trait DBTrait
                 'cars.is_flash_sale',
                 'cars.status',
                 'cars.gear_type_id',
-
                 'color_translations.name as color_name',
                 'colors.color_code',
                 'brand_translations.name as brand_name',
                 'category_translations.name as category_name',
-
                 'cars.default_image_path',
                 'car_translations.slug',
-                'car_translations.name',
-                'car_images.file_path',
-                'car_images.alt',
-                'car_images.type'
+                'car_translations.name'
             )
-            ->distinct()
             ->leftJoin('car_translations', function ($join) use ($language) {
                 $join->on('cars.id', '=', 'car_translations.car_id')
                     ->where('car_translations.locale', '=', $language);
             })
-            ->leftJoin('car_images', 'cars.id', '=', 'car_images.car_id')
             ->leftJoin('colors', 'colors.id', '=', 'cars.color_id')
             ->leftJoin('brands', 'brands.id', '=', 'cars.brand_id')
             ->leftJoin('categories', 'categories.id', '=', 'cars.category_id')
-
             ->leftJoin('color_translations', function ($join) use ($language) {
                 $join->on('colors.id', '=', 'color_translations.color_id')
                     ->where('color_translations.locale', '=', $language);
@@ -202,69 +318,40 @@ trait DBTrait
                     ->where('category_translations.locale', '=', $language);
             })
             ->where('cars.is_active', true)
-            ->where('cars.'.$condition, true);
-//            ->groupBy('cars.id','colors.color_code','color_translations.name','category_translations.name','brand_translations.name','cars.default_image_path', 'car_translations.slug', 'car_translations.name', 'car_images.file_path', 'car_images.alt', 'car_images.type');
+            ->where('cars.' . $condition, true)
+            ->limit($limit)
+            ->get();
 
-        // Apply pagination or limit if provided
-        if ($paginate) {
-            $cars = $query->paginate($paginate);
-        } elseif ($limit) {
-            $cars = $query->limit(10)->get();
-        } else {
-            $cars = $query->get();
-        }
+        // Fetch all images separately
+        $carImages = DB::table('car_images')
+            ->whereIn('car_id', $cars->pluck('id'))
+            ->get()
+            ->groupBy('car_id');
 
-        // Now process the results to group images by car
-        $carsGrouped = [];
-        foreach ($cars as $car) {
-            if (!isset($carsGrouped[$car->id])) {
-                // Initialize car entry with details and an empty images array
-                $carsGrouped[$car->id] = [
-                    'id' => $car->id,
-                    'default_image_path' => $car->default_image_path,
-                    'slug' => $car->slug,
-                    'name' => $car->name,
-                    'daily_main_price'=> ceil($car->daily_main_price * $currentCurrency->exchange_rate),
-                    'daily_discount_price' => ceil($car->daily_discount_price* $currentCurrency->exchange_rate),
-                    'weekly_main_price' => ceil($car->weekly_main_price* $currentCurrency->exchange_rate),
-                    'weekly_discount_price' => ceil($car->weekly_discount_price* $currentCurrency->exchange_rate),
-                    'monthly_main_price' => ceil($car->monthly_main_price* $currentCurrency->exchange_rate),
-                    'monthly_discount_price' => ceil($car->monthly_discount_price* $currentCurrency->exchange_rate),
-                    'door_count' => $car->door_count,
-                    'luggage_capacity' => $car->luggage_capacity,
-                    'passenger_capacity' => $car->passenger_capacity,
-                    'insurance_included' => $car->insurance_included,
-                    'free_delivery' => $car->free_delivery,
-                    'is_featured' => $car->is_featured,
-                    'is_flash_sale' => $car->is_flash_sale,
-                    'status' => $car->status,
-                    'color_name' => $car->color_name,
-                    'color_code' => $car->color_code,
-                    'brand_name' => $car->brand_name,
-                    'category_name' => $car->category_name,
-                    'gear_type_id' => $car->gear_type_id, 'images' => []
+        // Attach images to each car
+        $cars->transform(function ($car) use ($carImages, $currentCurrency) {
+            $car->images = $carImages->get($car->id, collect())->map(function ($image) {
+                return [
+                    'file_path' => $image->file_path,
+                    'alt' => $image->alt,
+                    'type' => $image->type
                 ];
-            }
+            });
 
-            // Add image to the car's images array (only if it exists)
-            if ($car->file_path) {
-                $carsGrouped[$car->id]['images'][] = [
-                    'file_path' => $car->file_path,
-                    'alt' => $car->alt,
-                    'type' => $car->type
-                ];
-            }
-        }
+            // Convert prices based on currency
+            $car->daily_main_price = ceil($car->daily_main_price * $currentCurrency->exchange_rate);
+            $car->daily_discount_price = ceil($car->daily_discount_price * $currentCurrency->exchange_rate);
+            $car->weekly_main_price = ceil($car->weekly_main_price * $currentCurrency->exchange_rate);
+            $car->weekly_discount_price = ceil($car->weekly_discount_price * $currentCurrency->exchange_rate);
+            $car->monthly_main_price = ceil($car->monthly_main_price * $currentCurrency->exchange_rate);
+            $car->monthly_discount_price = ceil($car->monthly_discount_price * $currentCurrency->exchange_rate);
 
-        // If you're paginating, convert the results back into a Laravel paginator
-        if ($paginate) {
-            $paginatedResult = $cars->setCollection(collect(array_values($carsGrouped)));
-            return $paginatedResult;
-        }
+            return $car;
+        });
 
-        // Return the grouped result as a collection
-        return collect(array_values($carsGrouped));
+        return $cars;
     }
+
 
     public function getFaqList($language,$condition=null, $limit = null,$paginate = null)
     {
