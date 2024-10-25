@@ -29,7 +29,7 @@ class HomePageController extends Controller
 
 //        $blogs = $this->getBlogList($language);
 
-        $onlyOnAfandina = $this->getCars($language,'only_on_afandina',3);
+        $onlyOnAfandina = $this->getCars($language,'only_on_afandina',10);
 
         $specialOffers = $this->getCars($language,'is_flash_sale',10);
 
