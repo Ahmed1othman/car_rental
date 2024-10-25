@@ -179,6 +179,7 @@ trait DBTrait
                 'car_images.alt',
                 'car_images.type'
             )
+            ->distinct()
             ->leftJoin('car_translations', function ($join) use ($language) {
                 $join->on('cars.id', '=', 'car_translations.car_id')
                     ->where('car_translations.locale', '=', $language);
@@ -202,13 +203,13 @@ trait DBTrait
             })
             ->where('cars.is_active', true)
             ->where('cars.'.$condition, true)
-            ->groupBy('cars.id','colors.color_code','color_translations.name','category_translations.name','brand_translations.name','cars.default_image_path', 'car_translations.slug', 'car_translations.name', 'car_images.file_path', 'car_images.alt', 'car_images.type');
+//            ->groupBy('cars.id','colors.color_code','color_translations.name','category_translations.name','brand_translations.name','cars.default_image_path', 'car_translations.slug', 'car_translations.name', 'car_images.file_path', 'car_images.alt', 'car_images.type');
 
         // Apply pagination or limit if provided
         if ($paginate) {
             $cars = $query->paginate($paginate);
         } elseif ($limit) {
-            $cars = $query->limit($limit)->get();
+            $cars = $query->limit(10)->get();
         } else {
             $cars = $query->get();
         }
