@@ -47,8 +47,8 @@ class BLogController extends Controller
 
         // Return the results using a resource
         return [
-            'section_title'=> $homeData->brand_section_title,
-            'section_description'=> $homeData->brand_section_paragraph,
+            'section_title'=> $homeData->translations->first()->brand_section_title,
+            'section_description'=> $homeData->translations->first()->brand_section_paragraph,
             'blogs'=> BlogResource::collection($brands)
         ];
     }

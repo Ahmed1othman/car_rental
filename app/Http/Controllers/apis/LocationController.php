@@ -46,8 +46,8 @@ class LocationController extends Controller
         }
 
         return [
-            'section_title'=> $homeData->where_find_us_section_title,
-            'section_description'=> $homeData->where_find_us_section_paragraph,
+            'section_title'=> $homeData->translations->first()->where_find_us_section_title,
+            'section_description'=> $homeData->translations->first()->where_find_us_section_paragraph,
             'locations'=> LocationResource::collection($rows)
         ];
     }

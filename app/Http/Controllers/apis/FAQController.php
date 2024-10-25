@@ -48,8 +48,8 @@ class FAQController extends Controller
 
         // Return the results using a resource
         return [
-            'section_title'=> $homeData->faq_section_title,
-            'section_description'=> $homeData->faq_section_paragraph,
+            'section_title'=> $homeData->translations->first()->faq_section_title,
+            'section_description'=> $homeData->translations->first()->faq_section_paragraph,
             'faqs'=> FAQResource::collection($rows)
         ];
     }

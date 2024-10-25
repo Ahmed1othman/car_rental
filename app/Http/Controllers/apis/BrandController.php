@@ -44,8 +44,8 @@ class BrandController extends Controller
         }
 
         return [
-            'section_title'=> $homeData->faq_section_title,
-            'section_description'=> $homeData->faq_section_paragraph,
+            'section_title'=> $homeData->translations->first()->faq_section_title,
+            'section_description'=> $homeData->translations->first()->faq_section_paragraph,
             'brands'=> BrandResource::collection($brands)
         ];
     }
