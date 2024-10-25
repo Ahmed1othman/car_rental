@@ -8,7 +8,7 @@ use App\Models\Blog;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
-class BLogController extends Controller
+class BlogController extends Controller
 {
     use DBTrait;
     public function index(Request $request){
