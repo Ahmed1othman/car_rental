@@ -44,7 +44,7 @@ class HomePageController extends Controller
 //        $locations = $this->getLocationsList($language);
         $response = [
             'header_section'=>[
-                'hero_header_title' => $homeData->translation->hero_header_title,
+                'hero_header_title' => $homeData->translations->hero_header_title,
                 'hero_header_video_path' => $homeData->hero_header_video_path,
                 'social_media_links' => [
                     'facebook' => $contactData->facebook,
