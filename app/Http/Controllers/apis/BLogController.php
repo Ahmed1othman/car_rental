@@ -4,9 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BlogResource;
-use App\Http\Resources\BrandResource;
 use App\Models\Blog;
-use App\Models\Brand;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
