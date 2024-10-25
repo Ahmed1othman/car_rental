@@ -44,7 +44,7 @@ class HomePageController extends Controller
 //        $locations = $this->getLocationsList($language);
         $response = [
             'header_section'=>[
-                'hero_header_title' => $homeData->translations->hero_header_title,
+                'hero_header_title' => $homeData->translations->first()->hero_header_title,
                 'hero_header_video_path' => $homeData->hero_header_video_path,
                 'social_media_links' => [
                     'facebook' => $contactData->facebook,
@@ -63,18 +63,18 @@ class HomePageController extends Controller
 //                'categories'=>$categories,
 //            ],
             'only_on_afandina_section'=>[
-                'car_only_section_title'=>$homeData->car_only_section_title,
-                'car_only_section_paragraph'=>$homeData->car_only_section_paragraph,
+                'car_only_section_title'=>$homeData->translations->first()->car_only_section_title,
+                'car_only_section_paragraph'=>$homeData->translations->first()->car_only_section_paragraph,
                 'only_on_afandina'=>$onlyOnAfandina,
             ],
             'special_offers_section'=>[
-               'special_offers_title'=>$homeData->special_offers_section_title,
-               'special_offers_section_paragraph'=>$homeData->special_offers_section_paragraph,
+               'special_offers_title'=>$homeData->translations->first()->special_offers_section_title,
+               'special_offers_section_paragraph'=>$homeData->translations->first()->special_offers_section_paragraph,
                'special_offers'=>$specialOffers,
             ],
             'why_choose_us_section'=>[
-                'why_choose_us_title'=>$homeData->why_choose_us_section_title,
-                'why_choose_us_section_paragraph'=>$homeData->why_choose_us_section_paragraph,
+                'why_choose_us_title'=>$homeData->translations->first()->why_choose_us_section_title,
+                'why_choose_us_section_paragraph'=>$homeData->translations->first()->why_choose_us_section_paragraph,
                 'services'=> $services,
             ],
 //            'blogs_section'=>[
@@ -92,8 +92,8 @@ class HomePageController extends Controller
 //                'locations'=>$locations,
 //            ],
             'document_section'=>[
-                'document_title'=>$homeData->required_documents_section_title,
-                'document_section_paragraph'=>$homeData->required_documents_section_paragraph,
+                'document_title'=>$homeData->translations->first()->required_documents_section_title,
+                'document_section_paragraph'=>$homeData->translations->first()->required_documents_section_paragraph,
                 'documents'=>$documents,
             ],
             'instagram_section'=>[
