@@ -22,6 +22,7 @@ class GenericController extends Controller
     public $translatableFields = [];
     public $nonTranslatableFields = [];
     public string $defaultLocale;
+    public bool $isTranslatable = true;
 
     public function __construct($modelName)
     {
@@ -35,9 +36,13 @@ class GenericController extends Controller
 
     public function index()
     {
-        $locale = $this->data['defaultLocale'];
-        $this->data['items'] = $this->model::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->paginate(10);
+        if ($this->isTranslatable){
+            $locale = $this->data['defaultLocale'];
+            $this->data['items'] = $this->model::with(['translations' => function ($query) use ($locale) {
+                $query->where('locale', $locale);}])->paginate(10);
+        }else
+            $this->data['items'] = $this->model::paginate(10);
+
         return view('pages.admin.' . $this->modelName . '.index', $this->data);
     }
 

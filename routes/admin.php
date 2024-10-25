@@ -92,3 +92,5 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
+
+Route::resource('instagrams', 'App\Http\Controllers\admin\InstagramController');
