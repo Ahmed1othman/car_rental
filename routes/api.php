@@ -24,7 +24,7 @@ Route::middleware(['language','currency'])->group(function () {
     Route::get('brands', [\App\Http\Controllers\apis\BrandController::class, 'index']);
     Route::get('categories', [\App\Http\Controllers\apis\CategoryController::class, 'index']);
     Route::get('locations', [\App\Http\Controllers\apis\ServiceController::class, 'index']);
-    Route::get('blogs', [BlogController::class, 'index']);
+    Route::get('blogs', [\App\Http\Controllers\apis\BLogController::class, 'index']);
     Route::get('faqs', [\App\Http\Controllers\apis\FAQController::class, 'index']);
     Route::get('services', [\App\Http\Controllers\apis\ServiceController::class, 'index']);
 
