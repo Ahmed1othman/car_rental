@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Advertisement;
 use App\Models\Home;
 use Illuminate\Support\Facades\DB;
 
@@ -58,6 +59,13 @@ trait DBTrait
         return Home::with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);
         }])->first();
+    }
+
+    public function getAdvertisements($language)
+    {
+        return Advertisement::with(['translations' => function ($query) use ($language) {
+            $query->where('locale', $language);
+        }],'advertisement_position')->first();
     }
 
     public function getCategoriesList($language)

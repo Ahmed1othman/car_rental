@@ -1,6 +1,6 @@
 @extends('layouts.admin_layout')
 
-@section('title', 'Add ' . $modelName)
+@section('title', 'Edit ' . $modelName)
 
 @section('content')
     <div class="content-wrapper">
@@ -8,62 +8,56 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="display-4">Add {{$modelName}}</h1>
+                        <h1 class="display-4" style="text-transform: capitalize;">Edit {{ $modelName }}</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.' . $modelName . '.index') }}" style="text-transform: capitalize;">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('admin.' . $modelName . '.index') }}" style="text-transform: capitalize;">{{ $modelName }} List</a></li>
-                            <li class="breadcrumb-item active" style="text-transform: capitalize;">Add {{$modelName}}</li>
+                            <li class="breadcrumb-item active" style="text-transform: capitalize;">Edit {{ $modelName }}</li>
                         </ol>
                     </div>
                 </div>
             </div>
         </section>
 
-
-
         <section class="content">
             <div class="container-fluid">
 
+                <!-- Display errors -->
                 @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert">
                         <div class="d-flex align-items-center">
-                            <i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px; color: #f44336;"></i>
+                            <i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px;"></i>
                             <div class="flex-grow-1">
                                 <strong>Oops! We found some issues:</strong>
-                                <ol class="mt-2 mb-0 pl-4" style="list-style: decimal;">
+                                <ol class="mt-2 mb-0 pl-4">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
                                 </ol>
                             </div>
-                            <button type="button" class="close ml-3" data-dismiss="alert" aria-label="Close" style="font-size: 20px;">
+                            <button type="button" class="close ml-3" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                     </div>
                 @endif
 
-
-
                 <div class="card card-primary card-outline card-tabs shadow-lg">
                     <div class="card-header p-0 pt-1 border-bottom-0 bg-light">
                         <!-- Tabs Header -->
                         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                            <!-- General Data Tab -->
                             <li class="nav-item">
                                 <a class="nav-link active text-dark" id="custom-tabs-general-tab" data-toggle="pill" href="#custom-tabs-general" role="tab" aria-controls="custom-tabs-general" aria-selected="true">
                                     <i class="fas fa-info-circle"></i> General Data
                                 </a>
                             </li>
-                            <!-- Translated Data Tab -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" id="custom-tabs-translated-tab" data-toggle="pill" href="#custom-tabs-translated" role="tab" aria-controls="custom-tabs-translated" aria-selected="false">
                                     <i class="fas fa-language"></i> Translated Data
                                 </a>
                             </li>
-                            <!-- SEO Data Tab -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" id="custom-tabs-seo-tab" data-toggle="pill" href="#custom-tabs-seo" role="tab" aria-controls="custom-tabs-seo" aria-selected="false">
                                     <i class="fas fa-search"></i> SEO Data
@@ -74,59 +68,30 @@
 
                     <div class="card-body">
                         <!-- Form -->
-                        <form action="{{ route('admin.'.$modelName.'.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('admin.' . $modelName . '.update', $item->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
+
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-                                    <div class="form-group text-center">
-                                        <!-- Image Preview with Circular Border and Placeholder -->
-                                        <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='400' viewBox='0 0 300 400'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E400x300%3C/text%3E%3C/svg%3E" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 400px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
-                                        </div>
-                                        <!-- File Input for Logo Upload -->
-                                        <div class="custom-file">
-                                            <input type="file" name="image_path" class="custom-file-input image-upload @error('image_path') is-invalid @enderror" id="image_path" data-preview="imagePreviewLogo">
-                                            <label class="custom-file-label" for="image_path">Upload Image</label>
-                                        </div>
-
-                                        <!-- Error Handling -->
-                                        @error('image_path')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                        @enderror
+                                    <div class="form-group">
+                                        <label for="brand_id" class="font-weight-bold">Brand</label>
+                                        <select name="brand_id" id="brand_id" class="form-control form-control-lg shadow-sm">
+                                            <option value="">-- Select Brand --</option>
+                                            @foreach($brands as $brand)
+                                                <option value="{{ $brand->id }}" {{ $item->brand_id == $brand->id ? 'selected' : '' }}>
+                                                    {{ $brand->translations()->first()->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label for="cars" class="font-weight-bold">Cars related to Post</label>
-                                            <select class="form-control car-select" name="cars[]" multiple="multiple" style="width: 100%;">
-                                                @foreach($cars as $car)
-                                                    <option value="{{ $car->id }}" data-image="{{ $car->default_image_path?asset('storage/' . $car->default_image_path):asset('/admin/dist/logo/empty_image.png') }}">
-                                                        {{ $car->translations->first()->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="is_active" class="font-weight-bold">Active</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active')}}>
-                                                    <label class="custom-control-label" for="is_active">Active</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="show_in_home" class="font-weight-bold">Shows In Home</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="show_in_home" class="custom-control-input" id="show_in_home" {{ old('show_in_home')}}>
-                                                    <label class="custom-control-label" for="show_in_home">Shows In Home</label>
-                                                </div>
-                                            </div>
+                                    <div class="form-group">
+                                        <label for="is_active" class="font-weight-bold">Active</label>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" value="{{$item->is_active}}" {{$item->is_active?'checked':''}}>
+                                            <label class="custom-control-label" for="is_active">Active</label>
                                         </div>
                                     </div>
                                 </div>
@@ -142,20 +107,17 @@
                                     </ul>
                                     <div class="tab-content shadow-sm p-3 mb-4 bg-white rounded" id="pills-tabContent">
                                         @foreach($activeLanguages as $lang)
+                                            @php
+                                                $translation = $item->translations->where('locale', $lang->code)->first();
+                                            @endphp
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
-                                                    <label for="title_{{ $lang->code }}" class="font-weight-bold">Title ({{ $lang->name }})</label>
-                                                    <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code) }}">
+                                                    <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
+                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.' . $lang->code, $translation->name ?? '') }}">
                                                 </div>
-
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}">{{ old('description.'.$lang->code) }}</textarea>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="content_{{ $lang->code }}" class="font-weight-bold">Content ({{ $lang->name }})</label>
-                                                    <textarea name="content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="content_{{ $lang->code }}">{{ old('content.'.$lang->code) }}</textarea>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.' . $lang->code, $translation->description ?? '') }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -173,32 +135,51 @@
                                     </ul>
                                     <div class="tab-content shadow-sm p-3 mb-4 bg-white rounded" id="pills-seo-tabContent">
                                         @foreach($activeLanguages as $lang)
+                                            @php
+                                                $translation = $item->translations->where('locale', $lang->code)->first();
+                                            @endphp
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-seo-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-seo-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="meta_title_{{ $lang->code }}" class="font-weight-bold">Meta Title ({{ $lang->name }})</label>
-                                                    <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.'.$lang->code) }}">
+                                                    <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.' . $lang->code, $translation->meta_title ?? '') }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="meta_description_{{ $lang->code }}" class="font-weight-bold">Meta Description ({{ $lang->name }})</label>
-                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code) }}</textarea>
+                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.' . $lang->code, $translation->meta_description ?? '') }}</textarea>
                                                 </div>
+                                                <!-- Meta Keywords Field -->
                                                 <div class="form-group">
                                                     <label for="meta_keywords_{{ $lang->code }}" class="font-weight-bold">Meta Keywords ({{ $lang->name }})</label>
-                                                    <input type="text" name="meta_keywords[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_keywords_{{ $lang->code }}" data-role="tagsinput" value="{{ old('meta_keywords.'.$lang->code) }}">
+
+                                                    @php
+                                                        // Decode the JSON meta_keywords into an array
+                                                        $metaKeywords = json_decode($translation->meta_keywords ?? '[]', true);
+
+                                                        // Convert the array into a comma-separated string of keywords
+                                                        $keywordString = implode(',', array_column($metaKeywords, 'value'));
+                                                    @endphp
+
+                                                    <input type="text" name="meta_keywords[{{ $lang->code }}]"
+                                                           class="form-control form-control-lg shadow-sm"
+                                                           id="meta_keywords_{{ $lang->code }}"
+                                                           value="{{ old('meta_keywords.' . $lang->code, $keywordString) }}"
+                                                           data-role="tagsinput" placeholder="Enter meta keywords">
                                                 </div>
 
                                                 <!-- Dynamic SEO Questions/Answers Section -->
                                                 <div class="seo-questions-container" id="seo-questions-{{ $lang->code }}">
                                                     <label class="font-weight-bold">SEO Questions/Answers ({{ $lang->name }})</label>
-                                                    <div class="seo-question-group mb-3 p-3 border border-light rounded shadow-sm">
-                                                        <div class="form-group">
-                                                            <input type="text" name="seo_questions[{{ $lang->code }}][0][question]" class="form-control form-control-lg shadow-sm mb-2" placeholder="Enter Question" />
+                                                    @foreach($item->seoQuestions->where('locale', $lang->code) as $index => $seoQuestion)
+                                                        <div class="seo-question-group mb-3 p-3 border border-light rounded shadow-sm">
+                                                            <div class="form-group">
+                                                                <input type="text" name="seo_questions[{{ $lang->code }}][{{ $index }}][question]" class="form-control form-control-lg shadow-sm mb-2" value="{{ old('seo_questions.' . $lang->code . '.' . $index . '.question', $seoQuestion->question_text) }}" placeholder="Enter Question" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <textarea name="seo_questions[{{ $lang->code }}][{{ $index }}][answer]" class="form-control form-control-lg shadow-sm" placeholder="Enter Answer">{{ old('seo_questions.' . $lang->code . '.' . $index . '.answer', $seoQuestion->answer_text) }}</textarea>
+                                                            </div>
+                                                            <button type="button" class="btn btn-sm btn-danger remove-question">Remove</button>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <textarea name="seo_questions[{{ $lang->code }}][0][answer]" class="form-control form-control-lg shadow-sm" placeholder="Enter Answer"></textarea>
-                                                        </div>
-                                                        <button type="button" class="btn btn-sm btn-danger remove-question">Remove</button>
-                                                    </div>
+                                                    @endforeach
                                                 </div>
                                                 <button type="button" class="btn btn-info add-question mt-3" data-lang="{{ $lang->code }}">
                                                     <i class="fas fa-plus"></i> Add Question
@@ -211,7 +192,7 @@
 
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-success btn-lg mt-3">
-                                <i class="fas fa-save"></i> Save
+                                <i class="fas fa-save"></i> Update
                             </button>
                         </form>
                     </div>
@@ -221,20 +202,14 @@
     </div>
 @endsection
 
-
 @push('scripts')
-
-    <!-- Custom JS -->
     <script>
-
-
         $(document).ready(function() {
             // Function to dynamically add SEO Questions/Answers
             $('.add-question').on('click', function() {
                 var lang = $(this).data('lang');
                 var container = $('#seo-questions-' + lang);
                 var count = container.find('.seo-question-group').length;
-                console.log('Adding question for language:', lang, 'Count:', count); // Debugging line
                 var newQuestionGroup = `
                     <div class="seo-question-group mb-3 p-3 border border-light rounded shadow-sm">
                         <div class="form-group">
@@ -253,7 +228,11 @@
                 $(this).closest('.seo-question-group').remove();
             });
 
+            $('[data-toggle="tooltip"]').tooltip();
+        });
 
+
+        $(document).ready(function() {
             @foreach($activeLanguages as $lang)
             var metaKeywordsInput = document.querySelector('#meta_keywords_{{ $lang->code }}');
             if (metaKeywordsInput) {
@@ -262,29 +241,6 @@
                 });
             }
             @endforeach
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            function formatCar(car) {
-                if (!car.id) {
-                    return car.text;
-                }
-
-                var $car = $(
-                    '<span><img src="' + $(car.element).data('image') + '" style="width: 60px; height: 40px;" /> ' +
-                    $(car.element).text() + '</span>'
-                );
-                return $car;
-            }
-
-            $('.car-select').select2({
-                templateResult: formatCar,
-                templateSelection: formatCar,
-                allowClear: true,
-                placeholder: "Select cars"
-            });
         });
     </script>
 @endpush

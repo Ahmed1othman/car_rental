@@ -152,5 +152,23 @@
         ),
       ),
     ),
+    7 => 
+    array (
+      'title' => 'Advertisement',
+      'icon' => 'fas fa-box',
+      'subMenu' => 
+      array (
+        0 => 
+        array (
+          'title' => 'Add Advertisement',
+          'route' => 'admin.advertisements.create',
+        ),
+        1 => 
+        array (
+          'title' => 'List Advertisement',
+          'route' => 'admin.advertisements.index',
+        ),
+      ),
+    ),
   ),
 );

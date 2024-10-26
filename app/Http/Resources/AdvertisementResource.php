@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BlogResource extends JsonResource
+class AdvertisementResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +18,9 @@ class BlogResource extends JsonResource
             'id' => $this->id,
             'title' => $this->translations->first()->title,
             'description' => $this->translations->first()->description,
-            'content' => $this->translations->first()->content,
-            'image' => $this->image_path,
-            'created_at' => $this->created_at->format('j M, Y'),
+            'mobile_image' => $this->mobile_image_path,
+            'web_image' => $this->web_image_path,
+            'position_key' => $this->advertisementPosition->position_key
         ];
     }
 }

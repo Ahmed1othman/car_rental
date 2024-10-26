@@ -145,6 +145,12 @@
                                                     <label for="title_{{ $lang->code }}" class="font-weight-bold">Title ({{ $lang->name }})</label>
                                                     <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code,$translation->title) }}">
                                                 </div>
+
+                                                <div class="form-group">
+                                                    <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}">{{ $translation->description ?? '' }}</textarea>
+                                                </div>
+
                                                 <div class="form-group">
                                                     <label for="content_{{ $lang->code }}" class="font-weight-bold">Content ({{ $lang->name }})</label>
                                                     <textarea name="content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="content_{{ $lang->code }}">{{ $translation->content ?? '' }}</textarea>

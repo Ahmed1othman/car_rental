@@ -44,6 +44,10 @@
             animation-delay: calc(var(--i) * (3s / 50));
         }
 
+        .alert-danger{
+            color: #ffb0b0;
+        }
+
         @keyframes animateBlink {
             0% { background: #d9ad04; }
             25% { background: #2c4766; }
@@ -218,21 +222,22 @@
         <form action="{{route('admin.login')}}" method="post">
             @method('post')
             @csrf
+            @error('email')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+            @error('password')
+            <div class="alert alert-danger ">{{ $message }}</div>
+            @enderror
             <div class="input-box">
                 <input name="email" type="email" required>
                 <label>Email</label>
             </div>
-            @error('email')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
 
             <div class="input-box">
                 <input name="password" type="password" required>
                 <label>Password</label>
             </div>
-            @error('password')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+
 
             <div class="forgot-pass">
                 {{-- <a href="#">Forgot your password?</a> --}}

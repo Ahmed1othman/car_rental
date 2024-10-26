@@ -79,38 +79,64 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
+                                    <div class="form-group">
+                                        <label for="advertisement_position_id" class="font-weight-bold">Advertisement position</label>
+                                        <select name="advertisement_position_id" id="advertisement_position_id" class="form-control shadow-sm select2">
+                                            <option value="">-- Select advertisement position --</option>
+                                            @foreach($advertisementPositions as $advertisementPosition)
+                                                <option value="{{ $advertisementPosition->id }}" {{ old('advertisement_position_id') == $advertisementPosition->id ? 'selected' : '' }}>
+                                                    {{ $advertisementPosition->position_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+
                                     <div class="form-group text-center">
                                         <!-- Image Preview with Circular Border and Placeholder -->
                                         <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='400' viewBox='0 0 300 400'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E400x300%3C/text%3E%3C/svg%3E" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 400px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
+                                            <img id="imagePreviewLogo"
+                                                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='275' viewBox='0 0 1440 275'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E1440x275%3C/text%3E%3C/svg%3E"
+                                                  alt="Logo Preview"
+                                                 class=" shadow " style="max-height: 280px; width: 1100px; object-fit: cover; border: 2px solid #ddd;">
                                         </div>
+
                                         <!-- File Input for Logo Upload -->
                                         <div class="custom-file">
-                                            <input type="file" name="image_path" class="custom-file-input image-upload @error('image_path') is-invalid @enderror" id="image_path" data-preview="imagePreviewLogo">
-                                            <label class="custom-file-label" for="image_path">Upload Image</label>
+                                            <input type="file" name="web_image_path" class="custom-file-input image-upload @error('web_image_path') is-invalid @enderror" id="web_image_path" data-preview="imagePreviewLogo">
+                                            <label class="custom-file-label" for="web_image_path">Upload Logo</label>
                                         </div>
 
                                         <!-- Error Handling -->
-                                        @error('image_path')
+                                        @error('web_image_path')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                         @enderror
                                     </div>
 
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label for="cars" class="font-weight-bold">Cars related to Post</label>
-                                            <select class="form-control car-select" name="cars[]" multiple="multiple" style="width: 100%;">
-                                                @foreach($cars as $car)
-                                                    <option value="{{ $car->id }}" data-image="{{ $car->default_image_path?asset('storage/' . $car->default_image_path):asset('/admin/dist/logo/empty_image.png') }}">
-                                                        {{ $car->translations->first()->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                    <div class="form-group text-center">
+                                        <!-- Image Preview with Circular Border and Placeholder -->
+                                        <div class="mb-3">
+                                            <img id="imagePreviewLogoMobile"
+                                                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='405' viewBox='0 0 720 405'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E720x405%3C/text%3E%3C/svg%3E"
+                                                 alt="Logo Preview"
+                                                 class=" shadow " style="max-height: 405px; width: 720px; object-fit: cover; border: 2px solid #ddd;">
+
                                         </div>
+
+                                        <!-- File Input for Logo Upload -->
+                                        <div class="custom-file">
+                                            <input type="file" name="mobile_image_path" class="custom-file-input image-upload @error('mobile_image_path') is-invalid @enderror" id="mobile_image_path" data-preview="imagePreviewLogoMobile">
+                                            <label class="custom-file-label" for="mobile_image_path">Upload Logo</label>
+                                        </div>
+
+                                        <!-- Error Handling -->
+                                        @error('mobile_image_path')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="is_active" class="font-weight-bold">Active</label>
                                                 <div class="custom-control custom-switch">
@@ -119,16 +145,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="show_in_home" class="font-weight-bold">Shows In Home</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="show_in_home" class="custom-control-input" id="show_in_home" {{ old('show_in_home')}}>
-                                                    <label class="custom-control-label" for="show_in_home">Shows In Home</label>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
+
+
                                 </div>
 
                                 <!-- Translated Data Tab Content with Sub-tabs for Languages -->
@@ -147,15 +166,9 @@
                                                     <label for="title_{{ $lang->code }}" class="font-weight-bold">Title ({{ $lang->name }})</label>
                                                     <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code) }}">
                                                 </div>
-
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}">{{ old('description.'.$lang->code) }}</textarea>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="content_{{ $lang->code }}" class="font-weight-bold">Content ({{ $lang->name }})</label>
-                                                    <textarea name="content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="content_{{ $lang->code }}">{{ old('content.'.$lang->code) }}</textarea>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code) }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -226,8 +239,6 @@
 
     <!-- Custom JS -->
     <script>
-
-
         $(document).ready(function() {
             // Function to dynamically add SEO Questions/Answers
             $('.add-question').on('click', function() {
@@ -262,29 +273,6 @@
                 });
             }
             @endforeach
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            function formatCar(car) {
-                if (!car.id) {
-                    return car.text;
-                }
-
-                var $car = $(
-                    '<span><img src="' + $(car.element).data('image') + '" style="width: 60px; height: 40px;" /> ' +
-                    $(car.element).text() + '</span>'
-                );
-                return $car;
-            }
-
-            $('.car-select').select2({
-                templateResult: formatCar,
-                templateSelection: formatCar,
-                allowClear: true,
-                placeholder: "Select cars"
-            });
         });
     </script>
 @endpush

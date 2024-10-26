@@ -58,29 +58,22 @@
                             @csrf
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
+
                                     <div class="form-group">
-                                        <label for="general_field" class="font-weight-bold">General Field</label>
-                                        <input type="text" name="general_field" class="form-control form-control-lg shadow-sm" id="general_field" value="{{ old('general_field') }}">
+                                        <label for="instagram_url" class="font-weight-bold">Instagram Video URL</label>
+                                        <input type="url" name="instagram_url" id="instagram_url" class="form-control" value="{{ old('instagram_url') }}" placeholder="Enter Instagram video URL" required>
                                     </div>
 
-                                    <!-- Instagram Video Link Input -->
-                                    <div class="form-group">
-                                        <label for="instagram_link" class="font-weight-bold">Instagram Video Link</label>
-                                        <input type="url" name="instagram_link" class="form-control form-control-lg shadow-sm" id="instagram_link" placeholder="Paste Instagram Video Link" value="{{ old('instagram_link') }}">
-                                    </div>
-
-                                    <!-- Video Preview -->
-                                    <div class="form-group text-center">
-                                        <label class="font-weight-bold">Video Preview</label>
-                                        <div id="embedPreview" class="shadow-sm mb-3" style="max-width: 560px; height: auto;">
-                                            <!-- The embedded Instagram video will be displayed here -->
-                                        </div>
+                                    <!-- Preview Section -->
+                                    <div id="instagramPreview" class="mt-3" style="display: none;">
+                                        <label class="font-weight-bold">Instagram Video Preview</label>
+                                        <video id="instagramVideo" controls autoplay muted loop style="width: 100%; height: auto; border: none;"></video>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>
                                         <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active') }}>
+                                            <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" {{ old('is_active') ? 'checked' : '' }}>
                                             <label class="custom-control-label" for="is_active">Active</label>
                                         </div>
                                     </div>
@@ -100,42 +93,20 @@
 
 @push('scripts')
     <script>
-        document.getElementById('instagram_link').addEventListener('input', function() {
-            const instagramUrl = this.value;
-            const embedPreview = document.getElementById('embedPreview');
+        document.getElementById('instagram_url').addEventListener('input', function() {
+            const url = this.value;
+            const videoElement = document.getElementById('instagramVideo');
+            const previewSection = document.getElementById('instagramPreview');
 
-            if (instagramUrl.includes('instagram.com')) {
-                // Clear the preview
-                embedPreview.innerHTML = 'Loading...';
+            if (url) {
+                // Display the preview section
+                previewSection.style.display = 'block';
 
-                // Send a request to the backend to fetch the Instagram oEmbed data
-                fetch('{{ route('admin.getInstagramEmbed') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ url: instagramUrl })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.html) {
-                            embedPreview.innerHTML = data.html;
-
-                            // Reparse the newly added HTML to apply Instagram's script
-                            if (window.instgrm) {
-                                window.instgrm.Embeds.process();
-                            }
-                        } else {
-                            embedPreview.innerHTML = 'Failed to load the preview.';
-                        }
-                    })
-                    .catch(error => {
-                        embedPreview.innerHTML = 'Failed to load the preview.';
-                        console.error('Error:', error);
-                    });
+                // Set the video source
+                videoElement.src = url;
             } else {
-                embedPreview.innerHTML = '';
+                // Hide the preview section if no URL
+                previewSection.style.display = 'none';
             }
         });
     </script>

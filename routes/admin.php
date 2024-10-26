@@ -90,7 +90,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('homes', 'App\Http\Controllers\admin\HomeController');
 
+    Route::resource('instagrams', 'App\Http\Controllers\admin\InstagramController');
+
+    Route::resource('advertisements', 'App\Http\Controllers\admin\AdvertisementController');
+
+
 });
 
 
-Route::resource('instagrams', 'App\Http\Controllers\admin\InstagramController');

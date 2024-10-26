@@ -235,12 +235,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
-
-
-
                                         <!-- Pricing Information -->
                                         <div class="card mb-4">
                                             <div class="card-header bg-light">

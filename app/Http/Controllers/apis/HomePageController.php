@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AdvertisementResource;
 use App\Http\Resources\BrandResource;
 use App\Models\Blog;
 use App\Models\Brand;
@@ -37,6 +38,8 @@ class HomePageController extends Controller
 
         $homeData = $this->getHome($language);
 
+        $advertisements = $this->getAdvertisements($language);
+
         $contactData = Contact::first();
 
         $services = $this->getServicesList($language);
@@ -62,10 +65,17 @@ class HomePageController extends Controller
 //                'category_title'=>$homeData->category_title,
 //                'categories'=>$categories,
 //            ],
+
+
+
             'only_on_afandina_section'=>[
                 'car_only_section_title'=>$homeData->translations->first()->car_only_section_title,
                 'car_only_section_paragraph'=>$homeData->translations->first()->car_only_section_paragraph,
                 'only_on_afandina'=>$onlyOnAfandina,
+            ],
+
+            'advertisements'=>[
+                'only_on_afandina'=>AdvertisementResource::collection($advertisements),
             ],
             'special_offers_section'=>[
                'special_offers_title'=>$homeData->translations->first()->special_offers_section_title,
