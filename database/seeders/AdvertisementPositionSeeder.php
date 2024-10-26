@@ -19,7 +19,7 @@ class AdvertisementPositionSeeder extends Seeder
 
 
         foreach ($languages as $language){
-            DB::table('Advertisement_positions')->updateOrInsert(['position_key' => $language['position_key'] ], $language);
+            DB::table('advertisement_positions')->updateOrInsert(['position_key' => $language['position_key'] ], $language);
         }
     }
 }
