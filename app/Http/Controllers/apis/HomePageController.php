@@ -146,7 +146,6 @@ class HomePageController extends Controller
 
     public function search(Request $request)
     {
-        return "sdsdsdsd";
         $language = $request->header('Accept-Language') ?? 'en';
         // Get the search term from the user input
         $searchTerm = $request->input('query');

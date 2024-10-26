@@ -20,7 +20,7 @@ Route::get('get-main-settings', [\App\Http\Controllers\apis\GeneralController::c
 Route::middleware(['language','currency'])->group(function () {
     Route::get('get-footer', [\App\Http\Controllers\apis\GeneralController::class, 'getFooter']);
     Route::get('home', [\App\Http\Controllers\apis\HomePageController::class, 'index']);
-    Route::post('search', [\App\Http\Controllers\apis\HomePageController::class, 'search']);
+    Route::post('search/search', [\App\Http\Controllers\apis\HomePageController::class, 'search']);
     Route::get('brands', [\App\Http\Controllers\apis\BrandController::class, 'index']);
     Route::get('categories', [\App\Http\Controllers\apis\CategoryController::class, 'index']);
     Route::get('locations', [\App\Http\Controllers\apis\ServiceController::class, 'index']);
@@ -32,5 +32,4 @@ Route::middleware(['language','currency'])->group(function () {
     Route::get('cars', [\App\Http\Controllers\apis\CarController::class, 'index']);
     Route::get('cars/{slug}', [\App\Http\Controllers\apis\CarController::class, 'show']);
     Route::post('advanced-search', [\App\Http\Controllers\apis\CarController::class, 'advancedSearch']);
-
 });
