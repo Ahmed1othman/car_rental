@@ -75,7 +75,7 @@ class HomePageController extends Controller
             ],
 
             'advertisements'=>[
-                'only_on_afandina'=>AdvertisementResource::collection($advertisements),
+                'advertisements'=>AdvertisementResource::collection($advertisements),
             ],
             'special_offers_section'=>[
                'special_offers_title'=>$homeData->translations->first()->special_offers_section_title,

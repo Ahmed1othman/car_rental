@@ -65,7 +65,7 @@ trait DBTrait
     {
         return Advertisement::with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);
-        }],'advertisement_position')->first();
+        }],'advertisement_position')->get();
     }
 
     public function getCategoriesList($language)
