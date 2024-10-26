@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\apis\BLogController;
+use App\Http\Controllers\apis\BlogController;
 use App\Http\Controllers\apis\BrandController;
 use App\Http\Controllers\apis\CarController;
 use App\Http\Controllers\apis\CategoryController;
