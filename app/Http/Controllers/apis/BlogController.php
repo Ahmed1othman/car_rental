@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BlogResource;
+use App\Http\Resources\DetailedBlogResource;
 use App\Models\Blog;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
@@ -11,6 +12,8 @@ use Illuminate\Http\Request;
 class BlogController extends Controller
 {
     use DBTrait;
+
+
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = $this->getHome($language);
@@ -49,5 +52,18 @@ class BlogController extends Controller
             'section_description'=> $homeData->translations->first()->brand_section_paragraph,
             'blogs'=> BlogResource::collection($brands)
         ];
+    }
+
+    public function show(Request $request ,$slug){
+
+        $language = $request->header('Accept-Language') ?? 'en';
+
+        $blog = Blog::whereHas('translations', function ($q) use ($slug) {
+            $q->where('slug',$slug);
+        })->with(['translations' => function ($query) {
+            $query->where('locale', 'en');
+        }],'cars')
+            ->firstOrFail();
+        return new DetailedBlogResource($blog);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BlogResource extends JsonResource
+class DetailedBlogResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,6 +20,7 @@ class BlogResource extends JsonResource
             'description' => $this->translations->first()->description,
             'content' => $this->translations->first()->content,
             'image' => $this->image_path,
+            'related_cars'=> $this->cars,
             'created_at' => $this->created_at->format('j M, Y'),
         ];
     }

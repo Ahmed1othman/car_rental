@@ -25,10 +25,12 @@ Route::middleware(['language','currency'])->group(function () {
     Route::get('categories', [\App\Http\Controllers\apis\CategoryController::class, 'index']);
     Route::get('locations', [\App\Http\Controllers\apis\ServiceController::class, 'index']);
     Route::get('blogs', [\App\Http\Controllers\apis\BlogController::class, 'index']);
+    Route::get('blogs/{slug}', [\App\Http\Controllers\apis\BlogController::class, 'show']);
     Route::get('faqs', [\App\Http\Controllers\apis\FAQController::class, 'index']);
     Route::get('services', [\App\Http\Controllers\apis\ServiceController::class, 'index']);
 
     Route::get('cars', [\App\Http\Controllers\apis\CarController::class, 'index']);
-    Route::get('advanced-search', [\App\Http\Controllers\apis\CarController::class, 'advancedSearch']);
+    Route::get('cars/{slug}', [\App\Http\Controllers\apis\CarController::class, 'show']);
+    Route::post('advanced-search', [\App\Http\Controllers\apis\CarController::class, 'advancedSearch']);
 
 });

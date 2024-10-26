@@ -3,7 +3,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CarResource extends JsonResource
+class DetailedCarResource extends JsonResource
 {
     public function toArray($request)
     {
@@ -40,8 +40,6 @@ class CarResource extends JsonResource
                 'alt' => $image->alt,
                 'type' => $image->type,
             ]),
-            'no_deposit' => $this->no_debosite??1,
-            'discount_rate' => ceil(($this->daily_main_price - $this->daily_discount_price) * 100 / $this->daily_main_price),
         ];
     }
 }
