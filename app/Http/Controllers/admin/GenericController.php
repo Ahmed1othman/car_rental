@@ -74,13 +74,13 @@ class GenericController extends Controller
         }
         $template = $this->model::create($nonTranslatedData);
 
-            $this->handleModelTranslations($validatedData, $template);
+        $this->handleModelTranslations($validatedData, $template);
 
-            // Handle SEO questions for each language
-            $this->handleSEOQuestionsForEachLanguage($validatedData, $template);
+        // Handle SEO questions for each language
+        $this->handleSEOQuestionsForEachLanguage($validatedData, $template);
 
 
-                foreach ($this->uploadedfiles as $fileField) {
+        foreach ($this->uploadedfiles as $fileField) {
                     if ($request->hasFile($fileField)) {
                         $data = $request->file($fileField);
                         // Check if data is an array (multiple images or videos)
@@ -126,11 +126,7 @@ class GenericController extends Controller
                     }
                 }
 
-                if ($this->modelName == 'blogs') {
-                    if ($request->has('cars')) {
-
-                    }
-                }
+            $this->exceptionsModelStore($request, $template);
             // Commit the transaction
             DB::commit();
 
@@ -290,6 +286,8 @@ class GenericController extends Controller
                     }
                 }
             }
+
+        $this->exceptionsModelUpdate($request, $row);
             // Commit the transaction
             DB::commit();
 
@@ -374,5 +372,32 @@ class GenericController extends Controller
         $regExp = '/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/';
         preg_match($regExp, $url, $matches);
         return $matches[1] ?? null; // Return the video ID or null
+    }
+
+    /**
+     * @param Request $request
+     * @param $template
+     * @return void
+     */
+    public function exceptionsModelStore(Request $request, $template): void
+    {
+        if ($this->modelName == "blogs") {
+
+            if ($request->has('cars')) {
+                $cars = $request->input('cars');
+                $template->cars()->attach($cars);
+            }
+        }
+    }
+
+    public function exceptionsModelUpdate(Request $request, $template): void
+    {
+        if ($this->modelName == "blogs") {
+
+            if ($request->has('cars')) {
+                $cars = $request->input('cars');
+                $template->cars()->sync($cars);
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@ class BlogController extends GenericController
     {
         $this->validationRules = [
             'title.*' => 'required|string|max:255',
+            'cars' => 'nullable|array',
             'image_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
             'content.*' => 'required|string',
             'description.*' => 'required|string',
@@ -47,7 +48,7 @@ class BlogController extends GenericController
         $this->validationMessages = [
 
         ];
-        parent::store($request);
+        return parent::store($request);
 
     }
 
@@ -56,6 +57,7 @@ class BlogController extends GenericController
         // Define validation rules
         $this->validationRules = [
             'title.*' => 'required|string|max:255',
+            'cars' => 'nullable|array',
             'image_path' => 'sometimes|mimes:jpg,jpeg,png,webp|max:4096',
             'content.*' => 'required|string',
             'description.*' => 'required|string',

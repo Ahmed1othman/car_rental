@@ -23,5 +23,11 @@ class Blog extends Model
         return $this->morphMany(SeoQuestion::class, 'seo_questionable');
     }
 
+    public function cars()
+    {
+        return $this->belongsToMany(Car::class, BlogCar::class, 'blog_id', 'car_id');
+    }
+
+
 
 }

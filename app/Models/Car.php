@@ -43,4 +43,10 @@ class Car extends Model
     public function category():BelongsTo{
         return $this->belongsTo(Category::class);
     }
+
+    public function templates()
+    {
+        return $this->belongsToMany(Blog::class, BlogCar::class, 'car_id', 'blog_id');
+    }
+
 }
