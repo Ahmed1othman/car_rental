@@ -40,6 +40,12 @@ class DetailedCarResource extends JsonResource
                 'alt' => $image->alt,
                 'type' => $image->type,
             ]),
+
+            'seo_data'=>[
+                'meta_title' => $this->translations->first()->meta_title,
+                'meta_description' => $this->translations->first()->meta_description,
+                'meta_keywords' => $this->translations->first()->meta_keywords,
+            ]
         ];
     }
 }
