@@ -85,23 +85,6 @@
                                     </div>
 
 
-                                    <div class="form-group text-center">
-                                        <!-- Image Preview with Circular Border and Placeholder -->
-                                        <div class="mb-3">
-                                            <img id="imagePreviewLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='200' viewBox='0 0 150 150'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' fill='%23555' font-size='20' text-anchor='middle' dy='.3em'%3E150x150%3C/text%3E%3C/svg%3E" alt="Logo Preview" class="rounded-circle shadow image-preview" style="max-height: 150px; width: 150px; object-fit: cover; border: 2px solid #ddd;">
-                                        </div>
-
-                                        <!-- File Input for Logo Upload -->
-                                        <div class="custom-file">
-                                            <input type="file" name="logo_path" class="custom-file-input image-upload @error('logo_path') is-invalid @enderror" id="logo_path" data-preview="imagePreviewLogo">
-                                            <label class="custom-file-label" for="logo_path">Upload Logo</label>
-                                        </div>
-
-                                        <!-- Error Handling -->
-                                        @error('logo_path')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                        @enderror
-                                    </div>
 
                                     <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>

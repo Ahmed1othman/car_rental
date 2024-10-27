@@ -8,7 +8,6 @@ use App\Http\Controllers\apis\FAQController;
 use App\Http\Controllers\apis\GeneralController;
 use App\Http\Controllers\apis\HomePageController;
 use App\Http\Controllers\apis\ServiceController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +26,7 @@ Route::get('get-main-settings', [GeneralController::class, 'getMainSetting']);
 Route::middleware(['language','currency'])->group(function () {
     Route::get('get-footer', [GeneralController::class, 'getFooter']);
     Route::get('home', [HomePageController::class, 'index']);
+    Route::get('about-us', [\App\Http\Controllers\apis\AboutUsPageController::class, 'index']);
     Route::post('search', [HomePageController::class, 'search']);
     Route::get('brands', [BrandController::class, 'index']);
     Route::get('categories', [CategoryController::class, 'index']);
