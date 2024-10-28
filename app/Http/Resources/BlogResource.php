@@ -16,7 +16,7 @@ class BlogResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'slug' => $this->translations->first()->meta_title,
+            'slug' => $this->translations->first()->slug,
             'title' => $this->translations->first()->title,
             'description' => $this->translations->first()->description,
             'content' => $this->translations->first()->content,
