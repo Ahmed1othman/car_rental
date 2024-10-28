@@ -102,6 +102,24 @@
                                     </div>
 
 
+                                    @php
+                                        $selectedCarIds = $item->cars->pluck('id')->toArray();
+                                    @endphp
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="cars" class="font-weight-bold">Cars related to Post</label>
+                                            <select class="form-control car-select" name="cars[]" multiple="multiple" style="width: 100%;">
+                                                @foreach($cars as $car)
+                                                    <option
+                                                        value="{{ $car->id }}"
+                                                        data-image="{{ $car->default_image_path ? asset('storage/' . $car->default_image_path) : asset('/admin/dist/logo/empty_image.png') }}"
+                                                        {{ in_array($car->id, $selectedCarIds) ? 'selected' : '' }}>
+                                                        {{ $car->translations->first()->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
@@ -277,6 +295,29 @@
                 });
             }
             @endforeach
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            function formatCar(car) {
+                if (!car.id) {
+                    return car.text;
+                }
+
+                var $car = $(
+                    '<span><img src="' + $(car.element).data('image') + '" style="width: 60px; height: 40px;" /> ' +
+                    $(car.element).text() + '</span>'
+                );
+                return $car;
+            }
+
+            $('.car-select').select2({
+                templateResult: formatCar,
+                templateSelection: formatCar,
+                allowClear: true,
+                placeholder: "Select cars"
+            });
         });
     </script>
 @endpush

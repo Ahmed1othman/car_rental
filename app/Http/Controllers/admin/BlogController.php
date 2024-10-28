@@ -10,7 +10,7 @@ class BlogController extends GenericController
         parent::__construct('blog');
         $this->seo_question =true;
         $this->slugField ='title';
-        $this->translatableFields = ['title','content'];
+        $this->translatableFields = ['title','content','description'];
         $this->nonTranslatableFields = ['is_active'];
         $this->uploadedfiles = ['image_path'];
     }
