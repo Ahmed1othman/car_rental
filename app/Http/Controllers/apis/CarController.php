@@ -5,6 +5,7 @@ namespace App\Http\Controllers\apis;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CarResource;
+use App\Http\Resources\DetailedCarResource;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Traits\DBTrait;
@@ -16,6 +17,14 @@ class CarController extends Controller
 
     use DBTrait;
 
+    public function show(Request $request ,$slug){
+
+        $language = $request->header('Accept-Language') ?? 'en';
+        $car = Car::whereHas('translations', function ($q) use ($slug) {
+            $q->where('slug',$slug);
+        })->firstOrFail();
+        return new DetailedCarResource($car);
+    }
     public function advancedSearch(Request $request)
     {
         $language = $request->header('Accept-Language') ?? 'en';
@@ -74,7 +83,6 @@ class CarController extends Controller
 
         return CarResource::collection($cars);
     }
-
 
 
 

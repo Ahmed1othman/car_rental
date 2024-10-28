@@ -14,23 +14,32 @@ class DetailedBlogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // Retrieve translation for the requested locale or fallback
+        $locale = app()->getLocale() ?? 'en';
+        $translation = $this->translations->where('locale', $locale)->first();
+
+        // Format the created_at date
+        $formattedCreatedAt = $this->created_at ? $this->created_at->format('j M, Y') : null;
+
+        // Decode and format meta keywords if they exist
+        $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
+        $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
+
         return [
             'id' => $this->id,
-            'slug' => $this->translations->first()->meta_title,
-            'title' => $this->translations->first()->title,
-            'description' => $this->translations->first()->description,
-            'content' => $this->translations->first()->content,
+            'slug' => $translation->slug ?? null,
+            'title' => $translation->title ?? null,
+            'description' => $translation->description ?? null,
+            'content' => $translation->content ?? null,
             'image' => $this->image_path,
-            'created_at' => $this->created_at->format('j M, Y'),
-            'related_cars'=>CarResource::collection($this->cars),
+            'created_at' => $formattedCreatedAt,
+            'related_cars' => CarResource::collection($this->cars),
 
-            'seo_data'=>[
-                'meta_title' => $this->translations->first()->meta_title,
-                'meta_description' => $this->translations->first()->meta_description,
-                'meta_keywords' => $this->translations->first()->meta_keywords,
-            ]
+            'seo_data' => [
+                'meta_title' => $translation->meta_title ?? null,
+                'meta_description' => $translation->meta_description ?? null,
+                'meta_keywords' => $metaKeywords,
+            ],
         ];
     }
-
-
 }

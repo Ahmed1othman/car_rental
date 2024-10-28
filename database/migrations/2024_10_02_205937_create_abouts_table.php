@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('abouts', function (Blueprint $table) {
             $table->id();
             $table->text('why_choose_image_path')->nullable();
-            $table->text('our_vision_image_path')->nullable();
             $table->text('our_mission_image_path')->nullable();
             $table->string('page_name')->nullable();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
-});
+        });
     }
 
     /**

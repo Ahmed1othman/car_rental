@@ -2,21 +2,39 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Currency;
 
 class DetailedCarResource extends JsonResource
 {
     public function toArray($request)
     {
-        $currency = \App\Models\Currency::find(app('currency_id'));
-        $local = app()->getLocale()??"en";
-        return [
+        // Cache currency exchange rate and locale
+        $currencyExchangeRate = Currency::find(app('currency_id'))->exchange_rate ?? 1;
+        $locale = app()->getLocale() ?? 'en';
+
+        // Retrieve translation data for the current locale
+        $translation = $this->translations->where('locale', $locale)->first();
+        $gearTypeName = $this->gearType->translations->where('locale', $locale)->first()->name ?? null;
+        $colorTranslation = $this->color->translations->where('locale', $locale)->first();
+        $brandName = $this->brand->translations->where('locale', $locale)->first()->name ?? null;
+        $categoryName = $this->category->translations->where('locale', $locale)->first()->name ?? null;
+
+        // Calculate and round prices
+        $prices = [
+            'daily_main_price' => ceil($this->daily_main_price * $currencyExchangeRate),
+            'daily_discount_price' => ceil($this->daily_discount_price * $currencyExchangeRate),
+            'weekly_main_price' => ceil($this->weekly_main_price * $currencyExchangeRate),
+            'weekly_discount_price' => ceil($this->weekly_discount_price * $currencyExchangeRate),
+            'monthly_main_price' => ceil($this->monthly_main_price * $currencyExchangeRate),
+            'monthly_discount_price' => ceil($this->monthly_discount_price * $currencyExchangeRate),
+        ];
+
+        // Decode and format meta keywords if they exist
+        $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
+        $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
+
+        return array_merge($prices, [
             'id' => $this->id,
-            'daily_main_price' => ceil($this->daily_main_price * $currency->exchange_rate),
-            'daily_discount_price' => ceil($this->daily_discount_price * $currency->exchange_rate),
-            'weekly_main_price' => ceil($this->weekly_main_price * $currency->exchange_rate),
-            'weekly_discount_price' => ceil($this->weekly_discount_price * $currency->exchange_rate),
-            'monthly_main_price' => ceil($this->monthly_main_price * $currency->exchange_rate),
-            'monthly_discount_price' =>ceil( $this->monthly_discount_price * $currency->exchange_rate),
             'door_count' => $this->door_count,
             'luggage_capacity' => $this->luggage_capacity,
             'passenger_capacity' => $this->passenger_capacity,
@@ -25,27 +43,26 @@ class DetailedCarResource extends JsonResource
             'is_featured' => $this->is_featured,
             'is_flash_sale' => $this->is_flash_sale,
             'status' => $this->status,
-            'gear_type' => $this->gearType->translations->where('locale', $local)->first()->name,
+            'gear_type' => $gearTypeName,
             'color' => [
-                'name' => $this->color->translations->where('locale', $local)->first()->name ?? null,
-                'code' => $this->color->color_code,
+                'name' => $colorTranslation->name ?? null,
+                'code' => $this->color->color_code ?? null,
             ],
-            'brand' => $this->brand->translations->where('locale', $local)->first()->name ?? null,
-            'category' => $this->category->translations->where('locale', $local)->first()->name ?? null,
+            'brand' => $brandName,
+            'category' => $categoryName,
             'default_image_path' => $this->default_image_path,
-            'slug' => $this->translations->where('locale', $local)->first()->slug ?? null,
-            'name' => $this->translations->where('locale', $local)->first()->name ?? null,
+            'slug' => $translation->slug ?? null,
+            'name' => $translation->name ?? null,
             'images' => $this->images->map(fn($image) => [
                 'file_path' => $image->file_path,
                 'alt' => $image->alt,
                 'type' => $image->type,
             ]),
-
-            'seo_data'=>[
-                'meta_title' => $this->translations->first()->meta_title,
-                'meta_description' => $this->translations->first()->meta_description,
-                'meta_keywords' => $this->translations->first()->meta_keywords,
-            ]
-        ];
+            'seo_data' => [
+                'meta_title' => $translation->meta_title ?? null,
+                'meta_description' => $translation->meta_description ?? null,
+                'meta_keywords' => $metaKeywords,
+            ],
+        ]);
     }
 }

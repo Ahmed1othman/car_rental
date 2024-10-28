@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->text('about_main_header_title')->nullable();
             $table->longText('about_main_header_paragraph')->nullable();
+            $table->text('about_our_agency_title')->nullable();
+            $table->text('why_choose_title')->nullable();
+            $table->text('our_vision_title')->nullable();
+            $table->text('our_mission_title')->nullable();
             $table->longText('why_choose_content')->nullable();
             $table->longText('our_vision_content')->nullable();
             $table->longText('our_mission_content')->nullable();

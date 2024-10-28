@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\About;
 use App\Models\Advertisement;
 use App\Models\Home;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +58,14 @@ trait DBTrait
     public function getHome($language)
     {
         return Home::with(['translations' => function ($query) use ($language) {
+            $query->where('locale', $language);
+        }])->first();
+    }
+
+
+    public function getAbout($language)
+    {
+        return About::with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);
         }])->first();
     }

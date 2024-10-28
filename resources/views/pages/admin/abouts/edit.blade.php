@@ -182,16 +182,32 @@
                                                     <textarea name="about_main_header_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm " id="about_main_header_paragraph_{{ $lang->code }}" rows="4">{{ old('about_main_header_paragraph.' . $lang->code, $translation->about_main_header_paragraph ?? '') }}</textarea>
                                                 </div>
 
+                                                <hr>
+                                                <div class="form-group">
+                                                    <label for="why_choose_title_[{{ $lang->code }}]" class="font-weight-bold">Why Choose Title ([{{ $lang->name }}])</label>
+                                                    <input type="text" name="why_choose_title[{{ $lang->code }}]" class="form-control shadow-sm" id="why_choose_title_[{{ $lang->code }}]" value="{{ old('why_choose_title.' . $lang->code ,$translation->why_choose_title??'') }}">
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="why_choose_content_{{ $lang->code }}" class="font-weight-bold">Why Choose Content ({{ $lang->name }})</label>
                                                     <textarea name="why_choose_content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="why_choose_content_{{ $lang->code }}" rows="4">{{ old('why_choose_content.' . $lang->code, $translation->why_choose_content ?? '') }}</textarea>
                                                 </div>
 
+
+                                                <hr>
+                                                <div class="form-group">
+                                                    <label for="our_vision_[{{ $lang->code }}]" class="font-weight-bold">Our Vision Title ([{{ $lang->name }}])</label>
+                                                    <input type="text" name="our_vision[{{ $lang->code }}]" class="form-control shadow-sm" id="our_vision_[{{ $lang->code }}]" value="{{ old('our_vision.' . $lang->code ,$translation->our_vision??'') }}">
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="our_vision_content_{{ $lang->code }}" class="font-weight-bold">Our Vision Content ({{ $lang->name }})</label>
                                                     <textarea name="our_vision_content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="our_vision_content_{{ $lang->code }}" rows="4">{{ old('our_vision_content.' . $lang->code, $translation->our_vision_content ?? '') }}</textarea>
                                                 </div>
 
+                                                <hr>
+                                                <div class="form-group">
+                                                    <label for="our_mission_[{{ $lang->code }}]" class="font-weight-bold">Our Mission Title ([{{ $lang->name }}])</label>
+                                                    <input type="text" name="our_mission[{{ $lang->code }}]" class="form-control shadow-sm" id="our_mission_[{{ $lang->code }}]" value="{{ old('our_mission.' . $lang->code ,$translation->our_mission??'') }}">
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="our_mission_content_{{ $lang->code }}" class="font-weight-bold">Our Mission Content ({{ $lang->name }})</label>
                                                     <textarea name="our_mission_content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="our_mission_content_{{ $lang->code }}" rows="4">{{ old('our_mission_content.' . $lang->code, $translation->our_mission_content ?? '') }}</textarea>

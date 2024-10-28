@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\apis\AboutUsPageController;
 use App\Http\Controllers\apis\BlogController;
 use App\Http\Controllers\apis\BrandController;
 use App\Http\Controllers\apis\CarController;
@@ -26,7 +27,7 @@ Route::get('get-main-settings', [GeneralController::class, 'getMainSetting']);
 Route::middleware(['language','currency'])->group(function () {
     Route::get('get-footer', [GeneralController::class, 'getFooter']);
     Route::get('home', [HomePageController::class, 'index']);
-    Route::get('about-us', [\App\Http\Controllers\apis\AboutUsPageController::class, 'index']);
+    Route::get('about-us', [AboutUsPageController::class, 'index']);
     Route::post('search', [HomePageController::class, 'search']);
     Route::get('brands', [BrandController::class, 'index']);
     Route::get('categories', [CategoryController::class, 'index']);

@@ -18,23 +18,7 @@ class BlogController extends Controller
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = $this->getHome($language);
         // Start with a base query
-        $query = Blog::where('is_active',true)->with(['translations' => function ($query) use ($language) {
-            $query->where('locale', $language);
-        }]);
-
-        // Apply filters dynamically based on request query parameters
-
-        // 1. Filter by brand name (translated)
-        if ($request->has('filters')) {
-            $filters = $request->input('filters');
-            foreach ($filters as $key => $value) {
-                if ($key == 'name'){
-                    $query->whereHas('translations', function ($q) use ($value) {
-                        $q->where('name', 'like', '%' . $value . '%');
-                    });
-                }
-            }
-        }
+        $query = Blog::where('is_active',true);
 
         // 4. Pagination check
         if ($request->has('paginate') && $request->input('paginate') == 'true') {
@@ -48,8 +32,8 @@ class BlogController extends Controller
 
         // Return the results using a resource
         return [
-            'section_title'=> $homeData->translations->first()->brand_section_title,
-            'section_description'=> $homeData->translations->first()->brand_section_paragraph,
+            'section_title'=> $homeData->translations->first()->blog_section_title,
+            'section_description'=> $homeData->translations->first()->blog_section_paragraph,
             'blogs'=> BlogResource::collection($brands)
         ];
     }
@@ -60,10 +44,7 @@ class BlogController extends Controller
 
         $blog = Blog::whereHas('translations', function ($q) use ($slug) {
             $q->where('slug',$slug);
-        })->with(['translations' => function ($query) {
-            $query->where('locale', 'en');
-        }],'cars')
-            ->firstOrFail();
+        })->firstOrFail();
         return new DetailedBlogResource($blog);
     }
 }
