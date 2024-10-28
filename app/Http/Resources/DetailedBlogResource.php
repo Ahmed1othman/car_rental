@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,6 +26,13 @@ class DetailedBlogResource extends JsonResource
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
         $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
+
+        $recentlyBlog = Blog::where('is_active', true)
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+
+
         return [
             'id' => $this->id,
             'slug' => $translation->slug ?? null,
@@ -34,7 +42,7 @@ class DetailedBlogResource extends JsonResource
             'image' => $this->image_path,
             'created_at' => $formattedCreatedAt,
             'related_cars' => CarResource::collection($this->cars),
-
+            'related_blogs' => BlogResource::collection($recentlyBlog),
             'seo_data' => [
                 'meta_title' => $translation->meta_title ?? null,
                 'meta_description' => $translation->meta_description ?? null,
