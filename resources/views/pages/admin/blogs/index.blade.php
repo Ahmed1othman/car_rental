@@ -49,7 +49,7 @@
                                     <th>#</th>
                                     <th>Post Image</th>
                                     <th>Title</th>
-                                    <th>Status</th>
+                                    <th>Options</th>
                                     <th>Created At</th>
                                     <th>Actions</th>
                                 </tr>
@@ -67,11 +67,28 @@
                                         </td>
                                         <td>{{ $item->translations->first()->title ?? 'N/A' }}</td>
                                         <td>
-                                            <!-- Custom Toggle Switch -->
-                                            <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_active" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
-                                                <span class="slider round"></span>
-                                            </label>
+                                            <!-- Combine all switches in one column -->
+                                            <div class="switch-column">
+
+
+
+
+                                                <div class="switch-wrapper">
+                                                    <label for="show_in_home">Show In Home</label>
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="toggle-status" id="how_in_home" data-model="{{ $modelName }}" data-attribute="show_in_home" data-id="{{ $item->id }}" {{ $item->show_in_home ? 'checked' : '' }}>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="switch-wrapper">
+                                                    <label for="is_active">Active</label>
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="toggle-status" id="is_active" data-model="{{ $modelName }}" data-attribute="is_active" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td>{{ $item->created_at ? $item->created_at->format('d M, Y') : 'N/A' }}</td>
                                         <td>

@@ -11,7 +11,7 @@ class BlogController extends GenericController
         $this->seo_question =true;
         $this->slugField ='title';
         $this->translatableFields = ['title','content','description'];
-        $this->nonTranslatableFields = ['is_active'];
+        $this->nonTranslatableFields = ['is_active','show_in_home'];
         $this->uploadedfiles = ['image_path'];
     }
 
@@ -32,6 +32,9 @@ class BlogController extends GenericController
 
     public function store(Request $request)
     {
+        $request->merge([
+            'show_in_home' => $request->has('show_in_home') ? true : false,
+        ]);
         $this->validationRules = [
             'title.*' => 'required|string|max:255',
             'cars' => 'nullable|array',
@@ -54,6 +57,9 @@ class BlogController extends GenericController
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'show_in_home' => $request->has('show_in_home') ? true : false,
+        ]);
         // Define validation rules
         $this->validationRules = [
             'title.*' => 'required|string|max:255',
