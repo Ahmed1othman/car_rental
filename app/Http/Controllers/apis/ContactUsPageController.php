@@ -13,6 +13,7 @@ use App\Models\Contact;
 use App\Models\Faq;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Fluent;
 
 class ContactUsPageController extends Controller
 {
@@ -20,13 +21,18 @@ class ContactUsPageController extends Controller
     use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language', 'en');
-        $contactData = $this->getAbout($language);
+        $contactData = $this->getContact();
         $homeData = $this->gethome($language);
 
         $faqs = FAQ::where('is_active',1)->get();
 
+        $data = new Fluent([
+            'contactData' => $contactData,
+            'homeData' => $homeData,
+            'faqs' => $faqs,
+        ]);
         return response()->json([
-            'data' => new ContactUsResource([$homeData,$contactData,$faqs]),
+            'data' => new ContactUsResource($data),
             'status' =>'success'
         ]);
     }

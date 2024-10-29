@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\About;
 use App\Models\Advertisement;
+use App\Models\Contact;
 use App\Models\Home;
 use Illuminate\Support\Facades\DB;
 
@@ -68,6 +69,9 @@ trait DBTrait
         return About::with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);
         }])->first();
+    }
+    public function getContact(){
+        return Contact::first();
     }
 
     public function getAdvertisements($language)

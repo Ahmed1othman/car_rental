@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\admin;
 use App\Models\Brand;
 use App\Models\Car;
+use App\Models\Car_model;
 use App\Models\CarImage;
 use App\Models\Category;
 use App\Models\Color;
@@ -41,6 +42,7 @@ class CarController extends GenericController
             'gear_type_id',
             'brand_id',
             'color_id',
+            'car_model_id',
             'category_id',
         ];
     }
@@ -71,6 +73,15 @@ class CarController extends GenericController
             $query->where('locale', $locale);}])->get();
         $this->data['colors'] = Color::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
+
+        $car = Car::find($id);
+        $this->data['carModels'] = Car_model::select('car_models.id', 'car_model_translations.name')
+            ->leftJoin('car_model_translations', function($join) use ($locale) {
+                $join->on('car_model_translations.car_model_id', '=', 'car_models.id')
+                    ->where('car_model_translations.locale', '=', $locale);
+            })
+            ->where('brand_id', $car->brand_id)
+            ->get();
 
         return parent::edit($id);
     }
@@ -130,7 +141,7 @@ class CarController extends GenericController
             'brand_id' => 'required|exists:brands,id',
             'category_id' => 'required|exists:categories,id',
             'color_id' => 'required|exists:colors,id',
-//            'body_style_id' => 'nullable|exists:body_styles,id',
+            'car_model_id' => 'nullable|exists:car_models,id',
             'maker_id' => 'nullable|exists:makers,id',
             'default_image_path' => 'nullable',
             'seo_questions.*.*.question' => 'nullable|string|max:255',
@@ -182,6 +193,7 @@ class CarController extends GenericController
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
+            'car_model_id' => 'nullable|exists:car_models,id',
             'slug' => 'nullable|string|unique:table_name,slug',
             'daily_main_price' => 'required|numeric|min:0',
             'daily_discount_price' => 'nullable|numeric|min:0|lt:daily_main_price',

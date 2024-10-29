@@ -161,6 +161,17 @@
                                                             </select>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="model_id" class="font-weight-bold">Model</label>
+                                                            <select name="model_id" id="model_id" class="form-control shadow-sm select2">
+                                                                <option value="">-- Select Model --</option>
+                                                                <!-- Models will be populated dynamically here -->
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="category_id" class="font-weight-bold">Car Category</label>
@@ -174,8 +185,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
+
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="gearType_id" class="font-weight-bold">Gear Type</label>
@@ -189,6 +199,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
+
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="color_id" class="font-weight-bold">Color</label>
@@ -669,5 +680,28 @@
             }
             @endforeach
         });
+
+
+        $(document).ready(function() {
+            $('#brand_id').change(function() {
+                var brandId = $(this).val();
+                var modelSelect = $('#model_id');
+
+                modelSelect.empty().append('<option value="">-- Select Model --</option>');
+
+                if (brandId) {
+                    $.ajax({
+                        url: "{{ route('admin.get.models', '') }}/" + brandId,
+                        type: "GET",
+                        success: function(data) {
+                            data.forEach(function(model) {
+                                modelSelect.append('<option value="' + model.id + '">' + model.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
     </script>
 @endpush

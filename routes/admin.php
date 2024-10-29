@@ -9,6 +9,9 @@ use App\Http\Controllers\admin\GenericController;
 use App\Http\Controllers\admin\MainSettingController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\LoginController;
+use App\Models\Brand;
+use App\Models\Car_model;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -94,6 +97,18 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('advertisements', 'App\Http\Controllers\admin\AdvertisementController');
 
+    Route::get('/get-models/{brand}', function (Brand $brand) {
+        $locale = App::getLocale();
+        $carModels = Car_model::select('car_models.id', 'car_model_translations.name')
+            ->where('brand_id', $brand->id)
+            ->leftJoin('car_model_translations', function($join) use ($locale) {
+                $join->on('car_model_translations.car_model_id', '=', 'car_models.id')
+                    ->where('car_model_translations.locale', '=', $locale);
+            })
+            ->get();
+
+        return response()->json($carModels);
+    })->name('get.models');
 
 });
 

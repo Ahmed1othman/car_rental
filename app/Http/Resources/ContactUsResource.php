@@ -8,49 +8,49 @@ class ContactUsResource extends JsonResource
 {
     public function toArray($request)
     {
+        $contactData = $this->contactData;
+        $homeData = $this->homeData->translations->first();
+        $faqs = $this->faqs;
+
+//
+//        dd($homeData);
         return [
-            'contact_us_title'=> $this->homeData->contact_us_title,
-            'contact_us_paragraph'=> $this->homeData->contact_us_paragraph,
-            'contact_us_detail_title'=> $this->hometData->contact_us_detail_title,
-            'contact_us_detail_paragraph'=> $this->homeData->contact_us_title,
-            'faq_section_title'=> $this->homeData->contact_us_title,
-            'faq_section_paragraph'=> $this->homeData->contact_us_title,
-            'faqs'=> FAQResource::collection($this->faqs),
+            'contact_us_title' => $homeData->contact_us_title ?? null,
+            'contact_us_paragraph' => $homeData->contact_us_paragraph ?? null,
+            'contact_us_detail_title' => $homeData->contact_us_detail_title ?? null,
+            'contact_us_detail_paragraph' => $homeData->contact_us_detail_paragraph ?? null, // Fixed line
+            'faq_section_title' => $homeData->faq_section_title ?? null,
+            'faq_section_paragraph' => $homeData->faq_section_paragraph ?? null,
+            'faqs' => FAQResource::collection($faqs),
 
-            'website' => $this->homeData->website,
-            'google_map_url' => $this->homeData->google_map_url,
-            'additional_info' => $this->homeData->additional_info,
+            'website' => $homeData->website ?? null,
+            'google_map_url' => $contactData->google_map_url ?? null,
+            'additional_info' => $contactData->additional_info ?? null,
 
-            'contact_data'=>[
-                'name' => $this->contactData->name,
-                'email' => $this->contactData->email,
-                'phone' =>  $this->contactData->phone,
-                'alternative_phone' => $this->contactData->alternative_phone,
-
-                'address'=> [
-                        'address_line1' => $this->contactData->address_line1,
-                        'address_line2' => $this->contactData->address_line2,
-                        'city' => $this->contactData->city,
-                        'state' => $this->contactData->state,
-                        'postal_code' => $this->contactData->postal_code,
-                        'country' => $this->contactData->country,
-                    ],
-
-                'social_media_links'=>[
-                    'facebook'=>$this->contactData->facebook,
-                    'twitter'=>$this->contactData->twitter,
-                    'linkedin'=>$this->contactData->linkedin,
-                    'instagram'=>$this->contactData->instagram,
-                    'youtube'=>$this->contactData->youtube,
-                    'whatsapp'=>$this->contactData->whatsapp,
-                    'tiktok'=>$this->contactData->tiktok,
-                   'snapchat'=>$this->contactData->snapchat,
-
+            'contact_data' => [
+                'name' => $contactData->name ?? null,
+                'email' => $contactData->email ?? null,
+                'phone' => $contactData->phone ?? null,
+                'alternative_phone' => $contactData->alternative_phone ?? null,
+                'address' => [
+                    'address_line1' => $contactData->address_line1 ?? null,
+                    'address_line2' => $contactData->address_line2 ?? null,
+                    'city' => $contactData->city ?? null,
+                    'state' => $contactData->state ?? null,
+                    'postal_code' => $contactData->postal_code ?? null,
+                    'country' => $contactData->country ?? null,
                 ],
-                'contact_us_title'=> $this->contactData->contact_us_title,
+                'social_media_links' => [
+                    'facebook' => $contactData->facebook ?? null,
+                    'twitter' => $contactData->twitter ?? null,
+                    'linkedin' => $contactData->linkedin ?? null,
+                    'instagram' => $contactData->instagram ?? null,
+                    'youtube' => $contactData->youtube ?? null,
+                    'whatsapp' => $contactData->whatsapp ?? null,
+                    'tiktok' => $contactData->tiktok ?? null,
+                    'snapchat' => $contactData->snapchat ?? null,
+                ],
             ],
-
-
         ];
     }
 }

@@ -142,13 +142,25 @@
                                                         <select name="brand_id" id="brand_id" class="form-control shadow-sm select2">
                                                             <option value="">-- Select Brand --</option>
                                                             @foreach($brands as $brand)
-                                                                <option value="{{ $brand->id }}" {{ old('brand_id', $item->brand_id) == $brand->id ? 'selected' : '' }}>
+                                                                <option value="{{ $brand->id }}" {{ (old('brand_id', $item->brand_id) == $brand->id) ? 'selected' : '' }}>
                                                                     {{ $brand->translations()->first()->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="car_model_id" class="font-weight-bold">Model</label>
+                                                        <select name="car_model_id" id="car_model_id" class="form-control shadow-sm select2" data-selected="{{ old('car_model_id', $item->car_model_id) }}">
+                                                            <option value="">-- Select Model --</option>
+                                                            <!-- Options will be populated dynamically via JavaScript -->
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="category_id" class="font-weight-bold">Car Category</label>
@@ -162,8 +174,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
+
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="gearType_id" class="font-weight-bold">Gear Type</label>
@@ -484,5 +495,39 @@
             }
             @endforeach
         });
+
+        $(document).ready(function() {
+            var brandSelect = $('#brand_id');
+            var modelSelect = $('#car_model_id');
+
+            function loadModels(brandId, selectedModelId = null) {
+                modelSelect.empty().append('<option value="">-- Select Model --</option>');
+                if (brandId) {
+                    $.ajax({
+                        url: "{{ route('admin.get.models', '') }}/" + brandId,
+                        type: "GET",
+                        success: function(data) {
+                            data.forEach(function(model) {
+                                var selected = selectedModelId == model.id ? 'selected' : '';
+                                modelSelect.append('<option value="' + model.id + '" ' + selected + '>' + model.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            }
+
+            // Load models on brand change
+            brandSelect.change(function() {
+                loadModels($(this).val());
+            });
+
+            // Load models on page load if a brand is already selected
+            var initialBrandId = brandSelect.val();
+            var initialModelId = modelSelect.data('selected');
+            if (initialBrandId) {
+                loadModels(initialBrandId, initialModelId);
+            }
+        });
+
     </script>
 @endpush
