@@ -88,7 +88,7 @@
                                     <input type="hidden" name="page_name" class="form-control shadow-sm" id="page_name" value="{{ old('page_name',$item->page_name) }}">
 
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="form-group text-center">
                                                 <!-- Image Preview with Circular Border and Placeholder -->
                                                 <div class="mb-3">
@@ -107,27 +107,27 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group text-center">
-                                                <!-- Image Preview with Circular Border and Placeholder -->
-                                                <div class="mb-3">
-                                                    <img id="imagePreview_our_vision_image_path" src="{{$item->our_vision_image_path?asset('storage/'.$item->our_vision_image_path):'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'400\' viewBox=\'0 0 300 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x300%3C/text%3E%3C/svg%3E'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
-                                                </div>
+{{--                                        <div class="col-md-4">--}}
+{{--                                            <div class="form-group text-center">--}}
+{{--                                                <!-- Image Preview with Circular Border and Placeholder -->--}}
+{{--                                                <div class="mb-3">--}}
+{{--                                                    <img id="imagePreview_our_vision_image_path" src="{{$item->our_vision_image_path?asset('storage/'.$item->our_vision_image_path):'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'400\' viewBox=\'0 0 300 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x300%3C/text%3E%3C/svg%3E'}}" alt="Logo Preview" class="shadow image-rectangle-preview" style="height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">--}}
+{{--                                                </div>--}}
 
-                                                <!-- File Input for Logo Upload -->
-                                                <div class="custom-file">
-                                                    <input type="file" name="our_vision_image_path" class="custom-file-input image-upload @error('our_vision_image_path') is-invalid @enderror" id="our_vision_image_path" data-preview="imagePreview_our_vision_image_path">
-                                                    <label class="custom-file-label" for="our_vision_image_path">Upload Our Vision Image</label>
-                                                </div>
+{{--                                                <!-- File Input for Logo Upload -->--}}
+{{--                                                <div class="custom-file">--}}
+{{--                                                    <input type="file" name="our_vision_image_path" class="custom-file-input image-upload @error('our_vision_image_path') is-invalid @enderror" id="our_vision_image_path" data-preview="imagePreview_our_vision_image_path">--}}
+{{--                                                    <label class="custom-file-label" for="our_vision_image_path">Upload Our Vision Image</label>--}}
+{{--                                                </div>--}}
 
-                                                <!-- Error Handling -->
-                                                @error('our_vision_image_path')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
+{{--                                                <!-- Error Handling -->--}}
+{{--                                                @error('our_vision_image_path')--}}
+{{--                                                <span class="invalid-feedback">{{ $message }}</span>--}}
+{{--                                                @enderror--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="form-group text-center">
                                                 <!-- Image Preview with Circular Border and Placeholder -->
                                                 <div class="mb-3">

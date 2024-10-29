@@ -19,7 +19,7 @@ class AboutController extends GenericController
         $this->nonTranslatableFields = ['page_name','is_active'];
         $this->uploadedfiles = [
             'our_mission_image_path',
-            'our_vision_image_path',
+//            'our_vision_image_path',
             'why_choose_image_path',
         ];
     }
@@ -38,7 +38,7 @@ class AboutController extends GenericController
             'our_vision_content.*' => 'nullable|string',
 
             'why_choose_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
-            'our_vision_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
+//            'our_vision_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
             'our_mission_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
 
             'meta_title.*' => 'nullable|string|max:255',
@@ -67,7 +67,7 @@ class AboutController extends GenericController
             'our_vision_content.*' => 'nullable|string',
 
             'why_choose_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:4096',
-            'our_vision_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:4096',
+//            'our_vision_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:4096',
             'our_mission_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:4096',
 
             'meta_title.*' => 'nullable|string|max:255',
