@@ -5,6 +5,7 @@ use App\Http\Controllers\apis\BlogController;
 use App\Http\Controllers\apis\BrandController;
 use App\Http\Controllers\apis\CarController;
 use App\Http\Controllers\apis\CategoryController;
+use App\Http\Controllers\apis\ContactUsPageController;
 use App\Http\Controllers\apis\FAQController;
 use App\Http\Controllers\apis\GeneralController;
 use App\Http\Controllers\apis\HomePageController;
@@ -28,6 +29,7 @@ Route::middleware(['language','currency'])->group(function () {
     Route::get('get-footer', [GeneralController::class, 'getFooter']);
     Route::get('home', [HomePageController::class, 'index']);
     Route::get('about-us', [AboutUsPageController::class, 'index']);
+    Route::get('contact-us', [ContactUsPageController::class, 'index']);
     Route::post('search', [HomePageController::class, 'search']);
     Route::get('brands', [BrandController::class, 'index']);
     Route::get('categories', [CategoryController::class, 'index']);

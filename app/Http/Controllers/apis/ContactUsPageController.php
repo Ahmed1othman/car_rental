@@ -10,6 +10,7 @@ use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Category;
 use App\Models\Contact;
+use App\Models\Faq;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,7 @@ class ContactUsPageController extends Controller
         $contactData = $this->getAbout($language);
         $homeData = $this->gethome($language);
 
-        $faqs = $this->getFaqList($language);
+        $faqs = FAQ::where('is_active',1)->get();
 
         return response()->json([
             'data' => new ContactUsResource([$homeData,$contactData,$faqs]),
