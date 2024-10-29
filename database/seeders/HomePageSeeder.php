@@ -62,6 +62,10 @@ class HomePageSeeder extends Seeder
                         'brand_section_title' => 'Brands Section',
                         'brand_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
 
+                        'blog_section_title' => 'Contact With Our Team',
+                        'blog_section_paragraph' => 'Lorem ipsum dolor sit amet consectetur. Aliquam a velit neque cursus quis. Nisi sed ut pharetra nunc ultrices viverra habitant blandit lobortis. Diam non risus ut cras sed. Enim lectus risus ',
+
+
                         'contact_us_title' => 'Contact With Our Team',
                         'contact_us_paragraph' => 'Lorem ipsum dolor sit amet consectetur. Aliquam a velit neque cursus quis. Nisi sed ut pharetra nunc ultrices viverra habitant blandit lobortis. Diam non risus ut cras sed. Enim lectus risus ',
 
