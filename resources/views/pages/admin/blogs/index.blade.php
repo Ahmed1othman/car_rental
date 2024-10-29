@@ -70,9 +70,6 @@
                                             <!-- Combine all switches in one column -->
                                             <div class="switch-column">
 
-
-
-
                                                 <div class="switch-wrapper">
                                                     <label for="show_in_home">Show In Home</label>
                                                     <label class="switch">

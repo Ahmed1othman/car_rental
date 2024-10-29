@@ -29,7 +29,7 @@ class DetailedBlogResource extends JsonResource
 
         $recentlyBlog = Blog::where('is_active', true)
             ->orderBy('created_at', 'desc')
-            ->take(3)
+            ->take(4)
             ->get();
 
 

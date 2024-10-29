@@ -14,7 +14,7 @@ class AboutUsResource extends JsonResource
             'about_us_data' => [
                 'our_mission_image_path'=> $this->our_mission_image_path,
                 'why_choose_image_path'=> $this->why_choose_image_path,
-                'about_main_header_title' => $translation->about_main_header_paragraph,
+                'about_main_header_title' => $translation->about_main_header_title,
                 'about_main_header_paragraph' => $translation->about_main_header_paragraph,
                 'about_our_agency_title' => $translation->about_our_agency_title,
                 'why_choose_title' => $translation->why_choose_title,

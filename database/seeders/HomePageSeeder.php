@@ -62,6 +62,13 @@ class HomePageSeeder extends Seeder
                         'brand_section_title' => 'Brands Section',
                         'brand_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
 
+                        'contact_us_title' => 'Contact With Our Team',
+                        'contact_us_paragraph' => 'Lorem ipsum dolor sit amet consectetur. Aliquam a velit neque cursus quis. Nisi sed ut pharetra nunc ultrices viverra habitant blandit lobortis. Diam non risus ut cras sed. Enim lectus risus ',
+
+                        'contact_us_detail_title' => 'Contact Details',
+                        'contact_us_detail_paragraph' => 'Lorem ipsum dolor sit amet consectetur. Aliquam a velit neque cursus quis. Nisi sed ut pharetra nunc ultrices viverra habitant b.',
+
+
                         'meta_title' => 'Home Page - Monza Rent Car',
                         'meta_description' => 'Explore our exclusive collection of luxury cars and enjoy special offers.',
                         'meta_keywords' => 'car rental, luxury cars, special offers, rent car',
