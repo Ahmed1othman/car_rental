@@ -16,7 +16,7 @@ class BlogController extends Controller
 
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
-        $homeData = $this->getHome($language);
+        return $homeData = $this->getHome($language);
         // Start with a base query
         $query = Blog::where('is_active',true);
 
