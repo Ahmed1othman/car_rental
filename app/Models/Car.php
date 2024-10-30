@@ -32,6 +32,11 @@ class Car extends Model
     public function brand():BelongsTo{
         return $this->belongsTo(Brand::class);
     }
+
+    public function CarModel():BelongsTo{
+        return $this->belongsTo(Car_model::class,'car_model_id');
+    }
+
     public function color():BelongsTo{
         return $this->belongsTo(Color::class);
     }
@@ -39,6 +44,8 @@ class Car extends Model
     public function gearType():BelongsTo{
         return $this->belongsTo(Gear_type::class,'gear_type_id');
     }
+
+
 
     public function category():BelongsTo{
         return $this->belongsTo(Category::class);

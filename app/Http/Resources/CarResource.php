@@ -11,7 +11,6 @@ class CarResource extends JsonResource
         $local = app()->getLocale()??"en";
         return [
             'id' => $this->id,
-            'slug' => $this->translations->first()->meta_title,
             'daily_main_price' => ceil($this->daily_main_price * $currency->exchange_rate),
             'daily_discount_price' => ceil($this->daily_discount_price * $currency->exchange_rate),
             'weekly_main_price' => ceil($this->weekly_main_price * $currency->exchange_rate),
@@ -32,6 +31,7 @@ class CarResource extends JsonResource
                 'code' => $this->color->color_code,
             ],
             'brand' => $this->brand->translations->where('locale', $local)->first()->name ?? null,
+            'car_model' => $this->CarModel->translations->where('locale', $local)->first()->name ?? null,
             'category' => $this->category->translations->where('locale', $local)->first()->name ?? null,
             'default_image_path' => $this->default_image_path,
             'slug' => $this->translations->where('locale', $local)->first()->slug ?? null,

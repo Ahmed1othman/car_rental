@@ -28,4 +28,8 @@ class Car_model extends Model
         return $this->belongsTo(Brand::class);
     }
 
+    public function cars(): HasMany{
+        return $this->hasMany(Car::class);
+    }
+
 }
