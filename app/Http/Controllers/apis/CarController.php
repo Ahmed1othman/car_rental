@@ -45,7 +45,7 @@ class CarController extends Controller
                     case 'door_count':
                     case 'luggage_capacity':
                     case 'passenger_capacity':
-                        $query->where($key, $value);
+                        $query->whereIn($key, $value);
                         break;
 
                     case 'free_delivery':
