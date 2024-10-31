@@ -11,6 +11,7 @@ class Car_modelTranslation extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $table = 'car_model_translations';
 
     //relations
     public function carModel(): BelongsTo

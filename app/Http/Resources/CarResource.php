@@ -5,10 +5,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CarResource extends JsonResource
 {
+
     public function toArray($request)
     {
         $currency = \App\Models\Currency::find(app('currency_id'));
-        $local = app()->getLocale()??"en";
+        $locale = app()->getLocale()??"en";
+
+        $carModel = $this->carModel ? $this->carModel->translations->where('locale', $locale)->first(): null;
+
         return [
             'id' => $this->id,
             'daily_main_price' => ceil($this->daily_main_price * $currency->exchange_rate),
@@ -25,17 +29,17 @@ class CarResource extends JsonResource
             'is_featured' => $this->is_featured,
             'is_flash_sale' => $this->is_flash_sale,
             'status' => $this->status,
-            'gear_type' => $this->gearType->translations->where('locale', $local)->first()->name,
+            'gear_type' => $this->gearType->translations->where('locale', $locale)->first()->name,
             'color' => [
-                'name' => $this->color->translations->where('locale', $local)->first()->name ?? null,
+                'name' => $this->color->translations->where('locale', $locale)->first()->name ?? null,
                 'code' => $this->color->color_code,
             ],
-            'brand' => $this->brand->translations->where('locale', $local)->first()->name ?? null,
-            'car_model' => $this->CarModel->translations->where('locale', $local)->first()->name ?? null,
-            'category' => $this->category->translations->where('locale', $local)->first()->name ?? null,
+            'brand' => $this->brand->translations->where('locale', $locale)->first()->name ?? null,
+            'car_model' => $carModel ? $carModel->name : null,
+            'category' => $this->category->translations->where('locale', $locale)->first()->name ?? null,
             'default_image_path' => $this->default_image_path,
-            'slug' => $this->translations->where('locale', $local)->first()->slug ?? null,
-            'name' => $this->translations->where('locale', $local)->first()->name ?? null,
+            'slug' => $this->translations->where('locale', $locale)->first()->slug ?? null,
+            'name' => $this->translations->where('locale', $locale)->first()->name ?? null,
             'images' => $this->images->map(fn($image) => [
                 'file_path' => $image->file_path,
                 'alt' => $image->alt,

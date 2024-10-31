@@ -79,6 +79,20 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
+
+                                    <div class="form-group">
+                                        <label for="icon_id" class="font-weight-bold">Icon</label>
+                                        <select name="icon_id" id="icon_id" class="form-control shadow-sm select2">
+                                            <option value="">-- Select Icon --</option>
+                                            @foreach($icons as $icon)
+                                                <option value="{{ $icon->id }}" data-icon="{{ $icon->icon_class }}" {{ old('icon_id') == $icon->id ? 'selected' : '' }}>
+                                                    {{ $icon->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        </div>
+
+
                                     <div class="form-group">
                                         <label for="is_active" class="font-weight-bold">Active</label>
                                         <div class="custom-control custom-switch">
@@ -208,5 +222,39 @@
             }
             @endforeach
         });
+
+
+        $(document).ready(function() {
+            $('#icon-select').select2({
+                placeholder: "Select an option",
+                allowClear: true,
+                templateResult: formatOptionWithIcon,
+                templateSelection: formatOptionWithIcon
+            });
+        });
+
+        $(document).ready(function() {
+            $('#icon_id').select2({
+                placeholder: "-- Select Icon --",
+                allowClear: true,
+                templateResult: formatOptionWithIcon,
+                templateSelection: formatOptionWithIcon
+            });
+        });
+
+        function formatOptionWithIcon(option) {
+            if (!option.id) {
+                return option.text;
+            }
+
+            const iconClass = $(option.element).data('icon');
+            const icon = $('<i>', { class: iconClass });
+            const text = $('<span>', { text: ' ' + option.text });
+
+            return $('<span>').append(icon).append(text);
+        }
+
+
+
     </script>
 @endpush

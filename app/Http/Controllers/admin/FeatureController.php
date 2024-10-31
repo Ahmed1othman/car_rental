@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\admin;
+use App\Models\Icon;
 use Illuminate\Http\Request;
 
 class FeatureController extends GenericController
@@ -11,6 +12,12 @@ class FeatureController extends GenericController
         $this->slugField ='name';
         $this->translatableFields = ['name'];
         $this->nonTranslatableFields = ['is_active'];
+    }
+
+    public function create()
+    {
+        $this->data['icons'] = Icon::get();
+        return parent::create();
     }
 
     public function store(Request $request)

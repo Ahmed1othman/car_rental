@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Resources;
 
+use App\Models\Car;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Currency;
 
@@ -12,11 +13,18 @@ class DetailedCarResource extends JsonResource
         $currencyExchangeRate = Currency::find(app('currency_id'))->exchange_rate ?? 1;
         $locale = app()->getLocale() ?? 'en';
 
+        $carCategory = Car::where('category_id', $this->category_id)
+            ->inRandomOrder()
+            ->take(6)
+            ->get();
+
         // Retrieve translation data for the current locale
         $translation = $this->translations->where('locale', $locale)->first();
         $gearTypeName = $this->gearType->translations->where('locale', $locale)->first()->name ?? null;
         $colorTranslation = $this->color->translations->where('locale', $locale)->first();
         $brandName = $this->brand->translations->where('locale', $locale)->first()->name ?? null;
+        $carModel = $this->carModel ? $this->carModel->translations->where('locale', $locale)->first(): null;
+
         $categoryName = $this->category->translations->where('locale', $locale)->first()->name ?? null;
 
         // Calculate and round prices
@@ -49,6 +57,7 @@ class DetailedCarResource extends JsonResource
                 'code' => $this->color->color_code ?? null,
             ],
             'brand' => $brandName,
+            'car_model' => $carModel ? $carModel->name : null,
             'category' => $categoryName,
             'default_image_path' => $this->default_image_path,
             'slug' => $translation->slug ?? null,
@@ -58,6 +67,8 @@ class DetailedCarResource extends JsonResource
                 'alt' => $image->alt,
                 'type' => $image->type,
             ]),
+
+            'related_cars'=> CarResource::collection($carCategory),
             'seo_data' => [
                 'meta_title' => $translation->meta_title ?? null,
                 'meta_description' => $translation->meta_description ?? null,

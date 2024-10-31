@@ -451,6 +451,12 @@
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
                                                     <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code) }}</textarea>
                                                 </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="long_description_{{ $lang->code }}" class="font-weight-bold">long_description ({{ $lang->name }})</label>
+                                                    <textarea name="long_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="long_description_{{ $lang->code }}">{{ old('long_description.'.$lang->code) }}</textarea>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>

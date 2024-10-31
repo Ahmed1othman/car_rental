@@ -44,6 +44,7 @@ class CarController extends GenericController
             'color_id',
             'car_model_id',
             'category_id',
+            'long_description',
         ];
     }
 
@@ -115,6 +116,7 @@ class CarController extends GenericController
                     }
                 }],
             'description.*' => 'nullable|string',
+            'long_description.*' => 'nullable|string',
             'locale.*' => 'required|string|in:en,ar',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
@@ -189,6 +191,7 @@ class CarController extends GenericController
                     }
                 },],
             'description.*' => 'nullable|string',
+            'long_description.*' => 'nullable|string',
             'locale.*' => 'required|string|in:en,ar',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',

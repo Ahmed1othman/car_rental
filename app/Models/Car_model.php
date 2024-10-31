@@ -12,6 +12,7 @@ class Car_model extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $table = 'car_models';
 
     //relations
     public function translations(): HasMany
@@ -29,7 +30,7 @@ class Car_model extends Model
     }
 
     public function cars(): HasMany{
-        return $this->hasMany(Car::class);
+        return $this->hasMany(Car::class,'car_model_id','id');
     }
 
 }
