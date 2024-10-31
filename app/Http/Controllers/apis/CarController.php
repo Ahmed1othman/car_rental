@@ -42,12 +42,12 @@ class CarController extends Controller
                     case 'category_id':
                     case 'color_id':
                     case 'gear_type_id':
+                        $query->whereIn($key, $value);
+                        break;
                     case 'door_count':
                     case 'luggage_capacity':
                     case 'passenger_capacity':
-                        $query->whereIn($key, $value);
-                        break;
-
+                        $query->where($key, $value);
                     case 'free_delivery':
                     case 'insurance_included':
                         $query->where($key, true);
