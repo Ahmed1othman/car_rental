@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AdvancedSearchSettingResource;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Contact;
+use App\Models\Gear_type;
 use App\Models\Home;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Fluent;
 
 class GeneralController extends Controller
 {
@@ -82,4 +86,20 @@ class GeneralController extends Controller
         );
     }
 
+
+    public function advancedSearchSetting(){
+        $brands = Brand::all();
+        $categories = Category::all();
+        $colors = Color::all();
+        $carGears = Gear_type::all();
+
+        $data = new Fluent([
+            'brands' => $brands,
+            'categories' => $categories,
+            'colors' => $colors,
+            'gear_types' => $carGears,
+        ]);
+
+        return new AdvancedSearchSettingResource($data);
+    }
 }

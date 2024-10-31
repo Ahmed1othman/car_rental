@@ -42,4 +42,5 @@ Route::middleware(['language','currency'])->group(function () {
     Route::get('cars', [CarController::class, 'index']);
     Route::get('cars/{slug}', [CarController::class, 'show']);
     Route::post('advanced-search', [CarController::class, 'advancedSearch']);
+    Route::get('advanced-search-setting', [GeneralController::class, 'advancedSearchSetting']);
 });

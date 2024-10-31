@@ -5,24 +5,24 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryResource extends JsonResource
+class GearTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
+
+
+
     public function toArray(Request $request): array
     {
-        $locale = app()->getLocale()?? "en";
-        $translations = $this->translations->where('locale',$locale)->first();
+        $language = app()->getLocale();
+        $translations = $this->translations->where('locale',$language)->first();
         return [
             'id' => $this->id,
             'slug' => $translations->slug,
             'name' => $translations->name,
-            'description' => $translations->description,
-            'image' => $this->image_path,
-            'car_count'=>$this->cars->count(),
         ];
     }
 }
