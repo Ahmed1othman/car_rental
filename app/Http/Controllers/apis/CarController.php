@@ -81,6 +81,7 @@ class CarController extends Controller
             ? $query->paginate($request->input('per_page', 10))
             : $query->get();
 
+        return $cars;
         return CarResource::collection($cars);
     }
 
