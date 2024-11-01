@@ -23,6 +23,7 @@ class GearTypeResource extends JsonResource
             'id' => $this->id,
             'slug' => $translations->slug,
             'name' => $translations->name,
+            'car_count'=>$this->cars->count(),
         ];
     }
 }

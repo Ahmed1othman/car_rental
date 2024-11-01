@@ -14,7 +14,7 @@ class AdvancedSearchSettingResource extends JsonResource
             'brands'=> BrandResource::collection($this->brands),
             'categories'=> CategoryResource::collection($this->categories),
             'gear_types'=> GearTypeResource::collection($this->gear_types),
-            'colors'=> GearTypeResource::collection($this->colors),
+            'colors'=> ColorResource::collection($this->colors),
         ];
     }
 }
