@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class GenericController extends Controller
 {
     protected $model;
-    protected $seo_question=false;
+    protected $seo_question=true;
     protected $data = [];
     protected $modelName;
     public $validationRules = [];

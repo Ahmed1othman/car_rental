@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             UserSeeder::class,
             AdvertisementPositionSeeder::class,
+            FeatureSeeder::class,
+            IconSeeder::class,
         ]);
     }
 }

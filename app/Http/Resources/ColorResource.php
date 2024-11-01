@@ -24,6 +24,7 @@ class ColorResource extends JsonResource
             'slug' => $translations->slug,
             'name' => $translations->name,
             'color_code' => $this->color_code,
+            'car_count'=>$this->cars->count(),
         ];
     }
 }

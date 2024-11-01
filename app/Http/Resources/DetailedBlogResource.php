@@ -28,6 +28,7 @@ class DetailedBlogResource extends JsonResource
 
 
         $recentlyBlog = Blog::where('is_active', true)
+            ->whereNot('id', $this->id)
             ->orderBy('created_at', 'desc')
             ->take(4)
             ->get();

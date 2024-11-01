@@ -14,6 +14,7 @@ class DetailedCarResource extends JsonResource
         $locale = app()->getLocale() ?? 'en';
 
         $carCategory = Car::where('category_id', $this->category_id)
+            ->whereNot('id', $this->id)
             ->inRandomOrder()
             ->take(6)
             ->get();
