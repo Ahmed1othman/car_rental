@@ -132,7 +132,7 @@ trait DBTrait
             })
             ->where('services.is_active', true)
             ->where('services.show_in_home', true)
-            ->groupBy('services.id', 'service_translations.slug', 'service_translations.name')
+            ->groupBy('services.id', 'service_translations.slug', 'service_translations.description','service_translations.name')
             ->limit(4)
             ->get();
     }
