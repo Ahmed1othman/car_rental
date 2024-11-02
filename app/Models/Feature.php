@@ -30,7 +30,7 @@ class Feature extends Model
     }
 
     public function icon(){
-        return $this->belongsTo(Icon::class);
+        return $this->belongsTo(Icon::class,'icon_id','id');
     }
 
 }
