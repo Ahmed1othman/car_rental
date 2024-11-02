@@ -68,6 +68,7 @@ class DetailedCarResource extends JsonResource
                 'alt' => $image->alt,
                 'type' => $image->type,
             ]),
+            "car_features"=> FeatureResource::collection($this->features),
 
             'related_cars'=> CarResource::collection($carCategory),
             'seo_data' => [

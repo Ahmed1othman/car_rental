@@ -40,8 +40,8 @@ return new class extends Migration
 
             // Other optional fields
             $table->string('website')->nullable();
-            $table->string('google_map_url')->nullable();
-            $table->string('contact_person')->nullable();
+            $table->text('google_map_url')->nullable();
+            $table->text('contact_person')->nullable();
             $table->text('additional_info')->nullable();
 
             // Status: Active or Disabled

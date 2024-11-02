@@ -331,7 +331,7 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 @php
-                                                    $selectedFeatures = $item->features->pluck('id')->toArray();
+                                                    $selectedFeatures = \App\Models\CarFeature::where('car_id', $item->id)->pluck('feature_id')->toArray();
                                                 @endphp
                                                 <div class="form-group">
                                                     <label for="features" class="font-weight-bold">Features related to Post</label>
