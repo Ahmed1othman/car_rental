@@ -28,6 +28,7 @@ class DetailedCarResource extends JsonResource
 
         $categoryName = $this->category->translations->where('locale', $locale)->first()->name ?? null;
 
+
         // Calculate and round prices
         $prices = [
             'daily_main_price' => ceil($this->daily_main_price * $currencyExchangeRate),

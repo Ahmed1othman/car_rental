@@ -60,7 +60,7 @@ class Car extends Model
 
     public function features(): BelongsToMany
     {
-        return $this->belongsToMany(Blog::class, CarFeature::class, 'car_id', 'feature_id');
+        return $this->belongsToMany(Feature::class, CarFeature::class, 'car_id', 'feature_id');
     }
 
 }
