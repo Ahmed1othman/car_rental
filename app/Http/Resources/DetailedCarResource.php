@@ -63,12 +63,15 @@ class DetailedCarResource extends JsonResource
             'default_image_path' => $this->default_image_path,
             'slug' => $translation->slug ?? null,
             'name' => $translation->name ?? null,
+            "description"=> $translation->description?? null,
+            "long_description"=> $translation->long_description?? null,
             'images' => $this->images->map(fn($image) => [
                 'file_path' => $image->file_path,
                 'alt' => $image->alt,
                 'type' => $image->type,
             ]),
             "car_features"=> FeatureResource::collection($this->features),
+
 
             'related_cars'=> CarResource::collection($carCategory),
             'seo_data' => [
