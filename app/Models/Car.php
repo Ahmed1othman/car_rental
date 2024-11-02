@@ -6,6 +6,7 @@ use App\Models\old\CarImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -52,9 +53,14 @@ class Car extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function templates()
+    public function blogs(): BelongsToMany
     {
         return $this->belongsToMany(Blog::class, BlogCar::class, 'car_id', 'blog_id');
+    }
+
+    public function features(): BelongsToMany
+    {
+        return $this->belongsToMany(Blog::class, CarFeature::class, 'car_id', 'feature_id');
     }
 
 }

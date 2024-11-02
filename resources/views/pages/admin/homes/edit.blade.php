@@ -182,7 +182,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="special_offers_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Special Offers Section Paragraph ({{ $lang->name }})</label>
-                                                    <textarea name="special_offers_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="special_offers_section_paragraph_{{ $lang->code }}" rows="4">{{ old('special_offers_section_paragraph.' . $lang->code, $translation->special_offers_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="special_offers_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="special_offers_section_paragraph_{{ $lang->code }}" rows="4">{{ old('special_offers_section_paragraph.' . $lang->code, $translation->special_offers_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
 

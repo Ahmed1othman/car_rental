@@ -90,7 +90,7 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        </div>
+                                    </div>
 
 
                                     <div class="form-group">

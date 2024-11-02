@@ -125,7 +125,7 @@ trait DBTrait
     public function getServicesList($language)
     {
         return DB::table('services')
-            ->select('services.id', 'service_translations.slug', 'service_translations.name')
+            ->select('services.id', 'service_translations.slug', 'service_translations.name','service_translations.description')
             ->leftJoin('service_translations', function ($join) use ($language) {
                 $join->on('services.id', '=', 'service_translations.service_id')
                     ->where('service_translations.locale', '=', $language);

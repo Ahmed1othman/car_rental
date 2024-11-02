@@ -137,7 +137,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="description_{{ $lang->code }}">{{ old('description.'.$lang->code) }}</textarea>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}">{{ old('description.'.$lang->code) }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach

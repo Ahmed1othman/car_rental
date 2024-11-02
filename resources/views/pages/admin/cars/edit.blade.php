@@ -326,6 +326,32 @@
 
                                     <div class="card mb-4">
                                         <div class="card-header bg-light">
+                                            <h3 class="card-title">Car Features</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                @php
+                                                    $selectedFeatures = $item->features->pluck('id')->toArray();
+                                                @endphp
+                                                <div class="form-group">
+                                                    <label for="features" class="font-weight-bold">Features related to Post</label>
+                                                    <select class="form-control feature-select" name="features[]" multiple="multiple" style="width: 100%;">
+
+                                                        @foreach($features as $feature)
+                                                            <option value="{{ $feature->id }}" data-icon="{{ $feature->icon->icon_class }}"
+                                                                {{ in_array($feature->id, $selectedFeatures) ? 'selected' : '' }}>
+
+                                                            {{ $feature->translations->first()->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-4">
+                                        <div class="card-header bg-light">
                                             <h3 class="card-title">Status</h3>
                                         </div>
                                         <div class="card-body">
@@ -534,5 +560,24 @@
             }
         });
 
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            function formatFeature(feature) {
+                if (!feature.id) {
+                    return feature.text;
+                }
+                var $feature = $('<span><i class="' + $(feature.element).data('icon') + '"></i> ' + feature.text + '</span>');
+                return $feature;
+            }
+
+            $('.feature-select').select2({
+                templateResult: formatFeature,
+                templateSelection: formatFeature,
+                allowClear: true,
+                placeholder: "Select features"
+            });
+        });
     </script>
 @endpush

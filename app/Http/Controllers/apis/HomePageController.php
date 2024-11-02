@@ -57,17 +57,6 @@ class HomePageController extends Controller
                 ],
                 'menu_keys'=>[],
             ],
-//            'brands_section'=>[
-//                'brand_title'=>$homeData->brand_title,
-//                'brands'=>$brands,
-//            ],
-//            'categories_section'=>[
-//                'category_title'=>$homeData->category_title,
-//                'categories'=>$categories,
-//            ],
-
-
-
             'only_on_afandina_section'=>[
                 'car_only_section_title'=>$homeData->translations->first()->car_only_section_title,
                 'car_only_section_paragraph'=>$homeData->translations->first()->car_only_section_paragraph,
@@ -87,20 +76,6 @@ class HomePageController extends Controller
                 'why_choose_us_section_paragraph'=>$homeData->translations->first()->why_choose_us_section_paragraph,
                 'services'=> $services,
             ],
-//            'blogs_section'=>[
-//                'blogs_title'=>$homeData->blogs_title,
-//                'blogs'=>$blogs,
-//            ],
-//            'faqs_section'=>[
-//                'faqs_title'=>$homeData->faq_section_title,
-//                'faqs_section_paragraph'=>$homeData->faq_section_paragraph,
-//                'faqs'=>$faqs,
-//            ],
-//            'location_section'=>[
-//                'location_title'=>$homeData->where_find_us_section_title,
-//                'location_paragraph'=>$homeData->where_find_us_section_paragraph,
-//                'locations'=>$locations,
-//            ],
             'document_section'=>[
                 'document_title'=>$homeData->translations->first()->required_documents_section_title,
                 'document_section_paragraph'=>$homeData->translations->first()->required_documents_section_paragraph,
@@ -110,32 +85,6 @@ class HomePageController extends Controller
                 'instagram_title'=>"Instagram Videos",
                 'instagram_videos'=>[],
             ],
-//            'footer_section'=>[
-//                'footer_section_paragraph'=>$homeData->footer_section_paragraph,
-//                'social_media'=>[
-//                    'whatsapp' => $contactData->whatsapp,
-//                    'facebook' => $contactData->facebook,
-//                    'twitter' => $contactData->twitter,
-//                    'instagram' => $contactData->instagram,
-//                    'snapchat' => $contactData->snapchat,
-//                    'linkedin'=>$contactData->linkedin,
-//                    'youtube'=>$contactData->youtube,
-//                    'tiktok'=>$contactData->tiktok,
-//                    ],
-//                'contact_data'=>[
-//                    'phone' => $contactData->phone,
-//                    'email' => $contactData->email,
-//                    'alternative_phone' => $contactData->alternative_phone,
-//                    ],
-//                'address_data'=>[
-//                    'address_line1' => $contactData->address_line1,
-//                    'address_line2' => $contactData->address_line2,
-//                    'city' => $contactData->city,
-//                    'state' => $contactData->state,
-//                    'postal_code' => $contactData->postal_code,
-//                    'country' => $contactData->country,
-//                    ]
-//                ]
         ];
 
         return response()->json([

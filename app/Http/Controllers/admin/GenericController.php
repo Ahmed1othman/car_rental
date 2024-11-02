@@ -388,6 +388,14 @@ class GenericController extends Controller
                 $template->cars()->attach($cars);
             }
         }
+
+        if ($this->modelName == "cars") {
+
+            if ($request->has('features')) {
+                $features = $request->input('features');
+                $template->features()->attach($features);
+            }
+        }
     }
 
     public function exceptionsModelUpdate(Request $request, $template): void
@@ -397,6 +405,13 @@ class GenericController extends Controller
             if ($request->has('cars')) {
                 $cars = $request->input('cars');
                 $template->cars()->sync($cars);
+            }
+        }
+
+        if ($this->modelName == "cars") {
+            if ($request->has('features')) {
+                $features = $request->input('features');
+                $template->features()->sync($features);
             }
         }
     }

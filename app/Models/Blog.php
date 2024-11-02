@@ -30,6 +30,4 @@ class Blog extends Model
         return $this->belongsToMany(Car::class, BlogCar::class, 'blog_id', 'car_id');
     }
 
-
-
 }

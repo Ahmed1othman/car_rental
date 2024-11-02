@@ -6,6 +6,7 @@ use App\Models\Car_model;
 use App\Models\CarImage;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\Feature;
 use App\Models\Gear_type;
 use App\Models\Maker;
 use App\Models\old\BodyStyle;
@@ -19,7 +20,7 @@ class CarController extends GenericController
         parent::__construct('car');
         $this->seo_question =true;
         $this->slugField ='name';
-        $this->translatableFields = ['name','description'];
+        $this->translatableFields = ['name','description','long_description'];
         $this->uploadedfiles = ['default_image_path','images'];
         $this->nonTranslatableFields = [
             'daily_main_price',
@@ -44,7 +45,6 @@ class CarController extends GenericController
             'color_id',
             'car_model_id',
             'category_id',
-            'long_description',
         ];
     }
 
@@ -58,6 +58,8 @@ class CarController extends GenericController
         $this->data['gearTypes'] = Gear_type::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
         $this->data['colors'] = Color::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);}])->get();
+        $this->data['features'] = Feature::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
 
         return parent::create();
@@ -73,6 +75,9 @@ class CarController extends GenericController
         $this->data['gearTypes'] = Gear_type::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
         $this->data['colors'] = Color::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);}])->get();
+
+        $this->data['features'] = Feature::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
 
         $car = Car::find($id);

@@ -14,16 +14,26 @@ class IconSeeder extends Seeder
      */
     public function run()
     {
-        $icons = [
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-            ['name' => 'Air Conditioning', 'icon_class' => 'fa fa-snowflake'],
-            ['name' => 'Automatic Transmission', 'icon_class' => 'fa fa-cogs'],
+        DB::table('icons')->truncate();
+
+
+        $icons = [
             ['name' => 'Manual Transmission', 'icon_class' => 'fa fa-gear'],
+            ['name' => 'Bluetooth', 'icon_class' => 'fa fa-bluetooth'],
+            ['name' => 'AM/FM Radio', 'icon_class' => 'fa fa-radio'],
+            ['name' => 'USB Port', 'icon_class' => 'fa fa-usb'],
+            ['name' => 'Air Conditioning', 'icon_class' => 'fa fa-snowflake'],
+            ['name' => 'Chart', 'icon_class' => 'fa fa-chart-line'],
+            ['name' => 'Battery', 'icon_class' => 'fafa-battery-full'],
+            ['name' => 'Shield', 'icon_class' => 'fa fa-shield-alt'],
+                ['name' => 'Youtube', 'icon_class' => 'fa-brands fa-youtube'],
+            ['name' => 'Automatic Transmission', 'icon_class' => 'fa fa-cogs'],
             ['name' => 'Petrol', 'icon_class' => 'fa fa-gas-pump'],
             ['name' => 'Diesel', 'icon_class' => 'fa fa-oil-can'],
             ['name' => 'Electric', 'icon_class' => 'fa fa-bolt'],
             ['name' => 'Hybrid', 'icon_class' => 'fa fa-charging-station'],
-            ['name' => 'Bluetooth', 'icon_class' => 'fa fa-bluetooth'],
             ['name' => 'GPS Navigation', 'icon_class' => 'fa fa-map-marked-alt'],
             ['name' => 'Heated Seats', 'icon_class' => 'fa fa-fire'],
             ['name' => 'Leather Seats', 'icon_class' => 'fa fa-couch'],
@@ -44,8 +54,6 @@ class IconSeeder extends Seeder
             ['name' => 'Tinted Windows', 'icon_class' => 'fa fa-adjust'],
             ['name' => 'Anti-lock Braking System', 'icon_class' => 'fa fa-car-crash'],
             ['name' => 'Airbags', 'icon_class' => 'fa fa-shield-alt'],
-            ['name' => 'AM/FM Radio', 'icon_class' => 'fa fa-radio'],
-            ['name' => 'USB Port', 'icon_class' => 'fa fa-usb'],
             ['name' => 'Cup Holders', 'icon_class' => 'fa fa-mug-hot'],
             ['name' => 'Smartphone Integration', 'icon_class' => 'fa fa-mobile-alt'],
             ['name' => 'Hands-Free Calling', 'icon_class' => 'fa fa-phone-alt'],
@@ -94,9 +102,6 @@ class IconSeeder extends Seeder
             ['name' => 'Wrench', 'icon_class' => 'fa fa-wrench'],
             ['name' => 'Clock', 'icon_class' => 'fa fa-clock'],
             ['name' => 'Calendar', 'icon_class' => 'fa fa-calendar'],
-            ['name' => 'Battery', 'icon_class' => 'fa fa-battery'],
-            ['name' => 'Bluetooth', 'icon_class' => 'fa fa-bluetooth'],
-            ['name' => 'Chart', 'icon_class' => 'fa fa-chart'],
             ['name' => 'Cloud', 'icon_class' => 'fa fa-cloud'],
             ['name' => 'Credit Card', 'icon_class' => 'fa fa-credit-card'],
             ['name' => 'Database', 'icon_class' => 'fa fa-database'],
@@ -113,7 +118,6 @@ class IconSeeder extends Seeder
             ['name' => 'Phone Square', 'icon_class' => 'fa fa-phone-square'],
             ['name' => 'Plug', 'icon_class' => 'fa fa-plug'],
             ['name' => 'Rocket', 'icon_class' => 'fa fa-rocket'],
-            ['name' => 'Shield', 'icon_class' => 'fa fa-shield'],
             ['name' => 'Shopping Bag', 'icon_class' => 'fa fa-shopping-bag'],
             ['name' => 'Tablet', 'icon_class' => 'fa fa-tablet'],
             ['name' => 'Taxi', 'icon_class' => 'fa fa-taxi'],
@@ -124,7 +128,7 @@ class IconSeeder extends Seeder
             ['name' => 'Video', 'icon_class' => 'fa fa-video'],
             ['name' => 'Wifi', 'icon_class' => 'fa fa-wifi'],
             ['name' => 'Wine Glass', 'icon_class' => 'fa fa-wine-glass'],
-            ['name' => 'Youtube', 'icon_class' => 'fa fa-youtube'],
+
         ];
 
         DB::table('icons')->insert($icons);

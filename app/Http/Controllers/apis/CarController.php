@@ -50,6 +50,8 @@ class CarController extends Controller
                         $query->where($key, $value);
                     case 'free_delivery':
                     case 'insurance_included':
+                    case 'only_on_afandina':
+                    case 'is_flash_sale':
                         $query->where($key, true);
                         break;
 
