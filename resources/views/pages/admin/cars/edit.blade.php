@@ -404,7 +404,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="long_description_{{ $lang->code }}" class="font-weight-bold">long_description ({{ $lang->name }})</label>
+                                                    <label for="long_description_{{ $lang->code }}" class="font-weight-bold">Long Description ({{ $lang->name }})</label>
                                                     <textarea name="long_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="long_description_{{ $lang->code }}">{{ old('long_description.'.$lang->code,$translation->long_description??'') }}</textarea>
                                                 </div>
                                             </div>

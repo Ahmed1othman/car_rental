@@ -24,7 +24,7 @@ class GeneralController extends Controller
 
         $languages = $this->getLanguagesList($language);
         $currencies = $this->getCurrenciesList($language);
-
+        $contact = Contact::first();
         $response = [
             'main_setting'=>[
                 'languages'=>$languages,
@@ -32,6 +32,10 @@ class GeneralController extends Controller
                 'storage_base_url' => asset('storage/'),
                 'dark_logo' => asset('admin/dist/logo/website_logos/logo_dark.png'),
                 'light_logo' => asset('admin/dist/logo/website_logos/light.png'),
+                'contact_data'=>[
+                    'phone' => $contact->phone,
+                    'whatsapp' => $contact->whatsapp,
+                    ],
             ],
         ];
 

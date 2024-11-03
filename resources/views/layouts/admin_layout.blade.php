@@ -91,7 +91,10 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@latest/dist/tagify.min.js"></script>
-        <script src="https://cdn.tiny.cloud/1/5c135bzlciyk91vi7xrlsu8kg30bj232e5y5i5rw53oaztrj/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+{{--        <script src="https://cdn.tiny.cloud/1/5c135bzlciyk91vi7xrlsu8kg30bj232e5y5i5rw53oaztrj/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>--}}
+
+
+        <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
 
         <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
         <script src="{{asset('admin/dist/js/custom.js')}}"></script>

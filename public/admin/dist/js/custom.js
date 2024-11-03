@@ -1,12 +1,86 @@
 $(document).ready(function() {
 
-    tinymce.init({
-        selector: '.teny-editor',
-        height: 400,           // You can adjust the height
-        plugins: 'lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
-        toolbar: 'undo redo | formatselect | fontsize | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to initialize the editor for the active tab
+        function initializeEditors() {
+            document.querySelectorAll('.teny-editor').forEach((editor) => {
+                if (!editor.classList.contains('tox-tinymce')) {  // Check if TinyMCE is not already initialized
+                    ClassicEditor.create(editor, {
+                        toolbar: [
+                            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                            'undo', 'redo'
+                        ],
+                        language: editor.getAttribute('data-language') // Set language dynamically if needed
+                    }).catch(error => {
+                        console.error(error);
+                    });
+                }
+            });
+        }
+
+        // Event listener for tab clicks
+        const languageTabs = document.querySelectorAll('[data-toggle="pill"]');
+        languageTabs.forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function() {
+                initializeEditors(); // Initialize editor when a new language tab is shown
+            });
+        });
+
+        // Initial setup for the first active tab
+        initializeEditors();
     });
+
+        ClassicEditor
+        .create(document.querySelector('.teny-editor'), {
+        toolbar: [
+        'heading', '|',
+        'bold', 'italic', 'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+        'bulletedList', 'numberedList', '|',
+        'link', 'imageUpload', 'insertTable', '|',
+        'alignment:left', 'alignment:center', 'alignment:right', 'alignment:justify', '|',
+        'undo', 'redo'
+        ],
+        heading: {
+        options: [
+    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+        ]
+    },
+        fontSize: {
+        options: [
+        9, 11, 13, 'default', 17, 19, 21
+        ]
+    },
+        alignment: {
+        options: [ 'left', 'center', 'right', 'justify' ]
+    },
+        image: {
+        toolbar: [
+        'imageTextAlternative', '|',
+        'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight'
+        ]
+    },
+        table: {
+        contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+    },
+        placeholder: 'Start typing here...',
+        language: 'en'
+    })
+        .catch(error => {
+        console.error(error);
+    });
+
+
+
+    // tinymce.init({
+    //     selector: '.teny-editor',
+    //     height: 400,           // You can adjust the height
+    //     plugins: 'lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+    //     toolbar: 'undo redo | formatselect | fontsize | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+    //     content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
+    // });
 
     // Toggle Status
     $('.toggle-status').on('change', function() {
