@@ -10,6 +10,7 @@ use App\Models\Feature;
 use App\Models\Gear_type;
 use App\Models\Maker;
 use App\Models\old\BodyStyle;
+use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,6 +30,9 @@ class CarController extends GenericController
             'weekly_discount_price',
             'monthly_main_price',
             'monthly_discount_price',
+            'daily_mileage_included',
+            'weekly_mileage_included',
+            'monthly_mileage_included',
             'door_count',
             'luggage_capacity',
             'passenger_capacity',
@@ -42,6 +46,7 @@ class CarController extends GenericController
             'status',
             'gear_type_id',
             'brand_id',
+            'year_id',
             'color_id',
             'car_model_id',
             'category_id',
@@ -62,6 +67,7 @@ class CarController extends GenericController
         $this->data['features'] = Feature::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
 
+        $this->data['years'] = Year::get();
         return parent::create();
     }
 
@@ -79,6 +85,8 @@ class CarController extends GenericController
 
         $this->data['features'] = Feature::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);}])->get();
+
+        $this->data['years'] = Year::get();
 
         $car = Car::find($id);
         $this->data['carModels'] = Car_model::select('car_models.id', 'car_model_translations.name')
@@ -133,6 +141,10 @@ class CarController extends GenericController
             'weekly_discount_price' => 'nullable|numeric|min:0|lt:weekly_main_price',
             'monthly_main_price' => 'required|numeric|min:0',
             'monthly_discount_price' => 'nullable|numeric|min:0|lt:monthly_main_price',
+
+            'daily_mileage_included' => 'nullable|numeric|min:0',
+            'weekly_mileage_included' => 'nullable|numeric|min:0',
+            'monthly_mileage_included' => 'nullable|numeric|min:0',
             'door_count' => 'nullable|integer|min:1',
             'luggage_capacity' => 'nullable|integer|min:0',
             'passenger_capacity' => 'nullable|integer|min:1',

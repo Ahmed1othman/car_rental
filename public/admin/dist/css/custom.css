@@ -125,3 +125,17 @@ input:checked + .slider:before {
  .is-invalid {
      border-color: #dc3545;
  }
+
+.full-screen-image-container {
+    position: relative;
+    width: 100%;
+    height: 50vh; /* 50% of the viewport height */
+    overflow: hidden; /* Hide any overflow */
+}
+
+.full-screen-image {
+    width: 100%;
+    height: 50vh; /* 50% of the viewport height */
+    object-fit: cover; /* Scale the image to cover the entire container */
+}
+

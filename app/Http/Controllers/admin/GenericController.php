@@ -243,7 +243,7 @@ class GenericController extends Controller
                         'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
                         'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                         'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
-                        'slug' => Str::slug($validatedData[$this->slugField][$langCode]??Str::random(5), '-')
+                        'slug' => Str::slug($validatedData[$this->slugField][$langCode].'-'.rand(1, 99999)??rand(1, 99999), '-')
                     ];
 
                     // Update or create translations
@@ -359,7 +359,7 @@ class GenericController extends Controller
                     'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
                     'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                     'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
-                    'slug' => Str::slug($validatedData[$this->slugField][$langCode], '-')
+                    'slug' => Str::slug($validatedData[$this->slugField][$langCode].'-'.rand(1, 99999)??rand(1, 99999), '-')
                 ];
                 $template->translations()->create(
                     $translatedData + $metaData

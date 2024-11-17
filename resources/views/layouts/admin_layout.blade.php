@@ -35,7 +35,11 @@
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify@latest/dist/tagify.css">
 
-
+        <style>
+            .cke_notification {
+                display: none;
+            }
+        </style>
 
         @stack('styles')
     </head>
@@ -94,7 +98,19 @@
 {{--        <script src="https://cdn.tiny.cloud/1/5c135bzlciyk91vi7xrlsu8kg30bj232e5y5i5rw53oaztrj/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>--}}
 
 
-        <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+{{--        <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>--}}
+
+        <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+        <script>
+            CKEDITOR.editorConfig = function( config ) {
+                config.language = 'es';
+                config.uiColor = '#F7B42C';
+                config.height = 200;
+                config.toolbarCanCollapse = true;
+            };
+            var editor = CKEDITOR.replaceAll( 'teny-editor' );
+        </script>
+
 
         <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
         <script src="{{asset('admin/dist/js/custom.js')}}"></script>

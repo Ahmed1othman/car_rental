@@ -49,6 +49,8 @@ class HomePageController extends Controller
             'header_section'=>[
                 'hero_header_title' => $homeData->translations->first()->hero_header_title,
                 'hero_header_video_path' => $homeData->hero_header_video_path,
+                'hero_header_image_path' => $homeData->hero_header_image_path,
+                'hero_media_type' => $homeData->hero_type,
                 'social_media_links' => [
                     'facebook' => $contactData->facebook,
                     'twitter' => $contactData->twitter,

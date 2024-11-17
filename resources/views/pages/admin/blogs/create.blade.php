@@ -21,8 +21,6 @@
             </div>
         </section>
 
-
-
         <section class="content">
             <div class="container-fluid">
 
@@ -44,8 +42,6 @@
                         </div>
                     </div>
                 @endif
-
-
 
                 <div class="card card-primary card-outline card-tabs shadow-lg">
                     <div class="card-header p-0 pt-1 border-bottom-0 bg-light">

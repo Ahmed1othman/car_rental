@@ -161,7 +161,7 @@
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="title_{{ $lang->code }}" class="font-weight-bold">Title ({{ $lang->name }})</label>
-                                                    <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code,$translation->title) }}">
+                                                    <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code,$translation->title??'') }}">
                                                 </div>
 
                                                 <div class="form-group">

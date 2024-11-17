@@ -86,6 +86,8 @@ class CarController extends Controller
         return CarResource::collection($cars);
     }
 
+    public function OnlyOnAfandina(){
 
+    }
 
 }

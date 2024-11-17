@@ -213,6 +213,20 @@
                                                             </select>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="year_id" class="font-weight-bold">Car Year</label>
+                                                            <select name="year_id" id="year_id" class="form-control shadow-sm select2">
+                                                                <option value="">-- Select Year --</option>
+                                                                @foreach($years as $year)
+                                                                    <option value="{{ $year->id }}" {{ old('year_id') == $year->id ? 'selected' : '' }}>
+                                                                        {{ $year->year }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,48 +266,79 @@
                                                 <h3 class="card-title">Pricing Information</h3>
                                             </div>
                                             <div class="card-body">
+                                                <label>Daily: </label>
+                                                <hr>
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="daily_main_price" class="font-weight-bold">Daily Main Price</label>
-                                                            <input type="text" name="daily_main_price" class="form-control shadow-sm" id="daily_main_price" value="{{ old('daily_main_price') }}">
+                                                            <input type="number" name="daily_main_price" class="form-control shadow-sm" id="daily_main_price" value="{{ old('daily_main_price') }}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="daily_discount_price" class="font-weight-bold">Daily Price With Discount</label>
-                                                            <input type="text" name="daily_discount_price" class="form-control shadow-sm" id="daily_discount_price" value="{{ old('daily_discount_price') }}">
+                                                            <input type="number" name="daily_discount_price" class="form-control shadow-sm" id="daily_discount_price" value="{{ old('daily_discount_price') }}">
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="daily_mileage_included" class="font-weight-bold">Daily Mileage Included</label>
+                                                            <input type="number" name="daily_mileage_included" class="form-control shadow-sm" id="daily_mileage_included" value="{{ old('daily_mileage_included') }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <label>Weakly: </label>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="weekly_main_price" class="font-weight-bold">Weekly Main Price</label>
                                                             <input type="text" name="weekly_main_price" class="form-control shadow-sm" id="weekly_main_price" value="{{ old('weekly_main_price') }}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="weekly_discount_price" class="font-weight-bold">Weekly Price With Discount</label>
-                                                            <input type="text" name="weekly_discount_price" class="form-control shadow-sm" id="weekly_discount_price" value="{{ old('weekly_discount_price') }}">
+                                                            <input type="number" name="weekly_discount_price" class="form-control shadow-sm" id="weekly_discount_price" value="{{ old('weekly_discount_price') }}">
                                                         </div>
                                                     </div>
-
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="weekly_mileage_included" class="font-weight-bold">Weekly Mileage Included</label>
+                                                            <input type="number" name="weekly_mileage_included" class="form-control shadow-sm" id="weekly_mileage_included" value="{{ old('weekly_mileage_included') }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <label>Monthly: </label>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="monthly_main_price" class="font-weight-bold">Monthly Main Price</label>
-                                                            <input type="text" name="monthly_main_price" class="form-control shadow-sm" id="monthly_main_price" value="{{ old('monthly_main_price') }}">
+                                                            <input type="number" name="monthly_main_price" class="form-control shadow-sm" id="monthly_main_price" value="{{ old('monthly_main_price') }}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="monthly_discount_price" class="font-weight-bold">Monthly Price With Discount</label>
-                                                            <input type="text" name="monthly_discount_price" class="form-control shadow-sm" id="monthly_discount_price" value="{{ old('monthly_discount_price') }}">
+                                                            <input type="number" name="monthly_discount_price" class="form-control shadow-sm" id="monthly_discount_price" value="{{ old('monthly_discount_price') }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="monthly_mileage_included" class="font-weight-bold">Monthly Mileage Included</label>
+                                                            <input type="number" name="monthly_mileage_included" class="form-control shadow-sm" id="monthly_mileage_included" value="{{ old('monthly_mileage_included') }}">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
+
+
 
                                         <!-- Car Features -->
                                         <div class="card mb-4">

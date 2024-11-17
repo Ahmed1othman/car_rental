@@ -27,9 +27,10 @@ class HomeController extends GenericController
             'footer_section_paragraph',
             'instagram_section_title',
         ];
-        $this->nonTranslatableFields = ['page_name','is_active'];
+        $this->nonTranslatableFields = ['page_name','is_active','hero_type'];
         $this->uploadedfiles = [
             'hero_header_video_path',
+            'hero_header_image_path',
         ];
     }
 
@@ -48,6 +49,7 @@ class HomeController extends GenericController
         ]);
         $this->validationRules = [
             'page_name' => 'required|string|max:255',
+            'hero_type' => 'required|in:video,image',
             'car_only_section_title.*' => 'nullable|string',
             'car_only_section_paragraph.*' => 'nullable|string',
             'special_offers_section_title.*' => 'nullable|string',
@@ -61,6 +63,7 @@ class HomeController extends GenericController
             'required_documents_section_title.*' => 'nullable|string',
             'required_documents_section_paragraph.*' => 'nullable|string',
             'hero_header_title.*' => 'nullable|string',
+            'hero_header_image_path' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
             'instagram_section_title.*' => 'nullable|string',
             'footer_section_paragraph.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
@@ -82,6 +85,7 @@ class HomeController extends GenericController
         // Define validation rules
         $this->validationRules = [
             'page_name' => 'required|string|max:255',
+            'hero_type' => 'required|in:video,image',
             'car_only_section_title.*' => 'nullable|string',
             'car_only_section_paragraph.*' => 'nullable|string',
             'special_offers_section_title.*' => 'nullable|string',

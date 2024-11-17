@@ -23,6 +23,11 @@
           'title' => 'Currencies',
           'route' => 'admin.currencies.index',
         ),
+          2 =>
+              array (
+                  'title' => 'Static Translation',
+                  'route' => 'admin.static-translations.index',
+              ),
       ),
     ),
     2 =>

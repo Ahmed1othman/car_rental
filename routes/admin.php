@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\GenericController;
 use App\Http\Controllers\admin\MainSettingController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\StaticTranslationController;
 use App\Models\Brand;
 use App\Models\Car_model;
 use Illuminate\Support\Facades\App;
@@ -96,6 +97,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('instagrams', 'App\Http\Controllers\admin\InstagramController');
 
     Route::resource('advertisements', 'App\Http\Controllers\admin\AdvertisementController');
+
+
+    Route::get('static-translations', [StaticTranslationController::class, 'index'])->name('static-translations.index');
+
+    Route::post('static-translations/save', [StaticTranslationController::class, 'saveTranslations'])->name('static-translations.save'); // Accept POST requests
+
 
     Route::get('/get-models/{brand}', function (Brand $brand) {
         $locale = App::getLocale();

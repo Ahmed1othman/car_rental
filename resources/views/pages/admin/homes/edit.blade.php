@@ -100,7 +100,7 @@
                                     <input type="hidden" name="page_name" class="form-control shadow-sm" id="page_name" value="{{ old('page_name',$item->page_name) }}">
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="form-group text-center">
                                                 <!-- Video Preview with Placeholder -->
                                                 <div class="mb-3">
@@ -122,17 +122,48 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5 class="card-title">Select Cars</h5>
-                                            <div class="card-tools">
-                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                                    <i class="fas fa-minus"></i>
-                                                </button>
+                                        <div class="col-md-12">
+                                            <div class="form-group text-center">
+                                                <!-- Full-Screen Image Preview with Placeholder -->
+                                                <div class="mb-3 full-screen-image-container">
+                                                    <img id="imagePreview_hero_header_image_path"
+                                                         src="{{ $item->hero_header_image_path ? asset('storage/' . $item->hero_header_image_path) : 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E1024x720%3C/text%3E%3C/svg%3E' }}"
+                                                         class="img-fluid full-screen-image"
+                                                         alt="Hero Header Image">
+                                                </div>
+
+                                                <!-- File Input for Image Upload -->
+                                                <div class="custom-file">
+                                                    <input type="file" name="hero_header_image_path"
+                                                           class="custom-file-input image-upload @error('hero_header_image_path') is-invalid @enderror"
+                                                           id="hero_header_image_path"
+                                                           data-preview="imagePreview_hero_header_image_path"
+                                                           accept="image/*">
+                                                    <label class="custom-file-label" for="hero_header_image_path">Upload Hero Header Image</label>
+                                                </div>
+
+                                                <!-- Error Handling -->
+                                                @error('hero_header_image_path')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
+
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <label for="hero_type">Hero Section Video or Image ?</label>
+                                        <select name="hero_type" id="car_maker_id" class="form-control @error('hero_type') is-invalid @enderror">
+                                            <option value="">Select type</option>
+                                            <option value="video" @if($item->hero_type == 'video') selected @endif>Video</option>
+                                            <option value="image" @if($item->hero_type == 'image') selected @endif>Image</option>
+                                        </select>
+                                        @error('hero_type')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group">
