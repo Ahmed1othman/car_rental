@@ -159,6 +159,7 @@ class GenericController extends Controller
             'is_active' => $request->has('is_active') ? $request->is_active : false,
         ]);
 
+
         // Validate the request data
         $validatedData = $request->validate($this->validationRules, $this->validationMessages);
 
@@ -239,12 +240,17 @@ class GenericController extends Controller
                         $translated[$translatableField] = $validatedData[$translatableField][$langCode] ?? null;
                     }
 
+
                     $translatedData = $translated + [
                         'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
                         'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                         'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
-                        'slug' => Str::slug($validatedData[$this->slugField][$langCode].'-'.rand(1, 99999)??rand(1, 99999), '-')
                     ];
+
+                    if ($this->modelName == "homes")
+                        $translatedData['slug'] = Str::slug('home-'.$langCode);
+                    else
+                        $translatedData['slug'] = Str::slug($validatedData[$this->slugField][$langCode].'-'.rand(1, 99999)??rand(1, 99999), '-');
 
                     // Update or create translations
                     $row->translations()->updateOrCreate(
