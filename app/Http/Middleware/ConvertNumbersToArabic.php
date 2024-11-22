@@ -18,8 +18,8 @@ class ConvertNumbersToArabic
     {
         $response = $next($request);
 
-        // Check if the response is a JSON response
-        if ($response instanceof JsonResponse) {
+        if (app()->getLocale()== 'ar')
+            if ($response instanceof JsonResponse) {
             $data = $response->getData(true);
 
             // Recursive function to convert numbers

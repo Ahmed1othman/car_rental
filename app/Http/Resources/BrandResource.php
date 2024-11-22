@@ -37,18 +37,20 @@ class BrandResource extends JsonResource
         $car = StaticTranslation::where('locale', $language)->where('key', 'car')->first();
         $cars = StaticTranslation::where('locale', $language)->where('key', 'cars')->first();
         $count = $this->cars->count();
-        if ($language == 'ar')
+        if ($language == 'ar'){
             if ($count < 2 && $count >10)
                 $car_counts = $count . " " . $cars->value;
             else if ($count == 2)
                 $car_counts = "سيارتان";
             else
-                $car_counts = $count. " ". $car->values;
-        else
-            if ($count < 2)
+                $car_counts = $count. " ". $car->value;
+        } else{
+            if ($count <= 1)
                 $car_counts = $count . " " . $car->value;
             else
-                $car_counts = $count . " " . $cars->values;
+                $car_counts = $count . " " . $cars->value;
+        }
+
         return $car_counts;
     }
 }
