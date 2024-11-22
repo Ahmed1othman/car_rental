@@ -36,65 +36,51 @@ class CarController extends Controller
         if ($request->has('filters')) {
             $filters = $request->input('filters');
 
-            foreach ($filters as $key => $value) {
-                switch ($key) {
-                    case 'brand_id':
-                    case 'category_id':
-                    case 'color_id':
-                    case 'gear_type_id':
-                        if (is_array($value)) {
-                            $query->whereIn($key, $value);
-                        }
-                        break;
-
-                    case 'door_count':
-                    case 'luggage_capacity':
-                    case 'passenger_capacity':
-                        $query->where($key, $value);
-                        break;
-
-                    case 'free_delivery':
-                    case 'insurance_included':
-                    case 'only_on_afandina':
-                    case 'is_flash_sale':
-                        $query->where($key, (bool)$value);
-                        break;
-
-                    case 'daily_main_price':
-                        if (is_array($value) && count($value) == 2) {
-                            $query->where(function($q) use ($value) {
-                                $q->whereBetween('daily_main_price', $value)
-                                    ->orWhereBetween('daily_discount_price', $value);
-                            });
-                        }
-                        break;
-
-                    case 'weekly_main_price':
-                        if (is_array($value) && count($value) == 2) {
-                            $query->where(function($q) use ($value) {
-                                $q->whereBetween('weekly_main_price', $value)
-                                    ->orWhereBetween('weekly_discount_price', $value);
-                            });
-                        }
-                        break;
-
-                    case 'monthly_main_price':
-                        if (is_array($value) && count($value) == 2) {
-                            $query->where(function($q) use ($value) {
-                                $q->whereBetween('monthly_main_price', $value)
-                                    ->orWhereBetween('monthly_discount_price', $value);
-                            });
-                        }
-                        break;
-
-                    case 'word':
-                        if (!empty($value)) {
-                            $query->whereHas('translations', function ($q) use ($value) {
-                                $q->where('name', 'like', '%' . $value . '%');
-                            });
-                        }
-                        break;
+            // Array-based ID filters
+            $idFilters = ['brand_id', 'category_id', 'color_id', 'gear_type_id'];
+            foreach ($idFilters as $filter) {
+                if (isset($filters[$filter]) && !empty($filters[$filter])) {
+                    $query->whereIn($filter, (array)$filters[$filter]);
                 }
+            }
+
+            // Numeric value filters
+            $numericFilters = ['door_count', 'luggage_capacity', 'passenger_capacity'];
+            foreach ($numericFilters as $filter) {
+                if (isset($filters[$filter]) && $filters[$filter] !== '') {
+                    $query->where($filter, $filters[$filter]);
+                }
+            }
+
+            // Boolean filters
+            $booleanFilters = ['free_delivery', 'insurance_included', 'only_on_afandina', 'is_flash_sale'];
+            foreach ($booleanFilters as $filter) {
+                if (isset($filters[$filter]) && $filters[$filter] !== '') {
+                    $query->where($filter, (bool)$filters[$filter]);
+                }
+            }
+
+            // Price range filters
+            $priceFilters = [
+                'daily_main_price' => ['daily_main_price', 'daily_discount_price'],
+                'weekly_main_price' => ['weekly_main_price', 'weekly_discount_price'],
+                'monthly_main_price' => ['monthly_main_price', 'monthly_discount_price']
+            ];
+
+            foreach ($priceFilters as $filterKey => $priceColumns) {
+                if (isset($filters[$filterKey]) && is_array($filters[$filterKey]) && count($filters[$filterKey]) == 2) {
+                    $query->where(function($q) use ($filters, $filterKey, $priceColumns) {
+                        $q->whereBetween($priceColumns[0], $filters[$filterKey])
+                            ->orWhereBetween($priceColumns[1], $filters[$filterKey]);
+                    });
+                }
+            }
+
+            // Word search
+            if (isset($filters['word']) && !empty($filters['word'])) {
+                $query->whereHas('translations', function ($q) use ($filters) {
+                    $q->where('name', 'like', '%' . $filters['word'] . '%');
+                });
             }
         }
 
@@ -105,8 +91,5 @@ class CarController extends Controller
         return CarResource::collection($cars);
     }
 
-    public function OnlyOnAfandina(){
-
-    }
 
 }
