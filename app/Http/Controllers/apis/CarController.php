@@ -42,33 +42,57 @@ class CarController extends Controller
                     case 'category_id':
                     case 'color_id':
                     case 'gear_type_id':
-                        $query->whereIn($key, $value);
+                        if (is_array($value)) {
+                            $query->whereIn($key, $value);
+                        }
+                        break;
+
                     case 'door_count':
                     case 'luggage_capacity':
                     case 'passenger_capacity':
                         $query->where($key, $value);
+                        break;
+
                     case 'free_delivery':
                     case 'insurance_included':
                     case 'only_on_afandina':
                     case 'is_flash_sale':
-                        $query->where($key, true);
+                        $query->where($key, (bool)$value);
+                        break;
 
                     case 'daily_main_price':
-                        $query->whereBetween('daily_main_price', $value)
-                            ->orWhereBetween('daily_discount_price', $value);
+                        if (is_array($value) && count($value) == 2) {
+                            $query->where(function($q) use ($value) {
+                                $q->whereBetween('daily_main_price', $value)
+                                    ->orWhereBetween('daily_discount_price', $value);
+                            });
+                        }
+                        break;
 
                     case 'weekly_main_price':
-                        $query->whereBetween('weekly_main_price', $value)
-                            ->orWhereBetween('weekly_discount_price', $value);
+                        if (is_array($value) && count($value) == 2) {
+                            $query->where(function($q) use ($value) {
+                                $q->whereBetween('weekly_main_price', $value)
+                                    ->orWhereBetween('weekly_discount_price', $value);
+                            });
+                        }
+                        break;
 
                     case 'monthly_main_price':
-                        $query->whereBetween('monthly_main_price', $value)
-                            ->orWhereBetween('monthly_discount_price', $value);
+                        if (is_array($value) && count($value) == 2) {
+                            $query->where(function($q) use ($value) {
+                                $q->whereBetween('monthly_main_price', $value)
+                                    ->orWhereBetween('monthly_discount_price', $value);
+                            });
+                        }
+                        break;
 
                     case 'word':
-                        $query->whereHas('translations', function ($q) use ($value) {
-                            $q->where('name', 'like', '%' . $value . '%');
-                        });
+                        if (!empty($value)) {
+                            $query->whereHas('translations', function ($q) use ($value) {
+                                $q->where('name', 'like', '%' . $value . '%');
+                            });
+                        }
                         break;
                 }
             }
