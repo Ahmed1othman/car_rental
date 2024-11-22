@@ -43,7 +43,6 @@ class CarController extends Controller
                     case 'color_id':
                     case 'gear_type_id':
                         $query->whereIn($key, $value);
-                        break;
                     case 'door_count':
                     case 'luggage_capacity':
                     case 'passenger_capacity':
@@ -53,22 +52,18 @@ class CarController extends Controller
                     case 'only_on_afandina':
                     case 'is_flash_sale':
                         $query->where($key, true);
-                        break;
 
                     case 'daily_main_price':
                         $query->whereBetween('daily_main_price', $value)
                             ->orWhereBetween('daily_discount_price', $value);
-                        break;
 
                     case 'weekly_main_price':
                         $query->whereBetween('weekly_main_price', $value)
                             ->orWhereBetween('weekly_discount_price', $value);
-                        break;
 
                     case 'monthly_main_price':
                         $query->whereBetween('monthly_main_price', $value)
                             ->orWhereBetween('monthly_discount_price', $value);
-                        break;
 
                     case 'word':
                         $query->whereHas('translations', function ($q) use ($value) {
