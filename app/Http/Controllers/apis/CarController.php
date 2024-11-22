@@ -25,40 +25,42 @@ class CarController extends Controller
         })->firstOrFail();
         return new DetailedCarResource($car);
     }
+
     public function advancedSearch(Request $request)
     {
-        $language = $request->header('Accept-Language') ?? 'en';
+        $language = $request->header('Accept-Language', 'en');
         app()->setLocale($language);
 
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
             ->where('is_active', true);
 
+        // Apply filters if they exist
         if ($request->has('filters')) {
             $filters = $request->input('filters');
 
             // Array-based ID filters
-            $idFilters = ['brand_id', 'category_id', 'color_id', 'gear_type_id'];
-            foreach ($idFilters as $filter) {
-                if (isset($filters[$filter]) && !empty($filters[$filter])) {
-                    $query->whereIn($filter, (array)$filters[$filter]);
-                }
-            }
+            collect(['brand_id', 'category_id', 'color_id', 'gear_type_id'])
+                ->each(function ($filter) use ($query, $filters) {
+                    if (!empty($filters[$filter])) {
+                        $query->whereIn($filter, (array)$filters[$filter]);
+                    }
+                });
 
             // Numeric value filters
-            $numericFilters = ['door_count', 'luggage_capacity', 'passenger_capacity'];
-            foreach ($numericFilters as $filter) {
-                if (isset($filters[$filter]) && $filters[$filter] !== '') {
-                    $query->where($filter, $filters[$filter]);
-                }
-            }
+            collect(['door_count', 'luggage_capacity', 'passenger_capacity'])
+                ->each(function ($filter) use ($query, $filters) {
+                    if (isset($filters[$filter]) && $filters[$filter] !== '') {
+                        $query->where($filter, $filters[$filter]);
+                    }
+                });
 
             // Boolean filters
-            $booleanFilters = ['free_delivery', 'insurance_included', 'only_on_afandina', 'is_flash_sale'];
-            foreach ($booleanFilters as $filter) {
-                if (isset($filters[$filter]) && $filters[$filter] !== '') {
-                    $query->where($filter, (bool)$filters[$filter]);
-                }
-            }
+            collect(['free_delivery', 'insurance_included', 'only_on_afandina', 'is_flash_sale'])
+                ->each(function ($filter) use ($query, $filters) {
+                    if (isset($filters[$filter]) && $filters[$filter] !== '') {
+                        $query->where($filter, (bool)$filters[$filter]);
+                    }
+                });
 
             // Price range filters
             $priceFilters = [
@@ -76,19 +78,38 @@ class CarController extends Controller
                 }
             }
 
-            // Word search
-            if (isset($filters['word']) && !empty($filters['word'])) {
+            // Word search in translations
+            if (!empty($filters['word'])) {
                 $query->whereHas('translations', function ($q) use ($filters) {
                     $q->where('name', 'like', '%' . $filters['word'] . '%');
                 });
             }
         }
 
-        $cars = $request->input('paginate') === 'true'
-            ? $query->paginate($request->input('per_page', 10))
-            : $query->get();
+        // Handle sorting with validation
+        $allowedSortFields = [
+            'created_at',
+            'daily_main_price',
+            'weekly_main_price',
+            'monthly_main_price',
+            'passenger_capacity',
+            'door_count'
+        ];
 
-        return CarResource::collection($cars);
+        $sortField = in_array($request->input('sort_by'), $allowedSortFields)
+            ? $request->input('sort_by')
+            : 'created_at';
+
+        $sortDirection = $request->input('sort_direction') === 'asc' ? 'asc' : 'desc';
+        $query->orderBy($sortField, $sortDirection);
+
+        // Handle pagination with validation
+        $perPage = min(max($request->input('per_page', 10), 1), 10);
+
+        // Return paginated resource collection
+        return CarResource::collection(
+            $query->paginate($perPage)->withQueryString()
+        );
     }
 
 
