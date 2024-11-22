@@ -25,7 +25,6 @@ class DetailedCarResource extends JsonResource
         $colorTranslation = $this->color->translations->where('locale', $locale)->first();
         $brandName = $this->brand->translations->where('locale', $locale)->first()->name ?? null;
         $carModel = $this->carModel ? $this->carModel->translations->where('locale', $locale)->first(): null;
-
         $categoryName = $this->category->translations->where('locale', $locale)->first()->name ?? null;
 
 
@@ -50,6 +49,12 @@ class DetailedCarResource extends JsonResource
             'passenger_capacity' => $this->passenger_capacity,
             'insurance_included' => $this->insurance_included,
             'free_delivery' => $this->free_delivery,
+
+            'crypto_payment_accepted' => $this->crypto_payment_accepted,
+            'daily_mileage_included'=> $this->daily_mileage_included,
+            'monthly_mileage_included'=> $this->monthly_mileage_included,
+            'weakly_mileage_included'=> $this->weakly_mileage_included,
+            'year' => $this->year->year,
             'is_featured' => $this->is_featured,
             'is_flash_sale' => $this->is_flash_sale,
             'status' => $this->status,
@@ -72,8 +77,6 @@ class DetailedCarResource extends JsonResource
                 'type' => $image->type,
             ]),
             "car_features"=> FeatureResource::collection($this->features),
-
-
             'related_cars'=> CarResource::collection($carCategory),
             'seo_data' => [
                 'meta_title' => $translation->meta_title ?? null,

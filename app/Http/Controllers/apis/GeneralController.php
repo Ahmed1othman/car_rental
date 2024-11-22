@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdvancedSearchSettingResource;
+use App\Http\Resources\StaticTranslationsResource;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Category;
@@ -11,6 +12,7 @@ use App\Models\Color;
 use App\Models\Contact;
 use App\Models\Gear_type;
 use App\Models\Home;
+use App\Models\StaticTranslation;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Fluent;
@@ -24,11 +26,14 @@ class GeneralController extends Controller
 
         $languages = $this->getLanguagesList($language);
         $currencies = $this->getCurrenciesList($language);
+        $translations_data = StaticTranslation::where('locale', $language)->get();
+        $translationsData = $translations_data->pluck('value', 'key');
         $contact = Contact::first();
         $response = [
             'main_setting'=>[
                 'languages'=>$languages,
                 'currencies'=>$currencies,
+                'translation_data'=> $translationsData,
                 'storage_base_url' => asset('storage/'),
                 'dark_logo' => asset('admin/dist/logo/website_logos/logo_dark.png'),
                 'light_logo' => asset('admin/dist/logo/website_logos/logo_light.png'),

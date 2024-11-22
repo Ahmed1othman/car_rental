@@ -302,6 +302,11 @@ trait DBTrait
                 'cars.weekly_discount_price',
                 'cars.monthly_main_price',
                 'cars.monthly_discount_price',
+                'cars.daily_mileage_included',
+                'cars.weekly_mileage_included',
+                'cars.monthly_mileage_included',
+                'cars.crypto_payment_accepted',
+                'years.year',
                 'cars.door_count',
                 'cars.luggage_capacity',
                 'cars.passenger_capacity',
@@ -324,6 +329,7 @@ trait DBTrait
                     ->where('car_translations.locale', '=', $language);
             })
             ->leftJoin('colors', 'colors.id', '=', 'cars.color_id')
+            ->leftJoin('years', 'years.id', '=', 'cars.year_id')
             ->leftJoin('brands', 'brands.id', '=', 'cars.brand_id')
             ->leftJoin('categories', 'categories.id', '=', 'cars.category_id')
             ->leftJoin('color_translations', function ($join) use ($language) {

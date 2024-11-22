@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('get-main-settings', [GeneralController::class, 'getMainSetting']);
-Route::middleware(['language','currency'])->group(function () {
+Route::middleware(['language','currency','cta'])->group(function () {
     Route::get('get-footer', [GeneralController::class, 'getFooter']);
     Route::get('home', [HomePageController::class, 'index']);
     Route::get('about-us', [AboutUsPageController::class, 'index']);

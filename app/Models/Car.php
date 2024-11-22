@@ -43,6 +43,10 @@ class Car extends Model
         return $this->belongsTo(Color::class);
     }
 
+    public function year():BelongsTo{
+        return $this->belongsTo(Year::class);
+    }
+
     public function gearType():BelongsTo{
         return $this->belongsTo(Gear_type::class,'gear_type_id');
     }

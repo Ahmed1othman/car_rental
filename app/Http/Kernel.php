@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ConvertNumbersToArabic::class,
         ],
 
         'api' => [
@@ -66,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'language' => \App\Http\Middleware\Language::class,
         'currency'=>\App\Http\Middleware\Currency::class,
+        'cta'=>\App\Http\Middleware\ConvertNumbersToArabic::class,
     ];
 }

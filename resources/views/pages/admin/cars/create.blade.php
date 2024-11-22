@@ -359,6 +359,13 @@
                                                             <label class="custom-control-label" for="free_delivery">Free Delivery</label>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" name="crypto_payment_accepted" class="custom-control-input" id="crypto_payment_accepted" {{ old('crypto_payment_accepted') ? 'checked' : '' }}>
+                                                            <label class="custom-control-label" for="crypto_payment_accepted">Crypto Payment Accepted</label>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-md-6">
                                                         <div class="custom-control custom-switch">
                                                             <input type="checkbox" name="is_featured" class="custom-control-input" id="is_featured" {{ old('is_featured') ? 'checked' : '' }}>

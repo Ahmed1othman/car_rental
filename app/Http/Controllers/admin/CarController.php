@@ -39,6 +39,7 @@ class CarController extends GenericController
             'insurance_included',
             'free_delivery',
             'is_featured',
+            'crypto_payment_accepted',
             'is_flash_sale',
             'only_on_afandina',
             'show_in_home',
@@ -108,6 +109,7 @@ class CarController extends GenericController
             'is_featured' => $request->has('is_featured') ? true : false,
             'free_delivery' => $request->has('free_delivery') ? true : false,
             'is_active' => $request->has('is_active') ? true : false,
+            'crypto_payment_accepted' => $request->has('crypto_payment_accepted') ? true : false,
             'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
         ]);
         $this->validationRules = [
@@ -150,6 +152,7 @@ class CarController extends GenericController
             'passenger_capacity' => 'nullable|integer|min:1',
             'insurance_included' => 'boolean',
             'free_delivery' => 'boolean',
+            'crypto_payment_accepted' => 'boolean',
             'is_featured' => 'boolean',
             'is_flash_sale' => 'boolean',
             'is_active' => 'boolean',
@@ -183,6 +186,7 @@ class CarController extends GenericController
             'is_featured' => $request->has('is_featured') ? true : false,
             'free_delivery' => $request->has('free_delivery') ? true : false,
             'is_active' => $request->has('is_active') ? true : false,
+            'crypto_payment_accepted' => $request->has('crypto_payment_accepted') ? true : false,
             'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
         ]);
         $this->validationRules = [
