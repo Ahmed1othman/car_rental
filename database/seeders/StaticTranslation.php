@@ -1,103 +1,101 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\Http\Middleware;
 
-use App\Models\Language;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Stichoza\GoogleTranslate\GoogleTranslate;
+use Closure;
+use Illuminate\Http\JsonResponse;
 
-class StaticTranslation extends Seeder
+class ConvertNumbersToArabic
 {
     /**
-     * Run the database seeds.
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      */
-    public function run(): void
+    public function handle($request, Closure $next)
     {
-        DB::table('static_translations')->truncate();
+        $response = $next($request);
 
-        $locales = Language::whereNot('code','en')->get()->pluck('code')->toArray();
-        $translations = [
-            'menu'=>[
-                'home'=>'home page',
-                'all_brands'=>'all brands',
-                'categories'=>'car categories',
-                'about_us'=>'about us',
-                'contact_us'=>'contact us',
-                'blog'=>'blog',
-                'search'=>'find your car ...',
-                'no_results'=>'no results',
-                'cars'=>'Cars',
-                'car'=>'car',
-            ],
-            'card'=>[
-                'per_day'=>'per day',
-                'per_month'=>'per month',
-                'per_weak'=>'per weak',
-                'free_delivery'=>'free delivery',
-                'insurance_included'=>'insurance included',
-                'crypto_payment_accepted'=>'crypto payment accepted',
-                'km_per_day'=>'km per Day',
-                'km_per_month'=>'Km per month',
-                'km_per_week'=>'km per week',
-                'km'=>'Km',
-                'sale'=>'sale',
-                'no_deposit'=>'no deposit',
-                'brand'=>'brand',
-                'model'=>'model',
-                'year'=>'year',
-                'colo'=>'colo',
-                'category'=>'category',
-                'car_over_view'=>'car over view',
-                'car_features'=>'car features',
-                'related_cars'=>'related cars',
-                'car_description'=>'car description',
-            ],
-            'footer'=>[
-                'brand_section'=>'brands',
-                'quick_links'=>'quick links',
-                'support'=>'support',
-                'available_payment_methods'=>'available payment methods',
-            ],
-            'general'=>[
-                'view_all'=>'view all',
-                'cars'=>'cars',
-                'car'=>'car',
-                'no_results'=>'no results',
-            ],
+        // Check if the response is a JSON response
+        if ($response instanceof JsonResponse) {
+            $data = $response->getData(true);
 
-        ];
+            // Get the locale from the request or use a default
+            $locale = $request->header('Accept-Language', 'en');
 
-        foreach ($translations as $key_section => $section) {
-            foreach ($section as $key => $value) {
-                $enModel = \App\Models\StaticTranslation::create([
-                    'key' => $key,
-                    'locale' => 'en',
-                    'value' => $value,
-                    'section' => $key_section
-                ]);
+            // Process the data to convert numbers and handle pluralization
+            $data = $this->processData($data, $locale);
 
-                foreach ($locales as $locale) {
-                    $translatedName = $this->translateText($value ?? 'undefined', $locale);
-                    \App\Models\StaticTranslation::create([
-                        'key' => $key,
-                        'locale' => $locale,
-                        'value' => $translatedName,
-                        'section' => $key_section
-                    ]);
+            // Set the modified data back to the response
+            $response->setData($data);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Process data for number conversion and pluralization.
+     *
+     * @param  mixed  $data
+     * @param  string  $locale
+     * @return mixed
+     */
+    protected function processData($data, $locale)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                // Skip specific fields
+                if (in_array($key, ['file_path', 'default_image_path', 'hero_header_video_path', 'slug', 'hero_header_image_path'], true) ||
+                    filter_var($value, FILTER_VALIDATE_URL)) {
+                    continue;
+                }
+
+                if ($key === 'car_count') {
+                    $data[$key] = $this->formatCarCount($value, $locale);
+                } else {
+                    $data[$key] = $this->processData($value, $locale);
                 }
             }
+        } elseif (is_numeric($data) && $locale === 'ar') {
+            // Convert numbers to Arabic digits
+            $data = $this->convertToArabicNumbers($data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Format car count based on the locale.
+     *
+     * @param  string|int  $count
+     * @param  string  $locale
+     * @return string
+     */
+    protected function formatCarCount($count, $locale)
+    {
+        // Extract numeric count
+        $numericCount = (int) filter_var($count, FILTER_SANITIZE_NUMBER_INT);
+
+        if ($locale === 'ar') {
+            $arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            $numericCount = str_replace(range(0, 9), $arabicDigits, $numericCount);
+            return $numericCount . ' سيارة' . ($numericCount > 1 ? 'ات' : '');
+        } else {
+            return $numericCount . ' car' . ($numericCount > 1 ? 's' : '');
         }
     }
 
-    private function translateText($text, $locale)
+    /**
+     * Convert numbers to Arabic digits.
+     *
+     * @param  int|string  $number
+     * @return string
+     */
+    protected function convertToArabicNumbers($number)
     {
-        try {
-            $translator = new GoogleTranslate($locale);
-            return $translator->translate($text);
-        } catch (\Exception $e) {
-            return $text; // Fallback to the original text
-        }
+        $arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        return str_replace(range(0, 9), $arabicDigits, $number);
     }
 }

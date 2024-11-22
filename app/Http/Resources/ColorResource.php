@@ -30,4 +30,26 @@ class ColorResource extends JsonResource
             'car_count'=>$car_counts,
         ];
     }
+
+    /**
+     * @param string $language
+     * @return string
+     */
+    public function getCounts(string $language): string
+    {
+        $car = StaticTranslation::where('locale', $language)->where('key', 'car')->first();
+        $cars = StaticTranslation::where('locale', $language)->where('key', 'cars')->first();
+        $count = $this->cars->count();
+        if ($language == 'ar')
+            if ($count < 2 && $count >10)
+                $car_counts = $count . " " . $car->value;
+            else if ($count == 2)
+                $car_counts = "سيارتان";
+        else
+            if ($count < 2)
+                $car_counts = $count . " " . $car->value;
+            else
+                $car_counts = $count . " " . $cars->values;
+        return $car_counts;
+    }
 }

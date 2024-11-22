@@ -13,14 +13,27 @@ class CarResource extends JsonResource
 
         $carModel = $this->carModel ? $this->carModel->translations->where('locale', $locale)->first(): null;
 
+//        'daily_main_price' => ceil($this->daily_main_price * $currency->exchange_rate),
+//            'daily_discount_price' => ceil($this->daily_discount_price * $currency->exchange_rate),
+//            'weekly_main_price' => ceil($this->weekly_main_price * $currency->exchange_rate),
+//            'weekly_discount_price' => ceil($this->weekly_discount_price * $currency->exchange_rate),
+//            'monthly_main_price' => ceil($this->monthly_main_price * $currency->exchange_rate),
+//            'monthly_discount_price' =>ceil( $this->monthly_discount_price * $currency->exchange_rate),
+
+        $daily_main_price =  ceil($this->daily_main_price * $currency->exchange_rate);
+        $daily_discount_price =  ceil($this->daily_discount_price * $currency->exchange_rate);
+        $weekly_main_price =  ceil($this->weekly_main_price * $currency->exchange_rate);
+        $weekly_discount_price =  ceil($this->weekly_discount_price * $currency->exchange_rate);
+        $monthly_main_price =  ceil($this->monthly_main_price * $currency->exchange_rate);
+        $monthly_discount_price =  ceil($this->monthly_discount_price * $currency->exchange_rate);
         return [
             'id' => $this->id,
-            'daily_main_price' => ceil($this->daily_main_price * $currency->exchange_rate),
-            'daily_discount_price' => ceil($this->daily_discount_price * $currency->exchange_rate),
-            'weekly_main_price' => ceil($this->weekly_main_price * $currency->exchange_rate),
-            'weekly_discount_price' => ceil($this->weekly_discount_price * $currency->exchange_rate),
-            'monthly_main_price' => ceil($this->monthly_main_price * $currency->exchange_rate),
-            'monthly_discount_price' =>ceil( $this->monthly_discount_price * $currency->exchange_rate),
+            'daily_main_price' => $daily_main_price,
+            'daily_discount_price' => $daily_discount_price,
+            'weekly_main_price' => $weekly_main_price,
+            'weekly_discount_price' => $weekly_discount_price,
+            'monthly_main_price' => $monthly_main_price,
+            'monthly_discount_price' => $monthly_discount_price,
             'crypto_payment_accepted' => $this->crypto_payment_accepted,
             'daily_mileage_included'=> $this->daily_mileage_included,
             'monthly_mileage_included'=> $this->monthly_mileage_included,

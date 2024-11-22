@@ -13,7 +13,7 @@ class StaticTranslationsResource extends JsonResource
         return [
             'menu'=>[
                 'home'=>$this->home,
-                'all_brands'=>$this->all_brands,
+                'brands'=>$this->brands,
                 'categories'=> $this->categories,
                 'about_us'=> $this->about_us,
                 'contact_us'=> $this->contact_us,
