@@ -38,7 +38,7 @@ class CarResource extends JsonResource
             'daily_mileage_included'=> $this->daily_mileage_included,
             'monthly_mileage_included'=> $this->monthly_mileage_included,
             'weakly_mileage_included'=> $this->weakly_mileage_included,
-            'year' => $this->year->year,
+            'year' => $this->year->year??null,
             'door_count' => $this->door_count,
             'luggage_capacity' => $this->luggage_capacity,
             'passenger_capacity' => $this->passenger_capacity,

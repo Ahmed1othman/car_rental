@@ -54,7 +54,7 @@ class DetailedCarResource extends JsonResource
             'daily_mileage_included'=> $this->daily_mileage_included,
             'monthly_mileage_included'=> $this->monthly_mileage_included,
             'weakly_mileage_included'=> $this->weakly_mileage_included,
-            'year' => $this->year->year,
+            'year' => $this->year->year??null,
             'is_featured' => $this->is_featured,
             'is_flash_sale' => $this->is_flash_sale,
             'status' => $this->status,
