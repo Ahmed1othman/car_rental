@@ -75,16 +75,31 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-                                    <div class="form-group">
-                                        <label for="brand_id" class="font-weight-bold">Brand</label>
-                                        <select name="brand_id" id="brand_id" class="form-control form-control-lg shadow-sm">
-                                            <option value="">-- Select Brand --</option>
-                                            @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}" {{ $item->brand_id == $brand->id ? 'selected' : '' }}>
-                                                    {{ $brand->translations()->first()->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group text-center">
+                                                <!-- Video Preview with Placeholder -->
+                                                <div class="mb-3">
+                                                    <video id="file_path" controls style="height: 400px; width: 100%; object-fit: cover; border: 2px solid #ddd;">
+                                                        <source src="{{ $item->file_path ? asset('storage/' . $item->file_path) : 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x300%3C/text%3E%3C/svg%3E'  }}" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
+
+                                                <!-- File Input for Video Upload -->
+                                                <div class="custom-file">
+                                                    <input type="file" name="file_path" class="custom-file-input video-upload @error('file_path') is-invalid @enderror" id="video_path" data-preview="videoPreview_file_path" accept="video/*">
+                                                    <label class="custom-file-label" for="file_path">Upload Short Video</label>
+                                                </div>
+
+                                                <!-- Error Handling -->
+                                                @error('file_path')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group">
@@ -112,8 +127,8 @@
                                             @endphp
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
-                                                    <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.' . $lang->code, $translation->name ?? '') }}">
+                                                    <label for="title_{{ $lang->code }}" class="font-weight-bold">title ({{ $lang->name }})</label>
+                                                    <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.' . $lang->code, $translation->title ?? '') }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
@@ -242,5 +257,64 @@
             }
             @endforeach
         });
+    </script>
+
+    <script>
+        document.querySelectorAll('.video-upload').forEach(input => {
+            input.addEventListener('change', function(event) {
+                const previewId = this.getAttribute('data-preview');
+                const file = event.target.files[0];
+                if (file && file.type.includes('video')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const videoElement = document.getElementById(previewId);
+                        videoElement.src = e.target.result;
+                        videoElement.load();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            // Function to dynamically add SEO Questions/Answers
+            $('.add-question').on('click', function() {
+                var lang = $(this).data('lang');
+                var container = $('#seo-questions-' + lang);
+                var count = container.find('.seo-question-group').length;
+                var newQuestionGroup = `
+                    <div class="seo-question-group mb-3 p-3 border border-light rounded shadow-sm">
+                        <div class="form-group">
+                            <input type="text" name="seo_questions[` + lang + `][` + count + `][question]" class="form-control form-control-lg shadow-sm mb-2" placeholder="Enter Question" />
+                        </div>
+                        <div class="form-group">
+                            <textarea name="seo_questions[` + lang + `][` + count + `][answer]" class="form-control form-control-lg shadow-sm" placeholder="Enter Answer"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger remove-question">Remove</button>
+                    </div>`;
+                container.append(newQuestionGroup);
+            });
+
+            // Function to remove an SEO Question/Answer
+            $(document).on('click', '.remove-question', function() {
+                $(this).closest('.seo-question-group').remove();
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+
+        $(document).ready(function() {
+            @foreach($activeLanguages as $lang)
+            var metaKeywordsInput = document.querySelector('#meta_keywords_{{ $lang->code }}');
+            if (metaKeywordsInput) {
+                new Tagify(metaKeywordsInput, {
+                    placeholder: 'Enter meta keywords'
+                });
+            }
+            @endforeach
+        });
+
+
     </script>
 @endpush

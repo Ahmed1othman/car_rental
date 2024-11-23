@@ -8,10 +8,10 @@ class ShortVideoController extends GenericController
     {
         parent::__construct('short_video');
         $this->seo_question =true;
-        $this->slugField ='name';
+        $this->slugField ='title';
         $this->translatableFields = ['title','description'];
         $this->nonTranslatableFields = ['is_active'];
-        $this->uploadedfiles = ['image_path'];
+        $this->uploadedfiles = ['file_path'];
     }
 
     public function store(Request $request)
@@ -20,7 +20,7 @@ class ShortVideoController extends GenericController
             'is_active' => $request->has('is_active') ? true : false,
         ]);
         $this->validationRules = [
-            'name.*' => 'nullable|string|max:255',
+            'title.*' => 'nullable|string|max:255',
             'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
@@ -40,7 +40,7 @@ class ShortVideoController extends GenericController
     {
         // Define validation rules
         $this->validationRules = [
-            'name.*' => 'nullable|string|max:255',
+            'title.*' => 'nullable|string|max:255',
             'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
