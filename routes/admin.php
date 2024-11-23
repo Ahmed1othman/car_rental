@@ -120,3 +120,5 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
+
+Route::resource('short_videos', 'App\Http\Controllers\admin\ShortVideoController');

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\apis;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CarResource;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\DetailedCarResource;
 use App\Models\Brand;
 use App\Models\Car;
+use App\Models\Category;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -112,5 +114,85 @@ class CarController extends Controller
         );
     }
 
+
+    public function getBrandCars(Request $request){
+        $language = $request->header('Accept-Language', 'en');
+        app()->setLocale($language);
+
+        $brand = Brand::where('id', $request->input('brand_id'))->first();
+
+        $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
+            ->where('is_active', true);
+
+        $query->whereHas('brand', function ($q) use ($request) {
+            $q->where('id', $request->input('brand_id'));
+        });
+
+        // Handle sorting with validation
+        $allowedSortFields = [
+            'created_at',
+            'daily_main_price',
+            'weekly_main_price',
+            'monthly_main_price',
+            'passenger_capacity',
+            'door_count'
+        ];
+
+        $sortField = in_array($request->input('sort_by'), $allowedSortFields)
+            ? $request->input('sort_by')
+            : 'created_at';
+
+        $sortDirection = $request->input('sort_direction') === 'asc' ? 'asc' : 'desc';
+        $query->orderBy($sortField, $sortDirection);
+
+        // Handle pagination with validation
+        $perPage = min(max($request->input('per_page', 10), 1), 10);
+
+
+        return [
+            'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
+            'category' => new CategoryResource($brand)
+        ];
+
+    }
+
+    public function getCategoryCars(Request $request){
+        $language = $request->header('Accept-Language', 'en');
+        app()->setLocale($language);
+
+        $category = Category::where('id', $request->input('category_id'))->first();
+
+        $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
+            ->where('is_active', true);
+
+        $query->whereHas('category', function ($q) use ($request) {
+            $q->where('id', $request->input('category_id'));
+        });
+
+        // Handle sorting with validation
+        $allowedSortFields = [
+            'created_at',
+            'daily_main_price',
+            'weekly_main_price',
+            'monthly_main_price',
+            'passenger_capacity',
+            'door_count'
+        ];
+
+        $sortField = in_array($request->input('sort_by'), $allowedSortFields)
+            ? $request->input('sort_by')
+            : 'created_at';
+
+        $sortDirection = $request->input('sort_direction') === 'asc' ? 'asc' : 'desc';
+        $query->orderBy($sortField, $sortDirection);
+
+        // Handle pagination with validation
+        $perPage = min(max($request->input('per_page', 10), 1), 10);
+
+        return [
+            'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
+            'category' => new CategoryResource($category)
+        ];
+    }
 
 }

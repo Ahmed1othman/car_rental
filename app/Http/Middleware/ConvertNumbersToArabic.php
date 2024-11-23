@@ -58,6 +58,7 @@ class ConvertNumbersToArabic
                         'insurance_included',
                         'color_code',
                         'gear_type_id',
+                        'code',
                     ], true) ||
                     filter_var($value, FILTER_VALIDATE_URL)
                 ) {
