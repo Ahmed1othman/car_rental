@@ -33,10 +33,6 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
 
-//    Route::resource('templates', App\Http\Controllers\admin\TemplateController::class);
-    Route::resource('admin.settings', App\Http\Controllers\admin\TemplateController::class);
-
-
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/contacts', [ContactController::class, 'edit'])->name('contacts.create');
     Route::get('/contacts', [ContactController::class, 'edit'])->name('contacts');
@@ -103,6 +99,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('static-translations/save', [StaticTranslationController::class, 'saveTranslations'])->name('static-translations.save'); // Accept POST requests
 
+    Route::resource('short_videos', 'App\Http\Controllers\admin\ShortVideoController');
 
     Route::get('/get-models/{brand}', function (Brand $brand) {
         $locale = App::getLocale();
@@ -121,4 +118,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-Route::resource('short_videos', 'App\Http\Controllers\admin\ShortVideoController');
+
+
+

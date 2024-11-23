@@ -49,8 +49,8 @@ class ContactController extends Controller
             'tiktok' => 'nullable|string|max:255',
             'snapchat' => 'nullable|string|max:255',
             'website' => 'nullable|string|max:255',
-            'google_map_url' => 'nullable|string|max:255',
-            'contact_person' => 'nullable|string|max:255',
+            'google_map_url' => 'nullable|string|max:1000',
+            'contact_person' => 'nullable|string|max:1000',
             'additional_info' => 'nullable|string',
             'is_active' => 'boolean',
         ]);

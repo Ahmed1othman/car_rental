@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('short_videos', function (Blueprint $table) {
             $table->id();
+            $table->string('file_path')->nullable();  // Path to the brand logo image
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
-        $table->boolean('is_active')->default(true);
 });
     }
 

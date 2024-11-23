@@ -79,11 +79,6 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-                                    <div class="form-group">
-                                        <label for="general_field" class="font-weight-bold">General Field</label>
-                                        <input type="text" name="general_field" class="form-control form-control-lg shadow-sm" id="general_field" value="{{ old('general_field') }}">
-                                    </div>
-
 
                                     <div class="form-group text-center">
                                         <!-- Image Preview with Circular Border and Placeholder -->
@@ -125,8 +120,8 @@
                                         @foreach($activeLanguages as $lang)
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
-                                                    <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.'.$lang->code) }}">
+                                                    <label for="title_{{ $lang->code }}" class="font-weight-bold">title ({{ $lang->name }})</label>
+                                                    <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code) }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
