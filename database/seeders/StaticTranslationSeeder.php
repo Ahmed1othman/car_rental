@@ -15,6 +15,8 @@ class StaticTranslationSeeder extends Seeder
      */
     public function run(): void
     {
+
+
         // Fetch all active locales except English
         $locales = Language::whereNot('code', 'en')->get()->pluck('code')->toArray();
 
@@ -22,7 +24,7 @@ class StaticTranslationSeeder extends Seeder
         $translations = [
             'menu' => [
                 'home' => 'home page',
-                'all_brands' => 'all brands',
+                'brands' => 'brands',
                 'categories' => 'car categories',
                 'about_us' => 'about us',
                 'contact_us' => 'contact us',
