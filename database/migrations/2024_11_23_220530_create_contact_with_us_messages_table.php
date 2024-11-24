@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('contact_with_us_messages', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
-            $this->string('email')->nullable();
+            $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->text('message')->nullable();
             $table->string('subject')->nullable();

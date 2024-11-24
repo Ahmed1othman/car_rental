@@ -31,7 +31,7 @@ Route::middleware(['language','currency','cta'])->group(function () {
     Route::get('home', [HomePageController::class, 'index']);
     Route::get('about-us', [AboutUsPageController::class, 'index']);
     Route::get('contact-us', [ContactUsPageController::class, 'index']);
-    Route::get('contact-us/send-message', [ContactUsPageController::class, 'storeContactMessage']);
+    Route::post('contact-us/send-message', [ContactUsPageController::class, 'storeContactMessage']);
     Route::post('search', [HomePageController::class, 'search']);
     Route::get('brands', [BrandController::class, 'index']);
     Route::get('categories', [CategoryController::class, 'index']);

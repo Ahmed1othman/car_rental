@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Language;
 use App\Models\StaticTranslation;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class StaticTranslationSeeder extends Seeder
@@ -14,8 +15,10 @@ class StaticTranslationSeeder extends Seeder
      */
     public function run(): void
     {
+        // Fetch all active locales except English
         $locales = Language::whereNot('code', 'en')->get()->pluck('code')->toArray();
 
+        // Static translations structure
         $translations = [
             'menu' => [
                 'home' => 'home page',
@@ -32,12 +35,12 @@ class StaticTranslationSeeder extends Seeder
             'card' => [
                 'per_day' => 'per day',
                 'per_month' => 'per month',
-                'per_weak' => 'per weak',
+                'per_week' => 'per week',
                 'free_delivery' => 'free delivery',
                 'insurance_included' => 'insurance included',
                 'crypto_payment_accepted' => 'crypto payment accepted',
-                'km_per_day' => 'km per Day',
-                'km_per_month' => 'Km per month',
+                'km_per_day' => 'km per day',
+                'km_per_month' => 'km per month',
                 'km_per_week' => 'km per week',
                 'km' => 'Km',
                 'sale' => 'sale',
@@ -45,9 +48,9 @@ class StaticTranslationSeeder extends Seeder
                 'brand' => 'brand',
                 'model' => 'model',
                 'year' => 'year',
-                'colo' => 'colo',
+                'color' => 'color',
                 'category' => 'category',
-                'car_over_view' => 'car over view',
+                'car_overview' => 'car overview',
                 'car_features' => 'car features',
                 'related_cars' => 'related cars',
                 'car_description' => 'car description',
@@ -78,45 +81,48 @@ class StaticTranslationSeeder extends Seeder
             ],
         ];
 
+        // Insert translations
         foreach ($translations as $section => $keys) {
             foreach ($keys as $key => $value) {
-                // English translation (base language)
-                StaticTranslation::updateOrCreate(
-                    [
-                        'key' => $key,
-                        'locale' => 'en',
-                    ],
-                    [
-                        'value' => $value,
-                        'section' => $section,
-                    ]
-                );
+                // Create or update English translation
+                $this->createOrUpdateTranslation('en', $section, $key, $value);
 
-                // Translations for other locales
+                // Create or update translations for other locales
                 foreach ($locales as $locale) {
                     $translatedValue = $this->translateText($value, $locale);
-                    StaticTranslation::updateOrCreate(
-                        [
-                            'key' => $key,
-                            'locale' => $locale,
-                        ],
-                        [
-                            'value' => $translatedValue,
-                            'section' => $section,
-                        ]
-                    );
+                    $this->createOrUpdateTranslation($locale, $section, $key, $translatedValue);
                 }
             }
         }
     }
 
-    private function translateText($text, $locale)
+    /**
+     * Create or update a translation entry in the database.
+     */
+    private function createOrUpdateTranslation(string $locale, string $section, string $key, string $value): void
+    {
+        $translation = StaticTranslation::firstOrNew([
+            'key' => $key,
+            'locale' => $locale,
+            'section' => $section,
+        ]);
+
+        $translation->value = $value;
+        $translation->save();
+    }
+
+    /**
+     * Translate text to the given locale using GoogleTranslate.
+     */
+    private function translateText(string $text, string $locale): string
     {
         try {
             $translator = new GoogleTranslate($locale);
             return $translator->translate($text);
         } catch (\Exception $e) {
-            return $text; // Fallback to the original text
+            // Log the exception for debugging
+            Log::error("Translation error: " . $e->getMessage());
+            return $text; // Return the original text as fallback
         }
     }
 }
