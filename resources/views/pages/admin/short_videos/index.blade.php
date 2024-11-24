@@ -47,7 +47,8 @@
                                 <thead class="bg-dark text-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>Name</th>
+                                    <th>video</th>
+                                    <th>Title</th>
                                     <th>Status</th>
                                     <th>Created At</th>
                                     <th>Actions</th>
@@ -57,7 +58,13 @@
                                 @foreach ($items as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->translations->first()->name ?? 'N/A' }}</td>
+                                        <td>
+                                            <video width="300" height="250" controls>
+                                                <source src="{{ asset('storage/' . $item->file_path) }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </td>
+                                        <td>{{ $item->translations->first()->title ?? 'N/A' }}</td>
                                         <td>
                                             <!-- Custom Toggle Switch -->
                                             <label class="switch">

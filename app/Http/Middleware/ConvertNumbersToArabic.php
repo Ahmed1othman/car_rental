@@ -59,6 +59,7 @@ class ConvertNumbersToArabic
                         'color_code',
                         'gear_type_id',
                         'code',
+                        'image',
                     ], true) ||
                     filter_var($value, FILTER_VALIDATE_URL)
                 ) {

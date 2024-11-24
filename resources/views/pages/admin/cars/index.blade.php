@@ -49,6 +49,7 @@
                                     <th>#</th>
                                     <th>Default Image</th>
                                     <th>Name</th>
+                                    <th>Slug</th>
                                     <th>Brand</th>
                                     <th>Options</th> <!-- New column header for all switches -->
                                     <th>Created At</th>
@@ -67,6 +68,7 @@
                                             @endif
                                         </td>
                                         <td>{{ $item->translations->first()->name ?? 'N/A' }}</td>
+                                        <td>{{ $item->translations->first()->slug ?? 'N/A' }}</td>
                                         <td>{{ $item->brand->translations->first()->name ?? 'N/A' }}</td>
                                         <td>
                                             <!-- Combine all switches in one column -->
