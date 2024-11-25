@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -33,6 +34,10 @@ class Handler extends ExceptionHandler
 
     protected function handleApiException($request, $exception)
     {
+        if ($exception instanceof AuthenticationException) {
+            return parent::render($request, $exception);
+        }
+
         if ($exception instanceof ValidationException) {
             return response()->json([
                 'message' => 'Validation failed',
