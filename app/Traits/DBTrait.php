@@ -373,6 +373,8 @@ trait DBTrait
             $car->monthly_main_price = ceil($car->monthly_main_price * $currentCurrency->exchange_rate);
             $car->monthly_discount_price = ceil($car->monthly_discount_price * $currentCurrency->exchange_rate);
 
+            $car->no_debosit = 1;
+            $car->discount_rate = (($car->daily_main_price - $car->daily_discount_price) * 100 / $car->daily_main_price);
             return $car;
         });
 
