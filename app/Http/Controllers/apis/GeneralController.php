@@ -35,8 +35,8 @@ class GeneralController extends Controller
                 'currencies'=>$currencies,
                 'translation_data'=> $translationsData,
                 'storage_base_url' => asset('storage/'),
-                'dark_logo' => asset('admin/dist/logo/website_logos/logo_dark.png'),
-                'light_logo' => asset('admin/dist/logo/website_logos/logo_light.png'),
+                'dark_logo' => asset('admin/dist/logo/website_logos/logo_dark.svg'),
+                'light_logo' => asset('admin/dist/logo/website_logos/logo_light.svg'),
                 'contact_data'=>[
                     'phone' => $contact->phone,
                     'whatsapp' => $contact->whatsapp,
