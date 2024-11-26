@@ -86,7 +86,7 @@ class HomePageController extends Controller
             'where_find_us'=>[
                 'where_find_us_section_title'=>$homeData->translations->first()->where_find_us_section_title,
                 'where_find_us_section_paragraph'=>$homeData->translations->first()->where_find_us_section_paragraph,
-                'services'=> $locations,
+                'locations'=> $locations,
             ],
             'document_section'=>[
                 'document_title'=>$homeData->translations->first()->required_documents_section_title,
