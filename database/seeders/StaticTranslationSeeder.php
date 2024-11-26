@@ -74,6 +74,7 @@ class StaticTranslationSeeder extends Seeder
                 'cars' => 'cars',
                 'car' => 'car',
                 'no_results' => 'no results',
+                'transmission'=> 'transmission'
             ],
             'contact' => [
                 'get_in_touch_with_us' => 'get in touch with us',
