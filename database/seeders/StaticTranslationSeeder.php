@@ -18,7 +18,7 @@ class StaticTranslationSeeder extends Seeder
 
 
         // Fetch all active locales except English
-        $locales = Language::whereNot('code', 'en')->get()->pluck('code')->toArray();
+        $locales = Language::whereNotIn('code', ['en','ar'])->get()->pluck('code')->toArray();
 
         // Static translations structure
         $translations = [
@@ -89,6 +89,75 @@ class StaticTranslationSeeder extends Seeder
                 'whatsapp' => 'whatsApp',
             ],
         ];
+        $translationsAr = [
+            'menu' => [
+                'home' => 'الصفحة الرئيسية',
+                'brands' => 'العلامات التجارية',
+                'categories' => 'فئات السيارات',
+                'about_us' => 'من نحن',
+                'contact_us' => 'اتصل بنا',
+                'blog' => 'المدونة',
+                'search' => 'ابحث عن سيارتك ...',
+                'no_results' => 'لا توجد نتائج',
+                'cars' => 'سيارات',
+                'car' => 'سيارة',
+            ],
+            'card' => [
+                'per_day' => 'في اليوم',
+                'per_month' => 'في الشهر',
+                'per_week' => 'في الأسبوع',
+                'free_delivery' => 'توصيل مجاني',
+                'insurance_included' => 'يشمل التأمين',
+                'crypto_payment_accepted' => 'متاح الدفع بالعملات الرقمية',
+                'km_per_day' => 'كم في اليوم',
+                'km_per_month' => 'كم في الشهر',
+                'km_per_week' => 'كم في الأسبوع',
+                'km' => 'كم',
+                'sale' => 'تخفيض',
+                'no_deposit' => 'بدون تأمين',
+                'brand' => 'العلامة التجارية',
+                'model' => 'الموديل',
+                'year' => 'السنة',
+                'clear_filter' => 'إزالة التصفية',
+                'close' => 'إغلاق',
+                'price' => 'السعر',
+                'read_more' => 'اقرأ المزيد',
+                'related_blogs' => 'مقالات ذات صلة',
+                'message' => 'الرسالة',
+                'send' => 'إرسال',
+                'category' => 'الفئة',
+                'car_overview' => 'نظرة عامة على السيارة',
+                'car_features' => 'ميزات السيارة',
+                'related_cars' => 'سيارات ذات صلة',
+                'car_description' => 'وصف السيارة',
+            ],
+            'footer' => [
+                'brand_section' => 'العلامات التجارية',
+                'quick_links' => 'روابط سريعة',
+                'support' => 'الدعم',
+                'available_payment_methods' => 'طرق الدفع المتاحة',
+            ],
+            'general' => [
+                'view_all' => 'عرض الكل',
+                'cars' => 'السيارات',
+                'car' => 'سيارة',
+                'no_results' => 'لا توجد نتائج',
+                'transmission' => 'ناقل الحركة',
+            ],
+            'contact' => [
+                'get_in_touch_with_us' => 'تواصل معنا',
+                'submit' => 'إرسال',
+                'social_media' => 'وسائل التواصل الاجتماعي',
+                'full_name' => 'الاسم الكامل',
+                'phone_number' => 'رقم الهاتف',
+                'email' => 'البريد الإلكتروني',
+                'subject' => 'الموضوع',
+                'pricing' => 'التسعير',
+                'call_us' => 'اتصل بنا',
+                'whatsapp' => 'واتساب',
+            ],
+        ];
+
 
         // Insert translations
         foreach ($translations as $section => $keys) {
@@ -101,6 +170,16 @@ class StaticTranslationSeeder extends Seeder
                     $translatedValue = $this->translateText($value, $locale);
                     $this->createOrUpdateTranslation($locale, $section, $key, $translatedValue);
                 }
+
+
+            }
+        }
+
+        foreach ($translationsAr as $section => $keys) {
+            foreach ($keys as $key => $value) {
+                // Create or update English translation
+                $this->createOrUpdateTranslation('ar', $section, $key, $value);
+
             }
         }
     }
