@@ -74,7 +74,8 @@ class StaticTranslationSeeder extends Seeder
                 'cars' => 'cars',
                 'car' => 'car',
                 'no_results' => 'no results',
-                'transmission'=> 'transmission'
+                'transmission'=> 'transmission',
+                'instagram_videos' => 'Instagram Videos',
             ],
             'contact' => [
                 'get_in_touch_with_us' => 'get in touch with us',
@@ -87,6 +88,7 @@ class StaticTranslationSeeder extends Seeder
                 'pricing' => 'pricing',
                 'call_us' => 'call us',
                 'whatsapp' => 'whatsApp',
+
             ],
         ];
         $translationsAr = [
@@ -143,6 +145,7 @@ class StaticTranslationSeeder extends Seeder
                 'car' => 'سيارة',
                 'no_results' => 'لا توجد نتائج',
                 'transmission' => 'ناقل الحركة',
+                'instagram_videos' => 'إنستجرام',
             ],
             'contact' => [
                 'get_in_touch_with_us' => 'تواصل معنا',
