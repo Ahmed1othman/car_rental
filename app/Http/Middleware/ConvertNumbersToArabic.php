@@ -79,6 +79,7 @@ class ConvertNumbersToArabic
                         'free_delivery',
                         'no_deposit',
 
+
                     ], true) ||
                     filter_var($value, FILTER_VALIDATE_URL)
                 ) {
