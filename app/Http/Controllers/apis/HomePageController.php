@@ -5,6 +5,7 @@ namespace App\Http\Controllers\apis;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdvertisementResource;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\ShortVideoResource;
 use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Car;
@@ -13,6 +14,7 @@ use App\Models\Contact;
 use App\Models\Faq;
 use App\Models\Home;
 use App\Models\Service;
+use App\Models\Short_video;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +46,9 @@ class HomePageController extends Controller
 
         $services = $this->getServicesList($language);
         $documents = $this->getDocumentsList($language);
-//        $locations = $this->getLocationsList($language);
+        $locations = $this->getLocationsList($language);
+        $shortVideos = Short_video::get();
+
         $response = [
             'header_section'=>[
                 'hero_header_title' => $homeData->translations->first()->hero_header_title,
@@ -78,14 +82,20 @@ class HomePageController extends Controller
                 'why_choose_us_section_paragraph'=>$homeData->translations->first()->why_choose_us_section_paragraph,
                 'services'=> $services,
             ],
+
+            'where_find_us'=>[
+                'where_find_us_section_title'=>$homeData->translations->first()->where_find_us_section_title,
+                'where_find_us_section_paragraph'=>$homeData->translations->first()->where_find_us_section_paragraph,
+                'services'=> $locations,
+            ],
             'document_section'=>[
                 'document_title'=>$homeData->translations->first()->required_documents_section_title,
                 'document_section_paragraph'=>$homeData->translations->first()->required_documents_section_paragraph,
                 'documents'=>$documents,
             ],
-            'instagram_section'=>[
-                'instagram_title'=>"Instagram Videos",
-                'instagram_videos'=>[],
+            'short_videos_section'=>[
+                'short_videos_title'=>"Instagram Videos",
+                'short_videos'=> ShortVideoResource::collection($shortVideos),
             ],
         ];
 

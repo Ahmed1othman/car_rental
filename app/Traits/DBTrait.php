@@ -162,6 +162,7 @@ trait DBTrait
             ->get();
     }
 
+
 //    public function getCars($language, $condition, $limit = null, $paginate = null)
 //    {
 //        $currentCurrency = $this->getCurrency($language);
