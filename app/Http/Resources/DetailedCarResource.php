@@ -83,6 +83,9 @@ class DetailedCarResource extends JsonResource
                 'meta_description' => $translation->meta_description ?? null,
                 'meta_keywords' => $metaKeywords,
             ],
+
+            'no_deposit' => $this->no_debosite??1,
+            'discount_rate' => ceil(($this->daily_main_price - $this->daily_discount_price) * 100 / $this->daily_main_price),
         ]);
     }
 }
