@@ -78,6 +78,8 @@ class ConvertNumbersToArabic
                         'google_map_url',
                         'free_delivery',
                         'no_deposit',
+                        'web_image',
+                        'mobile_image',
 
 
                     ], true) ||
