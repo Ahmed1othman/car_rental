@@ -80,6 +80,7 @@ class ConvertNumbersToArabic
                         'no_deposit',
                         'web_image',
                         'mobile_image',
+                        'content',
 
 
                     ], true) ||
