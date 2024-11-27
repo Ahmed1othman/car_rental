@@ -306,7 +306,7 @@
 
 
                                                 <div class="form-group">
-                                                    <label for="footer_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Required Documents Section Paragraph ({{ $lang->name }})</label>
+                                                    <label for="footer_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Footer Section Paragraph ({{ $lang->name }})</label>
                                                     <textarea name="footer_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="footer_section_paragraph_{{ $lang->code }}" rows="4">{{ old('footer_section_paragraph.' . $lang->code, $translation->footer_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
