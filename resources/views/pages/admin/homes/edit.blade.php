@@ -223,7 +223,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="why_choose_us_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Why Choose Us Section Paragraph({{ $lang->name }})</label>
-                                                    <textarea name="why_choose_us_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="why_choose_us_section_paragraph_{{ $lang->code }}" rows="4">{{ old('why_choose_us_section_paragraph.' . $lang->code, $translation->why_choose_us_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="why_choose_us_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="why_choose_us_section_paragraph_{{ $lang->code }}" rows="4">{{ old('why_choose_us_section_paragraph.' . $lang->code, $translation->why_choose_us_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
@@ -232,7 +232,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="faq_section_paragraph_{{ $lang->code }}" class="font-weight-bold">FAQ Section Paragraph({{ $lang->name }})</label>
-                                                    <textarea name="faq_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="faq_section_paragraph_{{ $lang->code }}" rows="4">{{ old('faq_section_paragraph.' . $lang->code, $translation->faq_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="faq_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="faq_section_paragraph_{{ $lang->code }}" rows="4">{{ old('faq_section_paragraph.' . $lang->code, $translation->faq_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
@@ -241,7 +241,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="contact_us_paragraph_{{ $lang->code }}" class="font-weight-bold">FAQ Section Paragraph({{ $lang->name }})</label>
-                                                    <textarea name="contact_us_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="contact_us_paragraph_{{ $lang->code }}" rows="4">{{ old('contact_us_paragraph.' . $lang->code, $translation->contact_us_paragraph ?? '') }}</textarea>
+                                                    <textarea name="contact_us_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="contact_us_paragraph_{{ $lang->code }}" rows="4">{{ old('contact_us_paragraph.' . $lang->code, $translation->contact_us_paragraph ?? '') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
@@ -250,7 +250,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="contact_us_detail_paragraph_{{ $lang->code }}" class="font-weight-bold">FAQ Section Paragraph({{ $lang->name }})</label>
-                                                    <textarea name="contact_us_detail_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="contact_us_detail_paragraph_{{ $lang->code }}" rows="4">{{ old('contact_us_detail_paragraph.' . $lang->code, $translation->contact_us_detail_paragraph ?? '') }}</textarea>
+                                                    <textarea name="contact_us_detail_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="contact_us_detail_paragraph_{{ $lang->code }}" rows="4">{{ old('contact_us_detail_paragraph.' . $lang->code, $translation->contact_us_detail_paragraph ?? '') }}</textarea>
                                                 </div>
 
 
@@ -264,7 +264,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="where_find_us_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Where Find Us Section Paragraph ({{ $lang->name }})</label>
-                                                    <textarea name="where_find_us_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="where_find_us_section_paragraph_{{ $lang->code }}" rows="4">{{ old('where_find_us_section_paragraph.' . $lang->code, $translation->where_find_us_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="where_find_us_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="where_find_us_section_paragraph_{{ $lang->code }}" rows="4">{{ old('where_find_us_section_paragraph.' . $lang->code, $translation->where_find_us_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
@@ -273,7 +273,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="required_documents_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Required Documents Section Paragraph ({{ $lang->name }})</label>
-                                                    <textarea name="required_documents_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="required_documents_section_paragraph_{{ $lang->code }}" rows="4">{{ old('required_documents_section_paragraph.' . $lang->code, $translation->required_documents_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="required_documents_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="required_documents_section_paragraph_{{ $lang->code }}" rows="4">{{ old('required_documents_section_paragraph.' . $lang->code, $translation->required_documents_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
 
@@ -283,7 +283,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="instagram_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Instagram Section Paragraph ({{ $lang->name }})</label>
-                                                    <textarea name="instagram_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="instagram_section_paragraph_{{ $lang->code }}" rows="4">{{ old('instagram_section_paragraph.' . $lang->code, $translation->instagram_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="instagram_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm " id="instagram_section_paragraph_{{ $lang->code }}" rows="4">{{ old('instagram_section_paragraph.' . $lang->code, $translation->instagram_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
@@ -292,7 +292,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="category_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Category Section Paragraph ({{ $lang->name }})</label>
-                                                    <textarea name="category_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="category_section_paragraph_{{ $lang->code }}" rows="4">{{ old('category_section_paragraph.' . $lang->code, $translation->category_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="category_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="category_section_paragraph_{{ $lang->code }}" rows="4">{{ old('category_section_paragraph.' . $lang->code, $translation->category_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
@@ -301,13 +301,13 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="brand_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Brand Section Paragraph ({{ $lang->name }})</label>
-                                                    <textarea name="brand_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="brand_section_paragraph_{{ $lang->code }}" rows="4">{{ old('brand_section_paragraph.' . $lang->code, $translation->brand_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="brand_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="brand_section_paragraph_{{ $lang->code }}" rows="4">{{ old('brand_section_paragraph.' . $lang->code, $translation->brand_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
 
                                                 <div class="form-group">
                                                     <label for="footer_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Required Documents Section Paragraph ({{ $lang->name }})</label>
-                                                    <textarea name="footer_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="footer_section_paragraph_{{ $lang->code }}" rows="4">{{ old('footer_section_paragraph.' . $lang->code, $translation->footer_section_paragraph ?? '') }}</textarea>
+                                                    <textarea name="footer_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="footer_section_paragraph_{{ $lang->code }}" rows="4">{{ old('footer_section_paragraph.' . $lang->code, $translation->footer_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
 
