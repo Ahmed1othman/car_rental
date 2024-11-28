@@ -89,6 +89,8 @@ class StaticTranslationSeeder extends Seeder
                 'call_us' => 'call us',
                 'whatsapp' => 'whatsApp',
 
+                'whatsapp_text_one' => "Hi, I'm contacting you through ",
+                'whatsapp_text_two' => "I'd like to inquire about",
             ],
         ];
         $translationsAr = [
@@ -158,6 +160,8 @@ class StaticTranslationSeeder extends Seeder
                 'pricing' => 'التسعير',
                 'call_us' => 'اتصل بنا',
                 'whatsapp' => 'واتساب',
+                'whatsapp_text_one' => "مرحبًا، أتواصل معكم عبر ",
+                'whatsapp_text_two' => "أود الاستفسار عن ",
             ],
         ];
 
