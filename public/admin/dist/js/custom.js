@@ -83,48 +83,48 @@
 //     // });
 //
 //     // Toggle Status
-//     $('.toggle-status').on('change', function() {
-//         var value = $(this).is(':checked') ? 1 : 0;
-//         var model = $(this).data('model'); // Get the model name dynamically
-//         var attribute = $(this).data('attribute'); // Get the model name dynamically
-//         var id = $(this).data('id'); // Get the ID dynamically
-//
-//         $.ajax({
-//             url: 'toggleStatus', // Ensure the correct route is being used
-//             method: 'POST',
-//             data: {
-//                 _token: $('meta[name="csrf-token"]').attr('content'), // Use CSRF token dynamically
-//                 model: model,
-//                 id: id,
-//                 value: value,
-//                 attribute: attribute
-//             },
-//             success: function(response) {
-//                 if (response.success) {
-//                     Swal.fire({
-//                         icon: 'success',
-//                         title: 'Success!',
-//                         text: response.message,
-//                         timer: 2000,
-//                         showConfirmButton: false
-//                     });
-//                 } else {
-//                     Swal.fire({
-//                         icon: 'error',
-//                         title: 'Oops...',
-//                         text: 'Failed to update status!',
-//                     });
-//                 }
-//             },
-//             error: function(xhr) {
-//                 Swal.fire({
-//                     icon: 'error',
-//                     title: 'Error',
-//                     text: 'Something went wrong. Please try again later.',
-//                 });
-//             }
-//         });
-//     });
+    $('.toggle-status').on('change', function() {
+        var value = $(this).is(':checked') ? 1 : 0;
+        var model = $(this).data('model'); // Get the model name dynamically
+        var attribute = $(this).data('attribute'); // Get the model name dynamically
+        var id = $(this).data('id'); // Get the ID dynamically
+
+        $.ajax({
+            url: 'toggleStatus', // Ensure the correct route is being used
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'), // Use CSRF token dynamically
+                model: model,
+                id: id,
+                value: value,
+                attribute: attribute
+            },
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed to update status!',
+                    });
+                }
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong. Please try again later.',
+                });
+            }
+        });
+    });
 //
 //     // Delete Action with SweetAlert Confirmation
 //     $('.delete-btn').on('click', function() {
