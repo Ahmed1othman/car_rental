@@ -19,6 +19,9 @@ class LanguageController extends GenericController
 
     public function store(Request $request)
     {
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+        ]);
         $this->validationRules = [
             'code' => 'required|string|max:3|unique:languages,code',
             'name' => 'required|string|max:255|unique:languages,name',
@@ -36,6 +39,9 @@ class LanguageController extends GenericController
     public function update(Request $request, $id)
     {
 
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+        ]);
         // Define validation rules
         $this->validationRules = [
             'code' => 'required|string|max:3|unique:languages,code,'.$id,
