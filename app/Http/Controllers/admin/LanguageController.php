@@ -8,6 +8,7 @@ class LanguageController extends GenericController
     {
         parent::__construct('language');
         $this->nonTranslatableFields = ['code','name','flag','is_active'];
+         $this->isTranslatable = false;
     }
 
     public function index()
