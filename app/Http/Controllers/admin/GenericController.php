@@ -260,38 +260,42 @@ class GenericController extends Controller
                 }
             }
 
-            if ($this->seo_question) {
-                // Handle SEO questions for each language
-                foreach ($this->data['activeLanguages'] as $language) {
-                    $langCode = $language->code;
+            if ($this->isTranslatable)
+            {
+                if ($this->seo_question) {
+                    // Handle SEO questions for each language
+                    foreach ($this->data['activeLanguages'] as $language) {
+                        $langCode = $language->code;
 
-                    // Get all existing SEO questions for this template and language
-                    $existingQuestions = $row->seoQuestions()->where('locale', $langCode)->get();
-                    $submittedQuestions = $validatedData['seo_questions'][$langCode] ?? [];
-                    // Track submitted question IDs
-                    $submittedIds = array_column($submittedQuestions, 'id', 'id');
-                    // Delete questions not submitted
-                    foreach ($existingQuestions as $existingQuestion) {
-                        if (!isset($submittedIds[$existingQuestion->id])) {
-                            $existingQuestion->delete();
+                        // Get all existing SEO questions for this template and language
+                        $existingQuestions = $row->seoQuestions()->where('locale', $langCode)->get();
+                        $submittedQuestions = $validatedData['seo_questions'][$langCode] ?? [];
+                        // Track submitted question IDs
+                        $submittedIds = array_column($submittedQuestions, 'id', 'id');
+                        // Delete questions not submitted
+                        foreach ($existingQuestions as $existingQuestion) {
+                            if (!isset($submittedIds[$existingQuestion->id])) {
+                                $existingQuestion->delete();
+                            }
                         }
-                    }
 
-                    // Update or create questions
-                    foreach ($submittedQuestions as $seoQuestionData) {
-                        $row->seoQuestions()->updateOrCreate(
-                            [
-                                'id' => $seoQuestionData['id'] ?? null, // Use existing ID if available
-                                'locale' => $langCode,
-                            ],
-                            [
-                                'question_text' => $seoQuestionData['question'] ?? '',
-                                'answer_text' => $seoQuestionData['answer'] ?? null,
-                            ]
-                        );
+                        // Update or create questions
+                        foreach ($submittedQuestions as $seoQuestionData) {
+                            $row->seoQuestions()->updateOrCreate(
+                                [
+                                    'id' => $seoQuestionData['id'] ?? null, // Use existing ID if available
+                                    'locale' => $langCode,
+                                ],
+                                [
+                                    'question_text' => $seoQuestionData['question'] ?? '',
+                                    'answer_text' => $seoQuestionData['answer'] ?? null,
+                                ]
+                            );
+                        }
                     }
                 }
             }
+
 
         $this->exceptionsModelUpdate($request, $row);
             // Commit the transaction
