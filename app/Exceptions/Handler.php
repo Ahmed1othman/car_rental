@@ -26,16 +26,37 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
-
-    public function render($request, Throwable $exception)
+    public function register(): void
     {
-        return $this->handleApiException($request, $exception);
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 
-    protected function handleApiException($request, $exception)
+    /**
+     * Render an exception into an HTTP response.
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($request->expectsJson()) {
+            // Handle API exceptions
+            return $this->handleApiException($request, $exception);
+        }
+
+        // Handle web exceptions (default)
+        return parent::render($request, $exception);
+    }
+
+    /**
+     * Handle exceptions for API requests.
+     */
+    protected function handleApiException($request, Throwable $exception)
     {
         if ($exception instanceof AuthenticationException) {
-            return parent::render($request, $exception);
+            return response()->json([
+                'message' => 'Unauthenticated',
+                'errors' => $exception->getMessage(),
+            ], 401);
         }
 
         if ($exception instanceof ValidationException) {
@@ -47,31 +68,28 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof NotFoundHttpException) {
             return response()->json([
-                'message' => 'An error occurred',
+                'message' => 'Not Found',
                 'errors' => $exception->getMessage(),
             ], 404);
         }
 
-        if ($exception instanceof ModelNotFoundException ) {
+        if ($exception instanceof ModelNotFoundException) {
             return response()->json([
-                'message' => 'object not found',
+                'message' => 'Object not found',
                 'errors' => $exception->getMessage(),
             ], 404);
         }
 
-        if ($exception instanceof \Exception) {
+        if ($exception instanceof QueryException) {
             return response()->json([
-                'message' => 'An error occurred',
+                'message' => 'Database query error',
                 'errors' => $exception->getMessage(),
             ], 500);
         }
-        return parent::render($request, $exception);
-    }
 
-    public function register(): void
-    {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        return response()->json([
+            'message' => 'An unexpected error occurred',
+            'errors' => $exception->getMessage(),
+        ], 500);
     }
 }
