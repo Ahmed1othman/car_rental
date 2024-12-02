@@ -58,11 +58,19 @@ class CarResource extends JsonResource
             'default_image_path' => $this->default_image_path,
             'slug' => $this->translations->where('locale', $locale)->first()->slug ?? null,
             'name' => $this->translations->where('locale', $locale)->first()->name ?? null,
-            'images' => $this->images->map(fn($image) => [
-                'file_path' => $image->file_path,
-                'alt' => $image->alt,
-                'type' => $image->type,
-            ]),
+            'images' => collect([
+                [
+                    'file_path' => $this->default_image_path,
+                    'alt' => 'Default Image',  // You can customize this
+                    'type' => 'image',         // Default type
+                ],
+            ])->concat(
+                $this->images->map(fn($image) => [
+                    'file_path' => $image->file_path,
+                    'alt' => $image->alt,
+                    'type' => $image->type,
+                ])
+            ),
             'no_deposit' => $this->no_debosite??1,
             'discount_rate' => ceil(($this->daily_main_price - $this->daily_discount_price) * 100 / $this->daily_main_price),
         ];

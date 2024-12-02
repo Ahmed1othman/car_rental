@@ -358,14 +358,23 @@ trait DBTrait
 
         // Attach images to each car
         $cars->transform(function ($car) use ($carImages, $currentCurrency) {
-            $car->images = $carImages->get($car->id, collect())->map(function ($image) {
-                return [
-                    'file_path' => $image->file_path,
-                    'alt' => $image->alt,
-                    'type' => $image->type
-                ];
-            });
+            $defaultImage = collect([
+                [
+                    'file_path' => $car->default_image_path,
+                    'alt' => 'Default Image',  // Customize if needed
+                    'type' => 'image',         // Default type
+                ]
+            ]);
 
+            $car->images = $defaultImage->concat(
+                $carImages->get($car->id, collect())->map(function ($image) {
+                    return [
+                        'file_path' => $image->file_path,
+                        'alt' => $image->alt,
+                        'type' => $image->type
+                    ];
+                })
+            );
             // Convert prices based on currency
             $car->daily_main_price = ceil($car->daily_main_price * $currentCurrency->exchange_rate);
             $car->daily_discount_price = ceil($car->daily_discount_price * $currentCurrency->exchange_rate);
