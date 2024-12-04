@@ -168,8 +168,8 @@ class CarController extends Controller
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
             ->where('is_active', true);
 
-        $query->whereHas('category', function ($q) use ($request) {
-            $q->where('id', $request->input('category_id'));
+        $query->whereHas('category', function ($q) use ($category) {
+            $q->where('id', $category->id);
         });
 
         // Handle sorting with validation
