@@ -44,7 +44,7 @@ Route::middleware(['language','currency','cta'])->group(function () {
 
 
     Route::get('cars/brand-cars', [CarController::class, 'getBrandCars']);
-    Route::get('cars/category-cars', [CarController::class, 'getCategoryCars']);
+    Route::post('cars/category-cars', [CarController::class, 'getCategoryCars']);
     Route::get('cars', [CarController::class, 'index']);
     Route::get('cars/{slug}', [CarController::class, 'show']);
     Route::post('advanced-search', [CarController::class, 'advancedSearch']);
