@@ -11,6 +11,7 @@ use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Category;
 use App\Traits\DBTrait;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -162,6 +163,8 @@ class CarController extends Controller
 
         $category = Category::where('id', $request->input('category_id'))->first();
 
+        if (!$category)
+            return response()->json(['error' => 'Category not found'], 404);
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
             ->where('is_active', true);
 
