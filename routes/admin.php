@@ -121,3 +121,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
+
+
+
+Route::resource('currencies', 'App\Http\Controllers\admin\CurrencyController');

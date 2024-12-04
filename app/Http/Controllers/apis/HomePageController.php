@@ -13,6 +13,7 @@ use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Faq;
 use App\Models\Home;
+use App\Models\HomeTranslation;
 use App\Models\Service;
 use App\Models\Short_video;
 use App\Traits\DBTrait;
@@ -166,7 +167,8 @@ class HomePageController extends Controller
         ]);
     }
 
-
-
+    public function SEO(){
+//        $home = HomeTranslation::where
+    }
 
 }

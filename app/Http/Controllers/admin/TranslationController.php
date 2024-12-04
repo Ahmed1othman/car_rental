@@ -2,26 +2,23 @@
 namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 
-class CurrencyController extends GenericController
+class TranslationController extends GenericController
 {
     public function __construct()
     {
-        parent::__construct('currency');
-        $this->seo_question =false;
+        parent::__construct('template');
+        $this->seo_question =true;
         $this->slugField ='name';
-        $this->translatableFields = ['name'];
-        $this->nonTranslatableFields= ['code','symbol','is_active','is_default'];
+        $this->translatableFields = ['name','description'];
     }
 
     public function store(Request $request)
     {
         $request->merge([
             'is_active' => $request->has('is_active') ? true : false,
-            'is_default' => $request->has('is_default') ? true : false,
         ]);
         $this->validationRules = [
-            'code' => 'required|string|max:255',
-            'symbol' => 'required|string|max:255',
+            'general_field' => 'required|string|max:255',
             'name.*' => 'required|string|max:255',
             'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
@@ -40,14 +37,9 @@ class CurrencyController extends GenericController
 
     public function update(Request $request, $id)
     {
-        $request->merge([
-            'is_active' => $request->has('is_active') ? true : false,
-            'is_default' => $request->has('is_default') ? true : false,
-        ]);
         // Define validation rules
         $this->validationRules = [
-            'code' => 'required|string|max:255',
-            'symbol' => 'required|string|max:255',
+            'general_field' => 'required|string|max:255',
             'name.*' => 'required|string|max:255',
             'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',

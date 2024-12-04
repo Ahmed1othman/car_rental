@@ -2,41 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Currency extends Model
 {
-    protected $fillable = ['code', 'name', 'exchange_rate', 'is_default','is_active','symbol'];
+    use HasFactory;
+    protected $guarded = [];
 
-    protected $casts = [
-        'exchange_rate' => 'float',
-        'is_default' => 'boolean',
-    ];
-
-    public function setAsDefault()
+    //relations
+    public function translations(): HasMany
     {
-        self::where('is_default', true)->whereNot('id',$this->id)->update(['is_default' => false]);
-        $this->update([
-            'is_default' => 1,
-            'is_active' => 1
-        ]);
-        $this->save();
+        return $this->hasMany(CurrencyTranslation::class);
     }
 
-    public static function getDefault()
-    {
-        return self::where('is_default', true)->first();
-    }
 
-    public function calculateRate($amount, Currency $toCurrency)
-    {
-        $defaultCurrency = self::getDefault();
 
-        if ($this->is_default) {
-            return $amount * $toCurrency->exchange_rate;
-        }
-
-        $amountInDefault = $amount / $this->exchange_rate;
-        return $amountInDefault * $toCurrency->exchange_rate;
-    }
 }
