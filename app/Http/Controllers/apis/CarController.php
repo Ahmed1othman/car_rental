@@ -161,6 +161,7 @@ class CarController extends Controller
         $language = $request->header('Accept-Language', 'en');
         app()->setLocale($language);
 
+        return $request->all();
         $category = Category::where('id', $request->input('category_id'))->first();
 
         if (!$category)
