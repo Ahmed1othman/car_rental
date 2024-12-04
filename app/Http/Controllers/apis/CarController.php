@@ -11,9 +11,7 @@ use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Category;
 use App\Traits\DBTrait;
-use http\Env\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
@@ -157,12 +155,13 @@ class CarController extends Controller
 
     }
 
-    public function getCategoryCars(Request $request){
+    public function getCategoryCars(Request $request,$slug){
         $language = $request->header('Accept-Language', 'en');
         app()->setLocale($language);
 
-        return $request->all();
-        $category = Category::where('id', $request->input('category_id'))->first();
+        $category = Category::whereHas('translations', function ($q) use ($slug) {
+            $q->where('slug',$slug);
+        })->firstOrFail();
 
         if (!$category)
             return response()->json(['error' => 'Category not found'], 404);
