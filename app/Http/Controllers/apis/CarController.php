@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CarResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\DetailedBrandResource;
 use App\Http\Resources\DetailedCarResource;
 use App\Http\Resources\DetailedCategoryResource;
 use App\Models\Brand;
@@ -152,7 +153,7 @@ class CarController extends Controller
 
         return [
             'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
-            'category' => new CategoryResource($brand)
+            'brands' => new DetailedBrandResource($brand)
         ];
 
     }
