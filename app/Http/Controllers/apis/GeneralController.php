@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdvancedSearchSettingResource;
+use App\Http\Resources\CurrencyResource;
 use App\Http\Resources\StaticTranslationsResource;
 use App\Models\Brand;
 use App\Models\Car;
@@ -25,7 +26,7 @@ class GeneralController extends Controller
         $language = $request->header('Accept-Language') ?? 'en';
 
         $languages = $this->getLanguagesList($language);
-        $currencies = $this->getCurrenciesList($language);
+        $currencies = CurrencyResource::collection($this->getCurrenciesList());
         $translations_data = StaticTranslation::where('locale', $language)->get();
         $translationsData = $translations_data->pluck('value', 'key');
         $contact = Contact::first();

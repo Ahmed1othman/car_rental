@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\About;
 use App\Models\Advertisement;
 use App\Models\Contact;
+use App\Models\Currency;
 use App\Models\Home;
 use Illuminate\Support\Facades\DB;
 
@@ -28,19 +29,9 @@ trait DBTrait
             ->where('languages.is_active', true)
             ->get();
     }
-    public function getCurrenciesList($language)
+    public function getCurrenciesList()
     {
-        return DB::table('currencies')
-            ->select(
-                'currencies.id',
-                'currencies.code',
-                'currencies.name',
-                'currencies.symbol',
-                'currencies.exchange_rate',
-                'currencies.is_default',
-            )
-            ->where('currencies.is_active', true)
-            ->get();
+        return Currency::where('is_active', true)->get();
     }
     public function getBrandsList($language)
     {

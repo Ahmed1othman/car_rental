@@ -5,7 +5,9 @@ namespace App\Http\Controllers\apis;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdvertisementResource;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\SeoResource;
 use App\Http\Resources\ShortVideoResource;
+use App\Models\About;
 use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Car;
@@ -168,7 +170,12 @@ class HomePageController extends Controller
     }
 
     public function SEO(){
-//        $home = HomeTranslation::where
+        $home = Home::first();
+        $aboutAs = About::first();
+        return [
+            'home'=>new SeoResource($home),
+            'about_us'=>new SeoResource($aboutAs),
+        ];
     }
 
 }
