@@ -9,6 +9,7 @@ class BlogController extends GenericController
     {
         parent::__construct('blog');
         $this->seo_question =true;
+        $this->robots =true;
         $this->slugField ='title';
         $this->translatableFields = ['title','content','description'];
         $this->nonTranslatableFields = ['is_active','show_in_home'];
@@ -34,6 +35,7 @@ class BlogController extends GenericController
     {
         $request->merge([
             'show_in_home' => $request->has('show_in_home') ? true : false,
+
         ]);
         $this->validationRules = [
             'title.*' => 'required|string|max:255',
@@ -46,6 +48,8 @@ class BlogController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         $this->validationMessages = [
@@ -59,6 +63,7 @@ class BlogController extends GenericController
     {
         $request->merge([
             'show_in_home' => $request->has('show_in_home') ? true : false,
+
         ]);
         // Define validation rules
         $this->validationRules = [
@@ -72,6 +77,8 @@ class BlogController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         // Custom validation messages

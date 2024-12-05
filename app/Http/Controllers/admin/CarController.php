@@ -20,6 +20,7 @@ class CarController extends GenericController
     {
         parent::__construct('car');
         $this->seo_question =true;
+        $this->robots =true;
         $this->slugField ='name';
         $this->translatableFields = ['name','description','long_description'];
         $this->uploadedfiles = ['default_image_path','images'];
@@ -111,6 +112,7 @@ class CarController extends GenericController
             'is_active' => $request->has('is_active') ? true : false,
             'crypto_payment_accepted' => $request->has('crypto_payment_accepted') ? true : false,
             'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
+
         ]);
         $this->validationRules = [
             'name.*' => [
@@ -188,6 +190,7 @@ class CarController extends GenericController
             'is_active' => $request->has('is_active') ? true : false,
             'crypto_payment_accepted' => $request->has('crypto_payment_accepted') ? true : false,
             'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
+
         ]);
         $this->validationRules = [
             'name.*' => [

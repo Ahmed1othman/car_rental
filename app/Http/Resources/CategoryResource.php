@@ -26,6 +26,7 @@ class CategoryResource extends JsonResource
             'description' => $translations->description,
             'image' => $this->image_path,
             'car_count'=>$car_counts,
+
         ];
     }
 

@@ -23,6 +23,7 @@ class GenericController extends Controller
     public $nonTranslatableFields = [];
     public string $defaultLocale;
     public bool $isTranslatable = true;
+    public bool $robots = false;
 
     public function __construct($modelName)
     {
@@ -59,11 +60,10 @@ class GenericController extends Controller
         ]);
         // Validate the request data
         $validatedData = $request->validate($this->validationRules, $this->validationMessages);
-
         // Start a database transaction
         DB::beginTransaction();
 
-        try {
+//        try {
             // Store the template base data (non-translatable)
         foreach ($this->nonTranslatableFields as $nonTranslatableField) {
             if (isset($validatedData[$nonTranslatableField]))
@@ -133,12 +133,12 @@ class GenericController extends Controller
             return redirect()->route('admin.' . $this->modelName . '.index')
                 ->with('success', 'data added successfully');
 
-        } catch (\Exception $e) {
-            // Rollback the transaction if something goes wrong
-            DB::rollback();
-//            return redirect()->back()->withErrors(['error' => 'An error occurred while saving the template.']);
-            return redirect()->back()->withErrors(['error' =>$e->getMessage() ]);
-        }
+//        } catch (\Exception $e) {
+//            // Rollback the transaction if something goes wrong
+//            DB::rollback();
+////            return redirect()->back()->withErrors(['error' => 'An error occurred while saving the template.']);
+//            return redirect()->back()->withErrors(['error' =>$e->getMessage() ]);
+//        }
     }
 
     public function show($id)
@@ -158,7 +158,6 @@ class GenericController extends Controller
         $request->merge([
             'is_active' => $request->has('is_active') ? $request->is_active : false,
         ]);
-
 
         // Validate the request data
         $validatedData = $request->validate($this->validationRules, $this->validationMessages);
@@ -246,6 +245,17 @@ class GenericController extends Controller
                         'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                         'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
                     ];
+
+                    if ($this->robots) {
+                        $robotsIndex = $validatedData['robots_index'][$langCode] ?? null;
+                        $robotsFollow = $validatedData['robots_follow'][$langCode] ?? null;
+
+                        $translatedData += [
+                            'robots_index' => $robotsIndex === 'index' ? 'index' : 'noindex',
+                            'robots_follow' => $robotsFollow === 'follow' ? 'follow' : 'nofollow',
+                        ];
+                    }
+
 
                     if ($this->modelName == "homes")
                         $translatedData['slug'] = Str::slug('home-'.$langCode);
@@ -369,14 +379,29 @@ class GenericController extends Controller
                     'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
                     'meta_description' => $validatedData['meta_description'][$langCode] ?? null,
                     'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null,
-                    'slug' => Str::slug($validatedData[$this->slugField][$langCode].'-'.rand(1, 99999)??rand(1, 99999), '-')
+                    'slug' => Str::slug(
+                        ($validatedData[$this->slugField][$langCode] ?? 'default-slug') . '-' . rand(1, 99999),
+                        '-'
+                    )
                 ];
+
+                if ($this->robots) {
+                    $robotsIndex = $validatedData['robots_index'][$langCode] ?? null;
+                    $robotsFollow = $validatedData['robots_follow'][$langCode] ?? null;
+
+                    $metaData += [
+                        'robots_index' => $robotsIndex === 'index' ? 'index' : 'noindex',
+                        'robots_follow' => $robotsFollow === 'follow' ? 'follow' : 'nofollow',
+                    ];
+                }
+
                 $template->translations()->create(
                     $translatedData + $metaData
-                    );
+                );
             }
         }
     }
+
 
     function getYouTubeVideoId($url) {
         $regExp = '/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/';

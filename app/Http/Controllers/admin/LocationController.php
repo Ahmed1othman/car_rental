@@ -8,6 +8,7 @@ class LocationController extends GenericController
     {
         parent::__construct('location');
         $this->seo_question =true;
+        $this->robots =true;
         $this->slugField ='name';
         $this->translatableFields = ['name'];
         $this->nonTranslatableFields = ['is_active'];
@@ -17,6 +18,7 @@ class LocationController extends GenericController
     {
         $request->merge([
             'is_active' => $request->has('is_active') ? true : false,
+
         ]);
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
@@ -25,6 +27,8 @@ class LocationController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         $this->validationMessages = [
@@ -36,6 +40,10 @@ class LocationController extends GenericController
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+
+        ]);
         // Define validation rules
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
@@ -44,6 +52,8 @@ class LocationController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         // Custom validation messages

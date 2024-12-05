@@ -140,9 +140,45 @@
                                                     <label for="meta_description_{{ $lang->code }}" class="font-weight-bold">Meta Description ({{ $lang->name }})</label>
                                                     <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code) }}</textarea>
                                                 </div>
-                                                <div class="form-group">
+                                                <<div class="form-group">
                                                     <label for="meta_keywords_{{ $lang->code }}" class="font-weight-bold">Meta Keywords ({{ $lang->name }})</label>
                                                     <input type="text" name="meta_keywords[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_keywords_{{ $lang->code }}" data-role="tagsinput" value="{{ old('meta_keywords.'.$lang->code) }}">
+                                                </div>
+
+                                                <div class="row card">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="robots_index_{{ $lang->code }}" class="font-weight-bold">
+                                                                Robot Index ({{ $lang->name }})
+                                                            </label>
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox"
+                                                                       name="robots_index[{{ $lang->code }}]"
+                                                                       class="custom-control-input"
+                                                                       id="robots_index_{{ $lang->code }}"
+                                                                       value="index"
+                                                                    {{ old('robots_index.'.$lang->code, $currentValues['robots_index'][$lang->code] ?? '') === 'index' ? 'checked' : '' }}>
+                                                                <label class="custom-control-label" for="robots_index_{{ $lang->code }}">Index</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="robots_follow_{{ $lang->code }}" class="font-weight-bold">
+                                                                Robot Follow ({{ $lang->name }})
+                                                            </label>
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox"
+                                                                       name="robots_follow[{{ $lang->code }}]"
+                                                                       class="custom-control-input"
+                                                                       id="robots_follow_{{ $lang->code }}"
+                                                                       value="follow"
+                                                                    {{ old('robots_follow.'.$lang->code, $currentValues['robots_follow'][$lang->code] ?? '') === 'follow' ? 'checked' : '' }}>
+                                                                <label class="custom-control-label" for="robots_follow_{{ $lang->code }}">Follow</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Dynamic SEO Questions/Answers Section -->

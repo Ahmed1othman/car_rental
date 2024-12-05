@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('currencies_translations', function (Blueprint $table) {
+        Schema::create('currency_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('locale');  // e.g., 'en', 'ar'
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('currencies_translations');
+        Schema::dropIfExists('currency_translations');
     }
 };

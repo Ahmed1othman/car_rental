@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('currencies');
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
             $table->decimal('exchange_rate');

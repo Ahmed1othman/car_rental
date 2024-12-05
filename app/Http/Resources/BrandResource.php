@@ -25,6 +25,13 @@ class BrandResource extends JsonResource
             'description' => $translations->description,
             'image' => $this->logo_path,
             'car_count'=>$car_counts,
+            'seo_data'=>[
+                'seo_titles' => $translations->meta_title,
+                'seo_description' => $translations->meta_description,
+                'seo_image' => $this->logo_path,
+                'seo_alt' => $translations->name,
+                'seo_robots' => $this->image_path,
+            ]
         ];
     }
 

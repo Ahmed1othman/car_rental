@@ -8,6 +8,7 @@ class CategoryController extends GenericController
     {
         parent::__construct('category');
         $this->seo_question =true;
+        $this->robots =true;
         $this->slugField ='name';
         $this->translatableFields = ['name','description'];
         $this->nonTranslatableFields = ['is_active'];
@@ -18,6 +19,7 @@ class CategoryController extends GenericController
     {
         $request->merge([
             'is_active' => $request->has('is_active') ? true : false,
+
         ]);
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
@@ -28,6 +30,8 @@ class CategoryController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         $this->validationMessages = [
@@ -39,6 +43,10 @@ class CategoryController extends GenericController
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+
+        ]);
         // Define validation rules
         $this->validationRules = [
             'image_path' => 'sometimes|mimes:jpeg,png,jpg,gif,svg,webp|max:8192',
@@ -49,6 +57,8 @@ class CategoryController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         // Custom validation messages

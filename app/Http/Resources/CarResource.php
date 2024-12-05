@@ -34,6 +34,11 @@ class CarResource extends JsonResource
             'weekly_discount_price' => $weekly_discount_price,
             'monthly_main_price' => $monthly_main_price,
             'monthly_discount_price' => $monthly_discount_price,
+            'currency'=>[
+                'name' => $currency->translations->first()->name,
+                'code' => $currency->code,
+                'symbol' => $currency->symbol,
+            ],
             'crypto_payment_accepted' => $this->crypto_payment_accepted,
             'daily_mileage_included'=> $this->daily_mileage_included,
             'monthly_mileage_included'=> $this->monthly_mileage_included,

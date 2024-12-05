@@ -8,6 +8,7 @@ class BrandController extends GenericController
     {
         parent::__construct('brand');
         $this->seo_question =true;
+        $this->robots =true;
         $this->slugField ='name';
         $this->translatableFields = ['name'];
         $this->nonTranslatableFields = ['is_active'];
@@ -16,6 +17,12 @@ class BrandController extends GenericController
 
     public function store(Request $request)
     {
+
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+
+        ]);
+
         $this->validationRules = [
             'logo_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
             'name.*' => [
@@ -40,6 +47,8 @@ class BrandController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         $this->validationMessages = [
@@ -51,6 +60,11 @@ class BrandController extends GenericController
 
     public function update(Request $request, $id)
     {
+
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+
+        ]);
 
         // Define validation rules
         $this->validationRules = [
@@ -81,6 +95,8 @@ class BrandController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         // Custom validation messages

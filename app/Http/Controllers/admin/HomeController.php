@@ -9,6 +9,7 @@ class HomeController extends GenericController
     {
         parent::__construct('home');
         $this->seo_question =true;
+        $this->robots =true;
         $this->slugField ='page_name';
         $this->translatableFields = [
             'hero_header_title',
@@ -46,6 +47,7 @@ class HomeController extends GenericController
     {
         $request->merge([
             'is_active' => $request->has('is_active') ? true : false,
+
         ]);
         $this->validationRules = [
             'page_name' => 'required|string|max:255',
@@ -71,6 +73,8 @@ class HomeController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         $this->validationMessages = [
@@ -82,6 +86,10 @@ class HomeController extends GenericController
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+
+        ]);
         // Define validation rules
         $this->validationRules = [
             'page_name' => 'required|string|max:255',
@@ -106,6 +114,8 @@ class HomeController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'robots_index.*' => 'nullable',
+            'robots_follow.*' => 'nullable',
         ];
 
         // Custom validation messages
