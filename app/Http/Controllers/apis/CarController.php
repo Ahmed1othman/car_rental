@@ -114,17 +114,18 @@ class CarController extends Controller
     }
 
 
-    public function getBrandCars(Request $request){
+    public function getBrandCars(Request $request,$slug){
         $language = $request->header('Accept-Language', 'en');
         app()->setLocale($language);
 
-        $brand = Brand::where('id', $request->input('brand_id'))->first();
-
+        $brand = Brand::whereHas('translations', function ($q) use ($slug) {
+            $q->where('slug',$slug);
+        })->firstOrFail();
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
             ->where('is_active', true);
 
-        $query->whereHas('brand', function ($q) use ($request) {
-            $q->where('id', $request->input('brand_id'));
+        $query->whereHas('brand', function ($q) use ($brand) {
+            $q->where('id', $brand->id);
         });
 
         // Handle sorting with validation
