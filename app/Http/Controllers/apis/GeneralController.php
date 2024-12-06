@@ -33,7 +33,7 @@ class GeneralController extends Controller
         $response = [
             'main_setting'=>[
                 'languages'=>$languages,
-                'currencies'=>new CurrencyResource($currencies),
+                'currencies'=>$currencies,
                 'translation_data'=> $translationsData,
                 'storage_base_url' => asset('storage/'),
                 'dark_logo' => asset('admin/dist/logo/website_logos/logo_dark.svg'),

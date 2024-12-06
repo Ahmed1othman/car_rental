@@ -15,7 +15,7 @@ class CurrencyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $locale = app()->getLocale()??"en";
+        $locale = app()->getLocale()??"ar";
         $translations = $this->translations->where('locale',$locale)->first();
         return [
             'id' => $this->id,
