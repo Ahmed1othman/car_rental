@@ -38,6 +38,8 @@ class GeneralController extends Controller
                 'storage_base_url' => asset('storage/'),
                 'dark_logo' => asset('admin/dist/logo/website_logos/logo_dark.svg'),
                 'light_logo' => asset('admin/dist/logo/website_logos/logo_light.svg'),
+                'black_logo' => asset('admin/dist/logo/website_logos/black_logo.svg'),
+                'favicon' => asset('admin/dist/logo/website_logos/favicon.jpg'),
                 'contact_data'=>[
                     'phone' => $contact->phone,
                     'whatsapp' => $contact->whatsapp,
