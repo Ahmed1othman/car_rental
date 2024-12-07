@@ -9,9 +9,11 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\DetailedBrandResource;
 use App\Http\Resources\DetailedCarResource;
 use App\Http\Resources\DetailedCategoryResource;
+use App\Http\Resources\DetailedLocationResource;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Category;
+use App\Models\Location;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 
@@ -199,6 +201,45 @@ class CarController extends Controller
             'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
             'category' => new DetailedCategoryResource($category)
         ];
+    }
+
+    public function getLocationCars(Request $request,$slug){
+        $language = $request->header('Accept-Language', 'en');
+        app()->setLocale($language);
+
+        $brand = Location::whereHas('translations', function ($q) use ($slug) {
+            $q->where('slug',$slug);
+        })->firstOrFail();
+        $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
+            ->where('is_active', true)
+            ->where('id', $brand->id);
+
+        // Handle sorting with validation
+        $allowedSortFields = [
+            'created_at',
+            'daily_main_price',
+            'weekly_main_price',
+            'monthly_main_price',
+            'passenger_capacity',
+            'door_count'
+        ];
+
+        $sortField = in_array($request->input('sort_by'), $allowedSortFields)
+            ? $request->input('sort_by')
+            : 'created_at';
+
+        $sortDirection = $request->input('sort_direction') === 'asc' ? 'asc' : 'desc';
+        $query->orderBy($sortField, $sortDirection);
+
+        // Handle pagination with validation
+        $perPage = min(max($request->input('per_page', 10), 1), 10);
+
+
+        return [
+            'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
+            'location' => new DetailedLocationResource($brand)
+        ];
+
     }
 
 }

@@ -35,7 +35,6 @@ $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArr
             'name' => $translation->name,
             'description' => $translation->description,
             'content' =>  $translation->content,
-//            'car_count'=>$car_counts,
             'seo_data' => [
                 'seo_title' => $translation->meta_title ?? null,
                 'seo_description' => $translation->meta_description ?? null,
