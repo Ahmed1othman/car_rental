@@ -211,8 +211,7 @@ class CarController extends Controller
             $q->where('slug',$slug);
         })->firstOrFail();
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
-            ->where('is_active', true)
-            ->where('id', $location->id);
+            ->where('is_active', true);
 
         // Handle sorting with validation
         $allowedSortFields = [

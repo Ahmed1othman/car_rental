@@ -33,6 +33,7 @@ class StaticTranslationSeeder extends Seeder
                 'no_results' => 'no results',
                 'cars' => 'Cars',
                 'car' => 'car',
+                'locations' => 'locations',
             ],
             'card' => [
                 'per_day' => 'per day',
@@ -105,6 +106,7 @@ class StaticTranslationSeeder extends Seeder
                 'no_results' => 'لا توجد نتائج',
                 'cars' => 'سيارات',
                 'car' => 'سيارة',
+                'locations' => 'المناطق',
             ],
             'card' => [
                 'per_day' => 'في اليوم',
