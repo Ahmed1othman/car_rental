@@ -12,6 +12,8 @@ class DetailedCarResource extends JsonResource
         // Cache currency exchange rate and locale
         $currencyExchangeRate = Currency::find(app('currency_id'))->exchange_rate ?? 1;
         $locale = app()->getLocale() ?? 'en';
+        $currency = \App\Models\Currency::find(app('currency_id'));
+        $currencyLanguage = $currency->translations->where('locale', $locale)->first();
 
         $carCategory = Car::where('category_id', $this->category_id)
             ->whereNot('id', $this->id)
@@ -40,7 +42,7 @@ class DetailedCarResource extends JsonResource
 
         // Decode and format meta keywords if they exist
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
-$metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
+        $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
         $seoQuestionSchema = $this->jsonLD($seoQuestions);
@@ -56,6 +58,11 @@ $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArr
             'daily_mileage_included'=> $this->daily_mileage_included,
             'monthly_mileage_included'=> $this->monthly_mileage_included,
             'weakly_mileage_included'=> $this->weakly_mileage_included,
+            'currency'=>[
+                'name' => $currencyLanguage->name,
+                'code' => $currency->code,
+                'symbol' => $currency->symbol,
+            ],
             'year' => $this->year->year??null,
             'is_featured' => $this->is_featured,
             'is_flash_sale' => $this->is_flash_sale,

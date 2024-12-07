@@ -207,12 +207,12 @@ class CarController extends Controller
         $language = $request->header('Accept-Language', 'en');
         app()->setLocale($language);
 
-        $brand = Location::whereHas('translations', function ($q) use ($slug) {
+        $location = Location::whereHas('translations', function ($q) use ($slug) {
             $q->where('slug',$slug);
         })->firstOrFail();
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
             ->where('is_active', true)
-            ->where('id', $brand->id);
+            ->where('id', $location->id);
 
         // Handle sorting with validation
         $allowedSortFields = [
@@ -237,7 +237,7 @@ class CarController extends Controller
 
         return [
             'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
-            'location' => new DetailedLocationResource($brand)
+            'location' => new DetailedLocationResource($location)
         ];
 
     }

@@ -8,9 +8,10 @@ class CarResource extends JsonResource
 
     public function toArray($request)
     {
-        $currency = \App\Models\Currency::find(app('currency_id'));
-        $locale = app()->getLocale()??"en";
 
+        $locale = app()->getLocale()??"en";
+        $currency = \App\Models\Currency::find(app('currency_id'));
+        $currencyLanguage = $currency->translations->where('locale', $locale)->first();
         $carModel = $this->carModel ? $this->carModel->translations->where('locale', $locale)->first(): null;
 
 //        'daily_main_price' => ceil($this->daily_main_price * $currency->exchange_rate),
@@ -35,7 +36,7 @@ class CarResource extends JsonResource
             'monthly_main_price' => $monthly_main_price,
             'monthly_discount_price' => $monthly_discount_price,
             'currency'=>[
-                'name' => $currency->translations->first()->name,
+                'name' => $currencyLanguage->name,
                 'code' => $currency->code,
                 'symbol' => $currency->symbol,
             ],

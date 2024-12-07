@@ -25,7 +25,7 @@ class DetailedLocationResource extends JsonResource
 
         // Decode and format meta keywords if they exist
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
-$metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
+        $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
         $seoQuestionSchema = $this->jsonLD($seoQuestions);//        $car_counts = $this->getCounts($locale);
@@ -48,7 +48,6 @@ $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArr
                 'schemas'=>[
                     'faq_schema'=>$seoQuestionSchema,
                 ]
-
             ],
         ];
     }
