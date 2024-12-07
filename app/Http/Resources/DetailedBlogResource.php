@@ -26,7 +26,8 @@ class DetailedBlogResource extends JsonResource
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
         $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
-
+        $seoQuestions = $this->seoQuestions->where('locale',$locale);
+        $seoQuestionSchema = $this->jsonLD($seoQuestions);
         $recentlyBlog = Blog::where('is_active', true)
             ->whereNot('id', $this->id)
             ->orderBy('created_at', 'desc')
@@ -55,6 +56,29 @@ class DetailedBlogResource extends JsonResource
                 'seo_image' => $this->image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null
             ],
+            'schemas'=>[
+                'faq_schema'=>$seoQuestionSchema,
+            ]
         ];
+    }
+
+
+    public function jsonLD($seoQuestions)
+    {
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => $seoQuestions->map(function ($faq) {
+                return [
+                    '@type' => 'Question',
+                    'name' => $faq->question_text,
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => $faq->answer_text,
+                    ],
+                ];
+            }),
+        ];
+
     }
 }

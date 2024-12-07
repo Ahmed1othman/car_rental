@@ -109,6 +109,11 @@
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
                                                     <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code) }}</textarea>
                                                 </div>
+
+                                                <div class="form-group">
+                                                    <label for="content_{{ $lang->code }}" class="font-weight-bold">Content ({{ $lang->name }})</label>
+                                                    <textarea name="content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="content_{{ $lang->code }}" rows="4">{{ old('content.'.$lang->code) }}</textarea>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
@@ -132,7 +137,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="meta_description_{{ $lang->code }}" class="font-weight-bold">Meta Description ({{ $lang->name }})</label>
-                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code) }}</textarea>
+                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm " id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code) }}</textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="meta_keywords_{{ $lang->code }}" class="font-weight-bold">Meta Keywords ({{ $lang->name }})</label>

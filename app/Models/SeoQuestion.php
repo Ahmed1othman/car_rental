@@ -18,4 +18,5 @@ class SeoQuestion extends Model
         return $this->morphTo();
     }
 
+
 }

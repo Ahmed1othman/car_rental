@@ -114,4 +114,12 @@ class GeneralController extends Controller
 
         return new AdvancedSearchSettingResource($data);
     }
+
+
+    public function getCurrencies()
+    {
+        return response()->json([
+            'currencies' => CurrencyResource::collection($this->getCurrenciesList())
+        ]);
+    }
 }

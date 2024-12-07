@@ -10,7 +10,7 @@ class LocationController extends GenericController
         $this->seo_question =true;
         $this->robots =true;
         $this->slugField ='name';
-        $this->translatableFields = ['name'];
+        $this->translatableFields = ['name','description','content'];
         $this->nonTranslatableFields = ['is_active'];
     }
 
@@ -22,6 +22,8 @@ class LocationController extends GenericController
         ]);
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
+            'description.*' => 'required|string|max:255',
+            'content.*' => 'required|string|max:255',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
@@ -47,6 +49,8 @@ class LocationController extends GenericController
         // Define validation rules
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
+            'description.*' => 'required|string|max:255',
+            'content.*' => 'required|string|max:255',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',

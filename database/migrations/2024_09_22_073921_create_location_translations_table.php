@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('location_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('description');
+            $table->string('content');
             $table->string('locale');  // e.g., 'en', 'ar'
             $table->text('meta_title')->nullable();
             $table->text('meta_description')->nullable();

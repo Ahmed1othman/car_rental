@@ -103,6 +103,17 @@
                                                     <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
                                                     <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.' . $lang->code, $translation->name ?? '') }}">
                                                 </div>
+
+                                                <div class="form-group">
+                                                    <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}">{{ $translation->description ?? '' }}</textarea>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="content_{{ $lang->code }}" class="font-weight-bold">Content ({{ $lang->name }})</label>
+                                                    <textarea name="content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="content_{{ $lang->code }}">{{ $translation->content ?? '' }}</textarea>
+                                                </div>
+
                                             </div>
                                         @endforeach
                                     </div>

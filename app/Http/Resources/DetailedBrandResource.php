@@ -25,8 +25,10 @@ class DetailedBrandResource extends JsonResource
 
         // Decode and format meta keywords if they exist
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
-        $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
-        $car_counts = $this->getCounts($locale);
+$metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
+
+        $seoQuestions = $this->seoQuestions->where('locale',$locale);
+        $seoQuestionSchema = $this->jsonLD($seoQuestions);        $car_counts = $this->getCounts($locale);
         return [
             'id' => $this->id,
             'slug' => $translation->slug,
@@ -43,7 +45,10 @@ class DetailedBrandResource extends JsonResource
                     'follow'=>$translation->robots_follow?? 'nofollow',
                 ],
                 'seo_image' => $this->logo_path?? null,
-                'seo_image_alt' => $translation->meta_title?? null
+                'seo_image_alt' => $translation->meta_title?? null,
+                'schemas'=>[
+                    'faq_schema'=>$seoQuestionSchema,
+                ]
             ],
         ];
     }
@@ -68,5 +73,23 @@ class DetailedBrandResource extends JsonResource
         }
 
         return $car_counts;
+    }
+    public function jsonLD($seoQuestions)
+    {
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => $seoQuestions->map(function ($faq) {
+                return [
+                    '@type' => 'Question',
+                    'name' => $faq->question_text,
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => $faq->answer_text,
+                    ],
+                ];
+            }),
+        ];
+
     }
 }

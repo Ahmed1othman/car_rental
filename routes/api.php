@@ -9,6 +9,7 @@ use App\Http\Controllers\apis\ContactUsPageController;
 use App\Http\Controllers\apis\FAQController;
 use App\Http\Controllers\apis\GeneralController;
 use App\Http\Controllers\apis\HomePageController;
+use App\Http\Controllers\apis\LocationController;
 use App\Http\Controllers\apis\ServiceController;
 use App\Http\Controllers\apis\ShortVideoController;
 use Illuminate\Support\Facades\Route;
@@ -24,9 +25,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('get-main-settings', [GeneralController::class, 'getMainSetting']);
 
 Route::middleware(['language','currency','cta'])->group(function () {
-    Route::get('get-main-settings', [GeneralController::class, 'getMainSetting']);
     Route::get('get-footer', [GeneralController::class, 'getFooter']);
     Route::get('home', [HomePageController::class, 'index']);
     Route::get('about-us', [AboutUsPageController::class, 'index']);
@@ -36,7 +37,7 @@ Route::middleware(['language','currency','cta'])->group(function () {
     Route::get('brands', [BrandController::class, 'index']);
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('short-videos', [ShortVideoController::class, 'index']);
-    Route::get('locations', [ServiceController::class, 'index']);
+    Route::get('locations', [LocationController::class, 'index']);
     Route::get('blogs', [BlogController::class, 'index']);
     Route::get('blogs/{slug}', [BlogController::class, 'show']);
     Route::get('faqs', [FAQController::class, 'index']);
@@ -50,4 +51,5 @@ Route::middleware(['language','currency','cta'])->group(function () {
     Route::post('advanced-search', [CarController::class, 'advancedSearch']);
     Route::get('advanced-search-setting', [GeneralController::class, 'advancedSearchSetting']);
     Route::get('seo-pages',[HomePageController::class,'SEO']);
+    Route::get('currencies',[GeneralController::class,'getCurrencies']);
 });

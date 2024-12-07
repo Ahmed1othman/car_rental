@@ -7,7 +7,7 @@ use App\Models\StaticTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailedCategoryResource extends JsonResource
+class DetailedLocationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -28,14 +28,14 @@ class DetailedCategoryResource extends JsonResource
 $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
-        $seoQuestionSchema = $this->jsonLD($seoQuestions);        $car_counts = $this->getCounts($locale);
+        $seoQuestionSchema = $this->jsonLD($seoQuestions);//        $car_counts = $this->getCounts($locale);
         return [
             'id' => $this->id,
             'slug' => $translation->slug,
             'name' => $translation->name,
             'description' => $translation->description,
-            'image' => $this->image_path,
-            'car_count'=>$car_counts,
+            'content' =>  $translation->content,
+//            'car_count'=>$car_counts,
             'seo_data' => [
                 'seo_title' => $translation->meta_title ?? null,
                 'seo_description' => $translation->meta_description ?? null,
@@ -49,6 +49,7 @@ $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArr
                 'schemas'=>[
                     'faq_schema'=>$seoQuestionSchema,
                 ]
+
             ],
         ];
     }
@@ -74,7 +75,6 @@ $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArr
 
         return $car_counts;
     }
-
     public function jsonLD($seoQuestions)
     {
         return [

@@ -40,8 +40,10 @@ class DetailedCarResource extends JsonResource
 
         // Decode and format meta keywords if they exist
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
-        $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
+$metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
+        $seoQuestions = $this->seoQuestions->where('locale',$locale);
+        $seoQuestionSchema = $this->jsonLD($seoQuestions);
         return array_merge($prices, [
             'id' => $this->id,
             'door_count' => $this->door_count,
@@ -87,12 +89,40 @@ class DetailedCarResource extends JsonResource
             "car_features"=> FeatureResource::collection($this->features),
             'related_cars'=> CarResource::collection($carCategory),
             'seo_data' => [
-                'meta_title' => $translation->meta_title ?? null,
-                'meta_description' => $translation->meta_description ?? null,
-                'meta_keywords' => $metaKeywords,
+                'seo_title' => $translation->meta_title ?? null,
+                'seo_description' => $translation->meta_description ?? null,
+                'seo_keywords' => $metaKeywords,
+                'seo_robots' => [
+                    'index'=>$translation->robots_index?? 'noindex',
+                    'follow'=>$translation->robots_follow?? 'nofollow',
+                ],
+                'seo_image' => $this->default_image_path?? null,
+                'seo_image_alt' => $translation->meta_title?? null,
+                'schemas'=>[
+                    'faq_schema'=>$seoQuestionSchema,
+                ]
             ],
             'no_deposit' => $this->no_debosite??1,
             'discount_rate' => ceil(($this->daily_main_price - $this->daily_discount_price) * 100 / $this->daily_main_price),
         ]);
+    }
+
+    public function jsonLD($seoQuestions)
+    {
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => $seoQuestions->map(function ($faq) {
+                return [
+                    '@type' => 'Question',
+                    'name' => $faq->question_text,
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => $faq->answer_text,
+                    ],
+                ];
+            }),
+        ];
+
     }
 }
