@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Location;
 use App\Models\Language;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
@@ -15,6 +16,8 @@ class LocationSeeder extends Seeder
 
     public function run()
     {
+
+        DB::table('locations')->trancate();
 
         $locations = [
             [
