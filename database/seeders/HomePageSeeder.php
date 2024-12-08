@@ -102,8 +102,8 @@ class HomePageSeeder extends Seeder
                         'where_find_us_section_title' => 'موجود فقط في افندينا لتأجير السيارات',
                         'where_find_us_section_paragraph' => ' احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
 
-                        'required_documents_section_title' => 'عروض خاصة',
-                        'required_documents_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
+                        'required_documents_section_title' => 'الاوراق المطلوبة للحجز والاستلام',
+                        'required_documents_section_paragraph' => 'يمكمك الحجز واستلام السيارة بسهولة وسرعة فقط نحتاج الاتي :.',
 
                         'instagram_section_title' => 'افندينا علي انستحرام',
                         'instagram_section_paragraph' => 'احصل على أفضل الصفقات والعروض الخاصة على سياراتك المفضلة.',
