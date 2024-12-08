@@ -22,9 +22,9 @@ class LocationResource extends JsonResource
         return [
             'id' => $this->id,
             'slug' => $translations->slug??null,
-            'name' => $translations->name,
-            'description' => $translations->description,
-            'content' => $translations->content,
+            'name' => $translations->name??null,
+            'description' => $translations->description??null,
+            'content' => $translations->content??null,
 //            'car_count'=>$car_counts,
 
         ];
