@@ -122,7 +122,7 @@
                             <div class="row">
                                 @foreach ([
                                     ['label' => 'Website', 'name' => 'website', 'type' => 'url', 'icon' => 'fas fa-globe', 'value' => $contact->website],
-                                    ['label' => 'Google Map URL', 'name' => 'google_map_url', 'type' => 'url', 'icon' => 'fas fa-map-marked-alt', 'value' => $contact->google_map_url],
+                                    ['label' => 'Google Map URL', 'name' => 'google_map_url', 'type' => 'text', 'icon' => 'fas fa-map-marked-alt', 'value' => $contact->google_map_url],
                                     ['label' => 'Contact Person', 'name' => 'contact_person', 'type' => 'text', 'icon' => 'fas fa-user-tie', 'value' => $contact->contact_person],
                                     ['label' => 'Additional Information', 'name' => 'additional_info', 'type' => 'textarea', 'icon' => 'fas fa-info-circle', 'value' => $contact->additional_info]
                                 ] as $field)
