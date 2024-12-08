@@ -50,7 +50,7 @@ class HomePageSeeder extends Seeder
                         'where_find_us_section_title' => 'Where to Find Us',
                         'where_find_us_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
 
-                        'required_documents_section_title' => 'Special Offers',
+                        'required_documents_section_title' => 'required documents',
                         'required_documents_section_paragraph' => 'Get the best deals and special offers on your favorite cars.',
 
                         'instagram_section_title' => 'Instagram Section',

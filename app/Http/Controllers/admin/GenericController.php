@@ -259,6 +259,8 @@ class GenericController extends Controller
 
                     if ($this->modelName == "homes")
                         $translatedData['slug'] = Str::slug('home-'.$langCode);
+                    else if ($this->modelName == "abouts")
+                        $translatedData['slug'] = Str::slug('about-'.$langCode);
                     else
                         $translatedData['slug'] = Str::slug($validatedData[$this->slugField][$langCode].'-'.rand(1, 99999)??rand(1, 99999), '-');
 
