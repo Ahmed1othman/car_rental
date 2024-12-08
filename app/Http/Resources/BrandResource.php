@@ -20,7 +20,7 @@ class BrandResource extends JsonResource
         $car_counts = $this->getCounts($locale);
         return [
             'id' => $this->id,
-            'slug' => $translations->slug,
+            'slug' => $translations->slug??null,
             'name' => $translations->name,
             'description' => $translations->description,
             'image' => $this->logo_path,

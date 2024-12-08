@@ -61,7 +61,7 @@ class DetailedCarResource extends JsonResource
             'currency'=>[
                 'name' => $currencyLanguage->name,
                 'code' => $currency->code,
-                'symbol' => $currency->symbol,
+                'symbol' => $currency->symbol??null
             ],
             'year' => $this->year->year??null,
             'is_featured' => $this->is_featured,

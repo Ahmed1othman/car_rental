@@ -31,8 +31,8 @@ $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArr
         $seoQuestionSchema = $this->jsonLD($seoQuestions);        $car_counts = $this->getCounts($locale);
         return [
             'id' => $this->id,
-            'slug' => $translation->slug,
-            'name' => $translation->name,
+            'slug' => $translation->slug??null,
+            'name' => $translation->name??null,
             'description' => $translation->description,
             'image' => $this->logo_path,
             'car_count'=>$car_counts,
