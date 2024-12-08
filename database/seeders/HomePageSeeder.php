@@ -28,11 +28,11 @@ class HomePageSeeder extends Seeder
                 'translations' => [
                     [
                         'locale' => 'en',
-                        'hero_header_title' => 'Welcome to Monza Rent Car',
+                        'hero_header_title' => 'Welcome to Afandina Rent Car',
                         'hero_header_subtitle' => 'Experience luxury cars at affordable prices.',
 
                         'car_only_section_title' => 'Only on Us',
-                        'car_only_section_paragraph' => 'Discover exclusive cars available only at Monza Rent Car.',
+                        'car_only_section_paragraph' => 'Discover exclusive cars available only at Afandina Rent Car.',
 
                         'featured_cars_section_title' => 'Featured Cars',
                         'featured_cars_section_paragraph' => 'Our top picks of premium cars, handpicked for you.',
@@ -73,18 +73,18 @@ class HomePageSeeder extends Seeder
                         'contact_us_detail_paragraph' => 'Lorem ipsum dolor sit amet consectetur. Aliquam a velit neque cursus quis. Nisi sed ut pharetra nunc ultrices viverra habitant b.',
 
 
-                        'meta_title' => 'Home Page - Monza Rent Car',
+                        'meta_title' => 'Home Page - Afandina Rent Car',
                         'meta_description' => 'Explore our exclusive collection of luxury cars and enjoy special offers.',
                         'meta_keywords' => 'car rental, luxury cars, special offers, rent car',
                         'slug' => 'home-page',
                     ],
                     [
                         'locale' => 'ar',
-                        'hero_header_title' => 'مرحباً بكم في مونزا لتأجير السيارات',
+                        'hero_header_title' => 'مرحباً بكم في أفندينا لتأجير السيارات',
                         'hero_header_subtitle' => 'اختبر رفاهية السيارات بأسعار معقولة.',
 
                         'car_only_section_title' => 'موجود فقط لدينا',
-                        'car_only_section_paragraph' => 'اكتشف السيارات الحصرية المتاحة فقط في مونزا لتأجير السيارات.',
+                        'car_only_section_paragraph' => 'اكتشف السيارات الحصرية المتاحة فقط في أفندينا لتأجير السيارات.',
 
                         'featured_cars_section_title' => 'سيارات مميزة',
                         'featured_cars_section_paragraph' => 'أفضل السيارات الفاخرة المختارة خصيصاً لك.',
@@ -123,7 +123,7 @@ class HomePageSeeder extends Seeder
                         'contact_us_detail_paragraph' => 'لوريم نص يتواصل معنا بالرسائل التالية. يرجى ادخال البيانات التالية لتواص للرس� التالية.  ',
 
 
-                        'meta_title' => 'الصفحة الرئيسية - مونزا لتأجير السيارات',
+                        'meta_title' => 'الصفحة الرئيسية - أفندينا لتأجير السيارات',
                         'meta_description' => 'استكشف مجموعتنا الحصرية من السيارات الفاخرة وتمتع بالعروض الخاصة.',
                         'meta_keywords' => 'تأجير السيارات, سيارات فاخرة, عروض خاصة, استئجار سيارة',
                         'slug' => 'الصفحة-الرئيسية',
