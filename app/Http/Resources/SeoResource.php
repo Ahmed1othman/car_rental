@@ -32,7 +32,7 @@ class SeoResource extends JsonResource
                     'index'=>$translation->robots_index?? 'noindex',
                     'follow'=>$translation->robots_follow?? 'nofollow',
                 ],
-                'seo_image' => $base_url.$this->logo_path?? null,
+                'seo_image' => asset('admin/dist/logo/website_logos/logo_dark.svg')?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
 
                 'schemas'=>[
