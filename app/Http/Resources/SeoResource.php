@@ -37,6 +37,7 @@ class SeoResource extends JsonResource
 
                 'schemas'=>[
                     'faq_schema'=>$seoQuestionSchema,
+                    'organization_schema'=>$this->getOrganizationSchema()
                 ]
             ],
         ];
@@ -59,5 +60,39 @@ class SeoResource extends JsonResource
             }),
         ];
 
+    }
+
+
+
+    public function getOrganizationSchema()
+    {
+        return [
+            "@context" => "https://schema.org",
+            "@type" => "CarRental",
+            "name" => "Afandina Car Rental",
+            "url" => config('app.url'),
+            "logo" => asset('images/logo.png'),
+            "image" => asset('images/office.jpg'),
+            "description" => "Afandina Car Rental offers a wide range of vehicles for rent in Dubai, ensuring comfort, convenience, and competitive pricing.",
+            "address" => [
+                "@type" => "PostalAddress",
+                "streetAddress" => "123 Sheikh Zayed Road",
+                "addressLocality" => "Dubai",
+                "addressRegion" => "Dubai",
+                "postalCode" => "00000",
+                "addressCountry" => "UAE"
+            ],
+            "contactPoint" => [
+                "@type" => "ContactPoint",
+                "telephone" => "+971-50-123-4567",
+                "contactType" => "Customer Service",
+                "areaServed" => "Dubai, UAE",
+                "availableLanguage" => ["English", "Arabic"]
+            ],
+            "sameAs" => [
+                "https://www.facebook.com/AfandinaCarRental",
+                "https://www.instagram.com/AfandinaCarRental"
+            ]
+        ];
     }
 }
