@@ -43,6 +43,7 @@ class GeneralController extends Controller
                 'contact_data'=>[
                     'phone' => $contact->phone,
                     'whatsapp' => $contact->whatsapp,
+                    'email' => $contact->email,
                     ],
             ],
         ];

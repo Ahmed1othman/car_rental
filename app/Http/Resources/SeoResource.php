@@ -14,7 +14,7 @@ class SeoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
+        $base_url = asset('storage/');
         // Retrieve translation for the requested locale or fallback
         $locale = app()->getLocale() ?? 'en';
         $translation = $this->translations->where('locale', $locale)->first();
@@ -32,7 +32,7 @@ class SeoResource extends JsonResource
                     'index'=>$translation->robots_index?? 'noindex',
                     'follow'=>$translation->robots_follow?? 'nofollow',
                 ],
-                'seo_image' => $this->logo_path?? null,
+                'seo_image' => $base_url.$this->logo_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
 
                 'schemas'=>[

@@ -9,6 +9,7 @@ class DetailedCarResource extends JsonResource
 {
     public function toArray($request)
     {
+        $base_url = asset('storage/');
         // Cache currency exchange rate and locale
         $currencyExchangeRate = Currency::find(app('currency_id'))->exchange_rate ?? 1;
         $locale = app()->getLocale() ?? 'en';
@@ -103,7 +104,7 @@ class DetailedCarResource extends JsonResource
                     'index'=>$translation->robots_index?? 'noindex',
                     'follow'=>$translation->robots_follow?? 'nofollow',
                 ],
-                'seo_image' => $this->default_image_path?? null,
+                'seo_image' => $base_url.$this->default_image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>[
                     'faq_schema'=>$seoQuestionSchema,
