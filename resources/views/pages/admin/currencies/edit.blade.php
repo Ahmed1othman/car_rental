@@ -75,24 +75,38 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-
-
-
                                     <div class="form-group">
-                                        <label for="is_default" class="font-weight-bold">Default</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="is_default" class="custom-control-input" id="is_default" value="{{$item->is_default}}" {{$item->is_default?'checked':''}}>
-                                            <label class="custom-control-label" for="is_default">Default</label>
-                                        </div>
+                                        <label for="symbol" class="font-weight-bold">Symbol</label>
+                                        <input type="text" name="symbol" class="form-control form-control-lg shadow-sm" id="general_field" value="{{ old('symbol', $item->symbol) }}">
                                     </div>
                                     <div class="form-group">
-                                        <label for="is_active" class="font-weight-bold">Active</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" value="{{$item->is_active}}" {{$item->is_active?'checked':''}}>
-                                            <label class="custom-control-label" for="is_active">Active</label>
+                                        <div class="form-group">
+                                            <label for="code" class="font-weight-bold">Code</label>
+                                            <input type="text" name="code" class="form-control form-control-lg shadow-sm" id="code" value="{{ old('code', $item->code) }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exchange_rate" class="font-weight-bold">Exchange Rate</label>
+                                            <input type="number" name="exchange_rate" class="form-control form-control-lg shadow-sm" id="exchange_rate" value="{{ old('exchange_rate', $item->exchange_rate) }}">
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="is_default" class="font-weight-bold">Default</label>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" name="is_default" class="custom-control-input" id="is_default" value="{{$item->is_default}}" {{$item->is_default?'checked':''}}>
+                                                <label class="custom-control-label" for="is_default">Default</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="is_active" class="font-weight-bold">Active</label>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" value="{{$item->is_active}}" {{$item->is_active?'checked':''}}>
+                                                <label class="custom-control-label" for="is_active">Active</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <!-- Translated Data Tab Content with Sub-tabs for Languages -->
                                 <div class="tab-pane fade" id="custom-tabs-translated" role="tabpanel" aria-labelledby="custom-tabs-translated-tab">
@@ -117,71 +131,6 @@
                                         @endforeach
                                     </div>
                                 </div>
-
-                                <!-- SEO Data Tab Content -->
-                                <div class="tab-pane fade" id="custom-tabs-seo" role="tabpanel" aria-labelledby="custom-tabs-seo-tab">
-                                    <ul class="nav nav-pills mb-3" id="pills-seo-tab" role="tablist">
-                                        @foreach($activeLanguages as $lang)
-                                            <li class="nav-item">
-                                                <a class="nav-link @if($loop->first) active @endif bg-light text-dark" id="pills-seo-{{ $lang->code }}-tab" data-toggle="pill" href="#pills-seo-{{ $lang->code }}" role="tab" aria-controls="pills-seo-{{ $lang->code }}" aria-selected="true">{{ $lang->name }}</a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                    <div class="tab-content shadow-sm p-3 mb-4 bg-white rounded" id="pills-seo-tabContent">
-                                        @foreach($activeLanguages as $lang)
-                                            @php
-                                                $translation = $item->translations->where('locale', $lang->code)->first();
-                                            @endphp
-                                            <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-seo-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-seo-{{ $lang->code }}-tab">
-                                                <div class="form-group">
-                                                    <label for="meta_title_{{ $lang->code }}" class="font-weight-bold">Meta Title ({{ $lang->name }})</label>
-                                                    <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.' . $lang->code, $translation->meta_title ?? '') }}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="meta_description_{{ $lang->code }}" class="font-weight-bold">Meta Description ({{ $lang->name }})</label>
-                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.' . $lang->code, $translation->meta_description ?? '') }}</textarea>
-                                                </div>
-                                                <!-- Meta Keywords Field -->
-                                                <div class="form-group">
-                                                    <label for="meta_keywords_{{ $lang->code }}" class="font-weight-bold">Meta Keywords ({{ $lang->name }})</label>
-
-                                                    @php
-                                                        // Decode the JSON meta_keywords into an array
-                                                        $metaKeywords = json_decode($translation->meta_keywords ?? '[]', true);
-
-                                                        // Convert the array into a comma-separated string of keywords
-                                                        $keywordString = implode(',', array_column($metaKeywords, 'value'));
-                                                    @endphp
-
-                                                    <input type="text" name="meta_keywords[{{ $lang->code }}]"
-                                                           class="form-control form-control-lg shadow-sm"
-                                                           id="meta_keywords_{{ $lang->code }}"
-                                                           value="{{ old('meta_keywords.' . $lang->code, $keywordString) }}"
-                                                           data-role="tagsinput" placeholder="Enter meta keywords">
-                                                </div>
-
-                                                <!-- Dynamic SEO Questions/Answers Section -->
-                                                <div class="seo-questions-container" id="seo-questions-{{ $lang->code }}">
-                                                    <label class="font-weight-bold">SEO Questions/Answers ({{ $lang->name }})</label>
-                                                    @foreach($item->seoQuestions->where('locale', $lang->code) as $index => $seoQuestion)
-                                                        <div class="seo-question-group mb-3 p-3 border border-light rounded shadow-sm">
-                                                            <div class="form-group">
-                                                                <input type="text" name="seo_questions[{{ $lang->code }}][{{ $index }}][question]" class="form-control form-control-lg shadow-sm mb-2" value="{{ old('seo_questions.' . $lang->code . '.' . $index . '.question', $seoQuestion->question_text) }}" placeholder="Enter Question" />
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <textarea name="seo_questions[{{ $lang->code }}][{{ $index }}][answer]" class="form-control form-control-lg shadow-sm" placeholder="Enter Answer">{{ old('seo_questions.' . $lang->code . '.' . $index . '.answer', $seoQuestion->answer_text) }}</textarea>
-                                                            </div>
-                                                            <button type="button" class="btn btn-sm btn-danger remove-question">Remove</button>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                <button type="button" class="btn btn-info add-question mt-3" data-lang="{{ $lang->code }}">
-                                                    <i class="fas fa-plus"></i> Add Question
-                                                </button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Submit Button -->
@@ -198,32 +147,6 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            // Function to dynamically add SEO Questions/Answers
-            $('.add-question').on('click', function() {
-                var lang = $(this).data('lang');
-                var container = $('#seo-questions-' + lang);
-                var count = container.find('.seo-question-group').length;
-                var newQuestionGroup = `
-                    <div class="seo-question-group mb-3 p-3 border border-light rounded shadow-sm">
-                        <div class="form-group">
-                            <input type="text" name="seo_questions[` + lang + `][` + count + `][question]" class="form-control form-control-lg shadow-sm mb-2" placeholder="Enter Question" />
-                        </div>
-                        <div class="form-group">
-                            <textarea name="seo_questions[` + lang + `][` + count + `][answer]" class="form-control form-control-lg shadow-sm" placeholder="Enter Answer"></textarea>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-danger remove-question">Remove</button>
-                    </div>`;
-                container.append(newQuestionGroup);
-            });
-
-            // Function to remove an SEO Question/Answer
-            $(document).on('click', '.remove-question', function() {
-                $(this).closest('.seo-question-group').remove();
-            });
-
-            $('[data-toggle="tooltip"]').tooltip();
-        });
 
 
         $(document).ready(function() {

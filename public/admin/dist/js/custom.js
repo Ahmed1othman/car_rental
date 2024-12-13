@@ -196,6 +196,37 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const loader = document.getElementById('global-loader');
+
+    // Show loader on form submit
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            loader.style.display = 'flex';
+        });
+    });
+
+    // Show loader on button click (if it's not inside a form)
+    document.querySelectorAll('button[type="submit"]').forEach(button => {
+        button.addEventListener('click', function () {
+            const form = this.closest('form');
+            if (!form) loader.style.display = 'flex';
+        });
+    });
+
+    // Hide loader after AJAX requests (if needed for non-form actions)
+    if (window.fetch) {
+        const originalFetch = window.fetch;
+        window.fetch = function (...args) {
+            loader.style.display = 'flex';
+            return originalFetch(...args)
+                .finally(() => loader.style.display = 'none');
+        };
+    }
+});
+
+
 //Initialize Select2 Elements
 $('.select2').select2()
 

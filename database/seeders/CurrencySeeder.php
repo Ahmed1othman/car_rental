@@ -22,7 +22,7 @@ class CurrencySeeder extends Seeder
         $currencies = [
             [
                 'code' => 'AED',
-                'name' => 'Emirati Dirham',
+                'name' => 'AED',
                 'symbol' => 'د.إ',
                 'exchange_rate' => 1.0000,
                 'is_default' => true,
@@ -30,7 +30,7 @@ class CurrencySeeder extends Seeder
             ],
             [
                 'code' => 'SAR',
-                'name' => 'Saudi Riyal',
+                'name' => 'SAR',
                 'symbol' => '﷼',
                 'exchange_rate' => 1.0211,
                 'is_default' => false,
@@ -38,7 +38,7 @@ class CurrencySeeder extends Seeder
             ],
             [
                 'code' => 'USD',
-                'name' => 'US Dollar',
+                'name' => 'USD',
                 'symbol' => '$',
                 'exchange_rate' => 0.2723,
                 'is_default' => false,
@@ -46,7 +46,7 @@ class CurrencySeeder extends Seeder
             ],
             [
                 'code' => 'EUR',
-                'name' => 'Euro',
+                'name' => 'EUR',
                 'symbol' => '€',
                 'exchange_rate' => 0.2481,
                 'is_default' => false,
@@ -54,7 +54,7 @@ class CurrencySeeder extends Seeder
             ],
             [
                 'code' => 'GBP',
-                'name' => 'British Pound',
+                'name' => 'GBP',
                 'symbol' => '£',
                 'exchange_rate' => 0.2167,
                 'is_default' => false,
