@@ -22,7 +22,7 @@ class BrandSeeder extends Seeder
         // List of 15 popular car brands for car rentals in Dubai
         $brands = [
             [
-                'logo_path' => 'images/toyota.png',
+                'logo_path' => 'images/toyota.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -44,7 +44,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/nissan.png',
+                'logo_path' => 'images/nissan.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -66,7 +66,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/mercedes.png',
+                'logo_path' => 'images/mercedes.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -88,7 +88,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/bmw.png',
+                'logo_path' => 'images/bmw.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -110,7 +110,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/audi.png',
+                'logo_path' => 'images/audi.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -132,7 +132,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/chevrolet.png',
+                'logo_path' => 'images/chevrolet.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -154,7 +154,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/ford.png',
+                'logo_path' => 'images/ford.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -176,7 +176,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/lexus.png',
+                'logo_path' => 'images/lexus.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -198,7 +198,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/rolls_royce.png',
+                'logo_path' => 'images/rolls_royce.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -220,7 +220,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/ferrari.png',
+                'logo_path' => 'images/ferrari.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -242,7 +242,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/lamborghini.png',
+                'logo_path' => 'images/lamborghini.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -264,7 +264,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/porsche.png',
+                'logo_path' => 'images/porsche.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -287,7 +287,7 @@ class BrandSeeder extends Seeder
             ],
 
             [
-                'logo_path' => 'images/range_rover.png',
+                'logo_path' => 'images/range_rover.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -310,7 +310,7 @@ class BrandSeeder extends Seeder
             ],
             // Add more brands in a similar format to reach 15 brands
             [
-                'logo_path' => 'images/Kia.png',
+                'logo_path' => 'images/Kia.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -332,7 +332,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/hyundai.png',
+                'logo_path' => 'images/hyundai.webp',
                 'is_active' => true,
                 'translations' => [
                     [
@@ -354,7 +354,7 @@ class BrandSeeder extends Seeder
                 ],
             ],
             [
-                'logo_path' => 'images/honda.png',
+                'logo_path' => 'images/honda.webp',
                 'is_active' => true,
                 'translations' => [
                     [
