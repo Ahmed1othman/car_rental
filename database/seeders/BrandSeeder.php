@@ -310,7 +310,7 @@ class BrandSeeder extends Seeder
             ],
             // Add more brands in a similar format to reach 15 brands
             [
-                'logo_path' => 'images/Kia.webp',
+                'logo_path' => 'images/kia.webp',
                 'is_active' => true,
                 'translations' => [
                     [
