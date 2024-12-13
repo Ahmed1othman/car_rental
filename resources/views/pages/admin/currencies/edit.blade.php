@@ -58,11 +58,6 @@
                                     <i class="fas fa-language"></i> Translated Data
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" id="custom-tabs-seo-tab" data-toggle="pill" href="#custom-tabs-seo" role="tab" aria-controls="custom-tabs-seo" aria-selected="false">
-                                    <i class="fas fa-search"></i> SEO Data
-                                </a>
-                            </li>
                         </ul>
                     </div>
 

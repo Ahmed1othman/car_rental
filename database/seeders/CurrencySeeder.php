@@ -111,37 +111,38 @@ class CurrencySeeder extends Seeder
     private function translateCurrencyName($currencyName, $locale)
     {
         $translations = [
-            'Emirati Dirham' => [
-                'en' => 'Emirati Dirham',
-                'ar' => 'درهم إماراتي',
-                'fr' => 'Dirham Émirati',
-                'de' => 'VAE-Dirham',
+            'AED' => [
+                'en' => 'AED',
+                'ar' => 'درهم',
+                'fr' => 'AED',
+                'de' => 'AED',
             ],
-            'Saudi Riyal' => [
-                'en' => 'Saudi Riyal',
-                'ar' => 'ريال سعودي',
-                'fr' => 'Riyal Saoudien',
-                'de' => 'Saudi-Riyal',
+            'SAR' => [
+                'en' => 'SAR',
+                'ar' => 'ريال',
+                'fr' => 'SAR',
+                'de' => 'SAR',
             ],
-            'US Dollar' => [
-                'en' => 'US Dollar',
-                'ar' => 'دولار أمريكي',
-                'fr' => 'Dollar Américain',
-                'de' => 'US-Dollar',
+            'USD' => [
+                'en' => 'USD',
+                'ar' => 'دولار',
+                'fr' => 'USD',
+                'de' => 'USD',
             ],
-            'Euro' => [
-                'en' => 'Euro',
+            'EUR' => [
+                'en' => 'EUR',
                 'ar' => 'يورو',
-                'fr' => 'Euro',
-                'de' => 'Euro',
+                'fr' => 'EUR',
+                'de' => 'EUR',
             ],
-            'British Pound' => [
-                'en' => 'British Pound',
-                'ar' => 'جنيه إسترليني',
-                'fr' => 'Livre Sterling',
-                'de' => 'Britisches Pfund',
+            'GBP' => [
+                'en' => 'GBP',
+                'ar' => 'جنيه استرليني',
+                'fr' => 'GBP',
+                'de' => 'GBP',
             ],
         ];
+
 
         // Return the translated name or fallback to English if no translation is available
         return $translations[$currencyName][$locale] ?? $currencyName;
