@@ -108,7 +108,8 @@ class DetailedCarResource extends JsonResource
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>[
                     'faq_schema'=>$seoQuestionSchema,
-                ]
+                    'product_schema'=> $this->productSchema($translation, $brandName, $prices, $currency),
+                ],
             ],
             'no_deposit' => $this->no_debosite??1,
             'discount_rate' => ceil(($this->daily_main_price - $this->daily_discount_price) * 100 / $this->daily_main_price),
@@ -132,5 +133,28 @@ class DetailedCarResource extends JsonResource
             }),
         ];
 
+    }
+
+    public function productSchema($translation, $brandName, array $prices, $currency): array
+    {
+        return [
+            "@context" => "https://schema.org",
+            "@type" => "Product",
+            "name" => $translation->name ?? null,
+            "image" => $this->default_image_path,
+            "description" => $translation->description ?? null,
+            "brand" => [
+                "@type" => "Brand",
+                "name" => $brandName
+            ],
+            "offers" => [
+                [
+                    "@type" => "Offer",
+                    "price" => $prices['daily_discount_price'] ?? $prices['daily_main_price'],
+                    "priceCurrency" => $currency->code,
+                    "availability" => 'available',
+                ],
+            ]
+        ];
     }
 }

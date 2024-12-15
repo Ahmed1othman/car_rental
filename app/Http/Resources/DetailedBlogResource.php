@@ -58,6 +58,8 @@ class DetailedBlogResource extends JsonResource
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>[
                     'faq_schema'=>$seoQuestionSchema,
+                    'main_schema'=>$seoQuestionSchema,
+
                 ]
             ],
 
@@ -83,4 +85,5 @@ class DetailedBlogResource extends JsonResource
         ];
 
     }
+
 }

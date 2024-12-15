@@ -8,11 +8,12 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Feature;
 use App\Models\Gear_type;
-use App\Models\Maker;
-use App\Models\old\BodyStyle;
+
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class CarController extends GenericController
 {
@@ -306,32 +307,76 @@ class CarController extends GenericController
     }
 
 
+//    public function storeImages(Request $request)
+//    {
+//        // Validate the request (Images should be passed as an array)
+//        $request->validate([
+//            'file_path' => 'required|array',
+//            'file_path.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+//            'alt' => 'nullable|string|max:255',
+//            'car_id' => 'required|integer',
+//        ]);
+//
+//        // Loop through the images and store them
+//        foreach ($request->file('file_path') as $image) {
+//            // Store the image
+//            $imagePath = $image->store('images', 'public'); // Saves in 'storage/app/public/images'
+//
+//            // Save the path and other data in the database
+//            $media = new CarImage();
+//            $media->file_path = $imagePath;
+//            $media->alt = $request->input('alt')??null;// Assume alt text is also passed as an array
+//            $media->type = 'image';
+//            $media->car_id = $request->input('car_id');
+//            $media->save();
+//        }
+//
+//        return response()->json(['message' => 'Images uploaded successfully'], 200);
+//    }
+
+
+
     public function storeImages(Request $request)
     {
-        // Validate the request (Images should be passed as an array)
         $request->validate([
             'file_path' => 'required|array',
-            'file_path.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'file_path.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'alt' => 'nullable|string|max:255',
             'car_id' => 'required|integer',
         ]);
 
-        // Loop through the images and store them
-        foreach ($request->file('file_path') as $image) {
-            // Store the image
-            $imagePath = $image->store('images', 'public'); // Saves in 'storage/app/public/images'
+        // Set the desired width and height for resizing
+        $desiredWidth = 800;  // Replace with your desired width
+        $desiredHeight = 520; // Replace with your desired height
 
-            // Save the path and other data in the database
+        foreach ($request->file('file_path') as $image) {
+            // Create a unique filename for the WebP image
+            $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            $webpFilename = $filename . '_' . uniqid() . '.webp';
+
+            // Optimize, resize and convert the image to WebP
+            $imagePath = storage_path('app/public/images/' . $webpFilename);
+            $interventionImage = Image::make($image->getRealPath())
+                ->resize($desiredWidth, $desiredHeight) // Resize the image to the specified dimensions
+                ->encode('webp', 85) // 85 is the quality percentage
+                ->save($imagePath);
+
+            // Save the image details in the database
             $media = new CarImage();
-            $media->file_path = $imagePath;
-            $media->alt = $request->input('alt')??null;// Assume alt text is also passed as an array
+            $media->file_path = 'images/' . $webpFilename;
+            $media->alt = $request->input('alt') ?? null;
             $media->type = 'image';
             $media->car_id = $request->input('car_id');
             $media->save();
         }
 
-        return response()->json(['message' => 'Images uploaded successfully'], 200);
+        return response()->json(['message' => 'Images uploaded, optimized, resized, and converted to WebP successfully'], 200);
     }
+
+
+
+
+
 
     public function updateDefaultImage(Request $request)
     {
