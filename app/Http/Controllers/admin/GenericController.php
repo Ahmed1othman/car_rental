@@ -8,6 +8,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class GenericController extends Controller
 {
@@ -87,10 +88,19 @@ class GenericController extends Controller
                         if (is_array($data)) {
                             $filePaths = [];
                             foreach ($data as $item) {
-                                    $path = $item->store('images', 'public'); // Store the image
+
+                                $filename = pathinfo($item->getClientOriginalName(), PATHINFO_FILENAME);
+                                $webpFilename = $filename . '_' . uniqid() . '.webp';
+
+                                // Optimize, resize and convert the image to WebP
+                                $imagePath = storage_path('app/public/images/' . $webpFilename);
+                                $interventionImage = Image::make($item->getRealPath())
+                                    ->encode('webp', 85) // 85 is the quality percentage
+                                    ->save($imagePath);
+
                                     // Store image file path
                                     $filePaths[] = [
-                                        'file_path' => $path,
+                                        'file_path' => 'images/'.$webpFilename,
                                         'alt' => $request->alt?? null,
                                         'type' => 'image'
                                     ];

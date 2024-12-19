@@ -306,36 +306,6 @@ class CarController extends GenericController
         return response()->json(['message' => 'YouTube URLs stored successfully'], 200);
     }
 
-
-//    public function storeImages(Request $request)
-//    {
-//        // Validate the request (Images should be passed as an array)
-//        $request->validate([
-//            'file_path' => 'required|array',
-//            'file_path.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-//            'alt' => 'nullable|string|max:255',
-//            'car_id' => 'required|integer',
-//        ]);
-//
-//        // Loop through the images and store them
-//        foreach ($request->file('file_path') as $image) {
-//            // Store the image
-//            $imagePath = $image->store('images', 'public'); // Saves in 'storage/app/public/images'
-//
-//            // Save the path and other data in the database
-//            $media = new CarImage();
-//            $media->file_path = $imagePath;
-//            $media->alt = $request->input('alt')??null;// Assume alt text is also passed as an array
-//            $media->type = 'image';
-//            $media->car_id = $request->input('car_id');
-//            $media->save();
-//        }
-//
-//        return response()->json(['message' => 'Images uploaded successfully'], 200);
-//    }
-
-
-
     public function storeImages(Request $request)
     {
         $request->validate([
@@ -345,10 +315,6 @@ class CarController extends GenericController
             'car_id' => 'required|integer',
         ]);
 
-        // Set the desired width and height for resizing
-        $desiredWidth = 800;  // Replace with your desired width
-        $desiredHeight = 520; // Replace with your desired height
-
         foreach ($request->file('file_path') as $image) {
             // Create a unique filename for the WebP image
             $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
@@ -357,13 +323,13 @@ class CarController extends GenericController
             // Optimize, resize and convert the image to WebP
             $imagePath = storage_path('app/public/images/' . $webpFilename);
             $interventionImage = Image::make($image->getRealPath())
-                ->resize($desiredWidth, $desiredHeight) // Resize the image to the specified dimensions
+//                ->resize($desiredWidth, $desiredHeight) // Resize the image to the specified dimensions
                 ->encode('webp', 85) // 85 is the quality percentage
                 ->save($imagePath);
 
             // Save the image details in the database
             $media = new CarImage();
-            $media->file_path = 'images/' . $webpFilename;
+            $media->file_path = 'images/'. $webpFilename;
             $media->alt = $request->input('alt') ?? null;
             $media->type = 'image';
             $media->car_id = $request->input('car_id');
@@ -372,11 +338,6 @@ class CarController extends GenericController
 
         return response()->json(['message' => 'Images uploaded, optimized, resized, and converted to WebP successfully'], 200);
     }
-
-
-
-
-
 
     public function updateDefaultImage(Request $request)
     {
