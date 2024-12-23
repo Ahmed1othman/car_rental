@@ -65,7 +65,7 @@ class HomeController extends GenericController
             'required_documents_section_title.*' => 'nullable|string',
             'required_documents_section_paragraph.*' => 'nullable|string',
             'hero_header_title.*' => 'nullable|string',
-            'hero_header_image_path' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+            'hero_header_image_path' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:10000',
             'instagram_section_title.*' => 'nullable|string',
             'footer_section_paragraph.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',

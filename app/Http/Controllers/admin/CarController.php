@@ -310,7 +310,7 @@ class CarController extends GenericController
     {
         $request->validate([
             'file_path' => 'required|array',
-            'file_path.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'file_path.*' => 'required|image|mimes:jpeg,webp,png,jpg,gif,svg|max:2048',
             'alt' => 'nullable|string|max:255',
             'car_id' => 'required|integer',
         ]);

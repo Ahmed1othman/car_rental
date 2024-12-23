@@ -88,10 +88,8 @@ class GenericController extends Controller
                         if (is_array($data)) {
                             $filePaths = [];
                             foreach ($data as $item) {
-
                                 $filename = pathinfo($item->getClientOriginalName(), PATHINFO_FILENAME);
                                 $webpFilename = $filename . '_' . uniqid() . '.webp';
-
                                 // Optimize, resize and convert the image to WebP
                                 $imagePath = storage_path('app/public/images/' . $webpFilename);
                                 $interventionImage = Image::make($item->getRealPath())
@@ -124,11 +122,17 @@ class GenericController extends Controller
                             } else {
                             // Handle single file (e.g., 'logo' or single image)
                             if ($request->hasFile($fileField)) {
-                                $file = $request->file($fileField);
-                                $path = $file->store('images', 'public'); // Store single file
+                                $item = $request->file($fileField);
+                                $filename = pathinfo($item->getClientOriginalName(), PATHINFO_FILENAME);
+                                $webpFilename = $filename . '_' . uniqid() . '.webp';
+                                // Optimize, resize and convert the image to WebP
+                                $imagePath = storage_path('app/public/images/' . $webpFilename);
+                                $interventionImage = Image::make($item->getRealPath())
+                                    ->encode('webp', 85) // 85 is the quality percentage
+                                    ->save($imagePath);
 
                                 // Save path to the model directly
-                                $template->$fileField = $path;
+                                $template->$fileField = 'images/'.$webpFilename;
                                 $template->save();
                             }
                         }
