@@ -17,6 +17,7 @@ class BlogResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->translations->first()->title??null,
+            'description' => $this->translations->first()->description??null,
             'slug' => $this->slug,
             'image_path' => $this->image_path ? asset('storage/'.$this->image_path) : null,
             'created_at' => $this->created_at ? $this->created_at->format('j M, Y') : null
