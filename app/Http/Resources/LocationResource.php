@@ -17,16 +17,13 @@ class LocationResource extends JsonResource
     {
         $locale = app()->getLocale()?? "en";
         $translations = $this->translations->where('locale',$locale)->first();
-//        $car_counts = $this->getCounts($locale);
 
         return [
             'id' => $this->id,
-            'slug' => $translations->slug??null,
             'name' => $translations->name??null,
+            'slug' => $this->slug,
             'description' => $translations->description??null,
             'content' => $translations->content??null,
-//            'car_count'=>$car_counts,
-
         ];
     }
 

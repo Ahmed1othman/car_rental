@@ -16,8 +16,11 @@ class FAQResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'question' => $this->translations->first()->question,
-            'answer' => $this->translations->first()->answer,
+            'question' => $this->translations->first()->question ?? null,
+            'slug' => $this->slug,
+            'answer' => $this->translations->first()->answer ?? null,
+            'is_active' => $this->is_active,
+            'created_at' => $this->created_at,
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\DetailedLocationResource;
 use App\Http\Resources\LocationResource;
 use App\Models\Location;
 use App\Traits\DBTrait;
@@ -50,5 +51,12 @@ class LocationController extends Controller
             'section_description'=> $homeData->translations->first()->where_find_us_section_paragraph,
             'locations'=> LocationResource::collection($rows)
         ];
+    }
+
+    public function show(Request $request, $slug)
+    {
+        $language = $request->header('Accept-Language') ?? 'en';
+        $location = Location::where('slug', $slug)->firstOrFail();
+        return new DetailedLocationResource($location);
     }
 }

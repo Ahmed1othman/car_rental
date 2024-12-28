@@ -36,14 +36,14 @@ trait DBTrait
     public function getBrandsList($language)
     {
         return DB::table('brands')
-            ->select('brands.id', 'brands.logo_path', 'brand_translations.slug', 'brand_translations.name', DB::raw('COUNT(cars.id) as cars_count'))
+            ->select('brands.id', 'brands.logo_path', 'brands.slug', 'brand_translations.name', DB::raw('COUNT(cars.id) as cars_count'))
             ->leftJoin('brand_translations', function ($join) use ($language) {
                 $join->on('brands.id', '=', 'brand_translations.brand_id')
                     ->where('brand_translations.locale', '=', $language);
             })
             ->leftJoin('cars', 'brands.id', '=', 'cars.brand_id') // Assuming there is a cars table with a brand_id
             ->where('brands.is_active', true)
-            ->groupBy('brands.id', 'brand_translations.slug', 'brand_translations.name', 'brands.logo_path')
+            ->groupBy('brands.id', 'brands.slug', 'brand_translations.name', 'brands.logo_path')
             ->get();
     }
 
@@ -75,14 +75,14 @@ trait DBTrait
     public function getCategoriesList($language)
     {
         return DB::table('categories')
-            ->select('categories.id', 'categories.image_path', 'category_translations.slug', 'category_translations.name', DB::raw('COUNT(cars.id) as cars_count'))
+            ->select('categories.id', 'categories.image_path', 'categories.slug', 'category_translations.name', DB::raw('COUNT(cars.id) as cars_count'))
             ->leftJoin('category_translations', function ($join) use ($language) {
                 $join->on('categories.id', '=', 'category_translations.category_id')
                     ->where('category_translations.locale', '=', $language);
             })
             ->leftJoin('cars', 'categories.id', '=', 'cars.category_id') // Assuming there is a cars table with a category_id
             ->where('categories.is_active', true)
-            ->groupBy('categories.id', 'category_translations.slug', 'category_translations.name', 'categories.image_path')
+            ->groupBy('categories.id', 'categories.slug', 'category_translations.name', 'categories.image_path')
             ->get();
     }
 
@@ -93,7 +93,7 @@ trait DBTrait
             'blogs.id',
             'blogs.created_at',
             'blogs.image_path',
-            'blog_translations.slug',
+            'blogs.slug',
             'blog_translations.title',
             'blog_translations.content'
         )
@@ -106,7 +106,7 @@ trait DBTrait
             'blogs.id',
             'blogs.created_at',
             'blogs.image_path',
-            'blog_translations.slug',
+            'blogs.slug',
             'blog_translations.title',
             'blog_translations.content'
         )
@@ -116,40 +116,40 @@ trait DBTrait
     public function getServicesList($language)
     {
         return DB::table('services')
-            ->select('services.id', 'service_translations.slug', 'service_translations.name','service_translations.description')
+            ->select('services.id', 'services.slug', 'service_translations.name', 'service_translations.description')
             ->leftJoin('service_translations', function ($join) use ($language) {
                 $join->on('services.id', '=', 'service_translations.service_id')
                     ->where('service_translations.locale', '=', $language);
             })
             ->where('services.is_active', true)
             ->where('services.show_in_home', true)
-            ->groupBy('services.id', 'service_translations.slug', 'service_translations.description','service_translations.name')
+            ->groupBy('services.id', 'services.slug', 'service_translations.description', 'service_translations.name')
             ->limit(4)
             ->get();
     }
     public function getDocumentsList($language)
     {
         return DB::table('documents')
-            ->select('documents.id','documents.for', 'document_translations.slug', 'document_translations.content')
+            ->select('documents.id','documents.for', 'documents.slug', 'document_translations.content')
             ->leftJoin('document_translations', function ($join) use ($language) {
                 $join->on('documents.id', '=', 'document_translations.document_id')
                     ->where('document_translations.locale', '=', $language);
             })
             ->where('documents.is_active', true)
-            ->groupBy('documents.id','documents.for', 'document_translations.slug', 'document_translations.content')
+            ->groupBy('documents.id','documents.for', 'documents.slug', 'document_translations.content')
             ->get();
     }
 
     public function getLocationsList($language)
     {
         return DB::table('locations')
-            ->select('locations.id', 'location_translations.slug', 'location_translations.name')
+            ->select('locations.id', 'locations.slug', 'location_translations.name')
             ->leftJoin('location_translations', function ($join) use ($language) {
                 $join->on('locations.id', '=', 'location_translations.location_id')
                     ->where('location_translations.locale', '=', $language);
             })
             ->where('locations.is_active', true)
-            ->groupBy('locations.id', 'location_translations.slug', 'location_translations.name')
+            ->groupBy('locations.id', 'locations.slug', 'location_translations.name')
             ->get();
     }
 
@@ -190,7 +190,7 @@ trait DBTrait
                 'brand_translations.name as brand_name',
                 'category_translations.name as category_name',
                 'cars.default_image_path',
-                'car_translations.slug',
+                'cars.slug',
                 'car_translations.name'
             )
             ->leftJoin('car_translations', function ($join) use ($language,$currency,$currencyLanguage) {
@@ -266,42 +266,38 @@ trait DBTrait
     }
 
 
-    public function getFaqList($language,$condition=null, $limit = null,$paginate = null)
+    public function getFaqList($language, $condition = null, $limit = null, $paginate = null)
     {
-        $query =  DB::table('faqs')
+        $query = DB::table('faqs')
             ->select(
                 'faqs.id',
-                'faqs.created_at',
+                'faqs.slug',
                 'faq_translations.question',
-                'faq_translations.answer',
-                'faq_translations.slug',
+                'faq_translations.answer'
             )
             ->leftJoin('faq_translations', function ($join) use ($language) {
                 $join->on('faqs.id', '=', 'faq_translations.faq_id')
                     ->where('faq_translations.locale', '=', $language);
             })
-            ->where('faqs.is_active', 1)
-            ->where('faqs.'.$condition, 1)
-            ->groupBy(
-                'faqs.id',
-                'faqs.created_at',
-                'faq_translations.slug',
-                'faq_translations.question',
-                'faq_translations.answer'
-            );
+            ->where('faqs.is_active', true);
 
-
-
-            // Apply pagination or limit if provided
-        if ($paginate) {
-            $data = $query->paginate($paginate);
-        } elseif ($limit) {
-            $data = $query->limit($limit)->get();
-        } else {
-            $data = $query->get();
+        // Apply additional conditions if provided
+        if ($condition) {
+            foreach ($condition as $key => $value) {
+                $query->where($key, $value);
+            }
         }
 
-        return $data;
-    }
+        // Apply limit if provided
+        if ($limit) {
+            $query->limit($limit);
+        }
 
+        // Apply pagination if requested
+        if ($paginate) {
+            return $query->paginate($paginate);
+        }
+
+        return $query->get();
+    }
 }

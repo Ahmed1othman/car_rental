@@ -22,12 +22,10 @@ class CarController extends Controller
 
     use DBTrait;
 
-    public function show(Request $request ,$slug){
-
+    public function show(Request $request, $slug)
+    {
         $language = $request->header('Accept-Language') ?? 'en';
-        $car = Car::whereHas('translations', function ($q) use ($slug) {
-            $q->where('slug',$slug);
-        })->firstOrFail();
+        $car = Car::where('slug', $slug)->firstOrFail();
         return new DetailedCarResource($car);
     }
 

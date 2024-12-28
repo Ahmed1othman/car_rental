@@ -72,7 +72,7 @@ class ProcessImageJob implements ShouldQueue
             $originalHeight = $image->height();
             
             // Calculate new dimensions maintaining 200px height
-            $newHeight = 200;
+            $newHeight = 513;
             $newWidth = ($originalWidth / $originalHeight) * $newHeight;
             
             $image->resize($newWidth, $newHeight, function ($constraint) {

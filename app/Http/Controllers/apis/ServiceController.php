@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceResource;
+use App\Http\Resources\DetailedServiceResource;
 use App\Models\Service;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
@@ -49,5 +50,12 @@ class ServiceController extends Controller
             'section_description'=> $homeData->translations->first()->why_choose_us_section_paragraph,
             'services'=> ServiceResource::collection($rows)
         ];
+    }
+
+    public function show(Request $request, $slug)
+    {
+        $language = $request->header('Accept-Language') ?? 'en';
+        $service = Service::where('slug', $slug)->firstOrFail();
+        return new DetailedServiceResource($service);
     }
 }

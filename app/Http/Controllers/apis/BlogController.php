@@ -40,13 +40,13 @@ class BlogController extends Controller
         ];
     }
 
-    public function show(Request $request ,$slug){
-
+    public function show(Request $request, $slug)
+    {
         $language = $request->header('Accept-Language') ?? 'en';
 
-        $blog = Blog::whereHas('translations', function ($q) use ($slug) {
-            $q->where('slug',$slug);
-        })->firstOrFail();
+        // Find blog by the single slug in the main table
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+        
         return new DetailedBlogResource($blog);
     }
 }

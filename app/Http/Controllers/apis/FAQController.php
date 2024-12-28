@@ -4,6 +4,7 @@ namespace App\Http\Controllers\apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\DetailedFAQResource;
 use App\Http\Resources\FAQResource;
 use App\Http\Resources\LocationResource;
 use App\Models\Faq;
@@ -52,5 +53,12 @@ class FAQController extends Controller
             'section_description'=> $homeData->translations->first()->faq_section_paragraph,
             'faqs'=> FAQResource::collection($rows)
         ];
+    }
+
+    public function show(Request $request, $slug)
+    {
+        $language = $request->header('Accept-Language') ?? 'en';
+        $faq = Faq::where('slug', $slug)->firstOrFail();
+        return new DetailedFAQResource($faq);
     }
 }

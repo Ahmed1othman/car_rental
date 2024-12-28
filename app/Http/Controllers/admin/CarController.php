@@ -339,7 +339,7 @@ class CarController extends GenericController
                     $originalHeight = $image->height();
                     
                     // Calculate new dimensions maintaining 200px height
-                    $newHeight = 200;
+                    $newHeight = 513;
                     $newWidth = ($originalWidth / $originalHeight) * $newHeight;
                     
                     $image->resize($newWidth, $newHeight, function ($constraint) {
@@ -405,7 +405,7 @@ class CarController extends GenericController
                 $originalHeight = $image->height();
                 
                 // Calculate new dimensions maintaining 200px height
-                $newHeight = 200;
+                $newHeight = 513;
                 $newWidth = ($originalWidth / $originalHeight) * $newHeight;
                 
                 $image->resize($newWidth, $newHeight, function ($constraint) {

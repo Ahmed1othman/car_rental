@@ -62,7 +62,7 @@ class CarResource extends JsonResource
             'car_model' => $carModel ? $carModel->name : null,
             'category' => $this->category->translations->where('locale', $locale)->first()->name ?? null,
             'default_image_path' => $this->default_image_path,
-            'slug' => $this->translations->where('locale', $locale)->first()->slug ?? null,
+            'slug' => $this->slug,
             'name' => $this->translations->where('locale', $locale)->first()->name ?? null,
             'images' => collect([
                 [

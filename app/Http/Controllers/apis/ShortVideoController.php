@@ -5,6 +5,7 @@ namespace App\Http\Controllers\apis;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\DetailedShortVideoResource;
 use App\Http\Resources\ShortVideoResource;
 use App\Models\Brand;
 use App\Models\Category;
@@ -49,5 +50,12 @@ class ShortVideoController extends Controller
         return [
             'short_videos'=> ShortVideoResource::collection($brands)
         ];
+    }
+
+    public function show(Request $request, $slug)
+    {
+        $language = $request->header('Accept-Language') ?? 'en';
+        $video = Short_video::where('slug', $slug)->firstOrFail();
+        return new DetailedShortVideoResource($video);
     }
 }

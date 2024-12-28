@@ -15,14 +15,11 @@ class ShortVideoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $locale = app()->getLocale()?? "en";
-        $translations = $this->translations->where('locale',$locale)->first();
-
         return [
             'id' => $this->id,
-            'slug' => $translations->slug??null,
-            'title' => $translations->title??null,
-            'description' => $translations->description??null,
+            'title' => $this->translations->first()->title??null,
+            'slug' => $this->slug,
+            'description' => $this->translations->first()->description??null,
             'image' => $this->file_path,
         ];
     }

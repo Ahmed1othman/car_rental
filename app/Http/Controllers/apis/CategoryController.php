@@ -5,6 +5,7 @@ namespace App\Http\Controllers\apis;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\DetailedCategoryResource;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Traits\DBTrait;
@@ -50,5 +51,12 @@ class CategoryController extends Controller
             'section_description'=> $homeData->translations->first()->category_section_paragraph,
             'categories'=> CategoryResource::collection($brands)
         ];
+    }
+
+    public function show(Request $request, $slug)
+    {
+        $language = $request->header('Accept-Language') ?? 'en';
+        $category = Category::where('slug', $slug)->firstOrFail();
+        return new DetailedCategoryResource($category);
     }
 }
