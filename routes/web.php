@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\admin\CarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,9 @@ Route::get('/cars/images/check-status/{carId}', [CarController::class, 'checkIma
 
 Route::post('/cars/{id}/upload-image', [CarController::class, 'uploadImage'])->name('cars.upload-image');
 Route::post('/cars/{id}/upload-default-image', [CarController::class, 'uploadDefaultImage'])->name('cars.upload-default-image');
+
+// Test queue route
+Route::get('/test-queue', function () {
+    \App\Jobs\TestQueueJob::dispatch();
+    return 'Job dispatched! Check your logs.';
+});

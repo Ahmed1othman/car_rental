@@ -420,7 +420,7 @@ class CarController extends GenericController
                 }
                 
                 // Update car with new image
-                $car->image = $relativePath;
+                $car->default_image_path = $relativePath;
                 $car->save();
 
                 // Clear any cached images
