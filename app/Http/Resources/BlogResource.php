@@ -14,15 +14,12 @@ class BlogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
-        $formattedCreatedAt = $this->created_at ? $this->created_at->format('j M, Y') : null;
-
         return [
             'id' => $this->id,
             'title' => $this->translations->first()->title??null,
             'slug' => $this->slug,
             'image_path' => $this->image_path ? asset('storage/'.$this->image_path) : null,
-            'created_at' => formattedCreatedAt
+            'created_at' => $this->created_at ? $this->created_at->format('j M, Y') : null
         ];
     }
 }
