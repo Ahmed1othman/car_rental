@@ -40,7 +40,7 @@ class BlogController extends GenericController
         $this->validationRules = [
             'title.*' => 'required|string|max:255',
             'cars' => 'nullable|array',
-            'image_path' => 'required|mimes:jpg,jpeg,png,svg,webp|max:4096',
+            'image_path' => 'required|mimes:jpg,jpeg,png,svg,webp|max:10096',
             'content.*' => 'required|string',
             'description.*' => 'required|string',
             'meta_title.*' => 'nullable|string|max:255',
@@ -69,7 +69,7 @@ class BlogController extends GenericController
         $this->validationRules = [
             'title.*' => 'required|string|max:255',
             'cars' => 'nullable|array',
-            'image_path' => 'sometimes|mimes:jpg,jpeg,png,svg,webp|max:4096',
+            'image_path' => 'sometimes|mimes:jpg,jpeg,png,svg,webp|max:10096',
             'content.*' => 'required|string',
             'description.*' => 'required|string',
             'meta_title.*' => 'nullable|string|max:255',

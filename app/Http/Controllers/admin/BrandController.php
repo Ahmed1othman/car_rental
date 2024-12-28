@@ -24,7 +24,7 @@ class BrandController extends GenericController
         ]);
 
         $this->validationRules = [
-            'logo_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
+            'logo_path' => 'required|mimes:jpg,jpeg,png,webp|max:10096',
             'name.*' => [
         'required',
         function ($attribute, $value, $fail) {
@@ -68,7 +68,7 @@ class BrandController extends GenericController
 
         // Define validation rules
         $this->validationRules = [
-            'logo_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:4096',
+            'logo_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:10096',
             'name.*' => [
             'required','string','max:255',
             function ($attribute, $value, $fail) use ($id) {

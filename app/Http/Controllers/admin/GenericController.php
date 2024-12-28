@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use App\Jobs\ProcessImageJob;
 
 class GenericController extends Controller
 {
@@ -59,100 +60,89 @@ class GenericController extends Controller
         $request->merge([
             'is_active' => $request->has('is_active') ? true : false,
         ]);
+        
         // Validate the request data
         $validatedData = $request->validate($this->validationRules, $this->validationMessages);
+        
         // Start a database transaction
         DB::beginTransaction();
 
-//        try {
-            // Store the template base data (non-translatable)
-        foreach ($this->nonTranslatableFields as $nonTranslatableField) {
-            if (isset($validatedData[$nonTranslatableField]))
-                $nonTranslatedData[$nonTranslatableField] = $validatedData[$nonTranslatableField]?? null;
-            elseif ($nonTranslatableField == "is_active"){
-                $nonTranslatedData[$nonTranslatableField] = $request->is_active;
+        try {
+            // Store base data (non-translatable)
+            foreach ($this->nonTranslatableFields as $nonTranslatableField) {
+                if (isset($validatedData[$nonTranslatableField]))
+                    $nonTranslatedData[$nonTranslatableField] = $validatedData[$nonTranslatableField] ?? null;
+                elseif ($nonTranslatableField == "is_active") {
+                    $nonTranslatedData[$nonTranslatableField] = $request->is_active;
+                }
             }
-        }
-        $template = $this->model::create($nonTranslatedData);
+            $template = $this->model::create($nonTranslatedData);
 
-        $this->handleModelTranslations($validatedData, $template);
+            $this->handleModelTranslations($validatedData, $template);
+            $this->handleSEOQuestionsForEachLanguage($validatedData, $template);
 
-        // Handle SEO questions for each language
-        $this->handleSEOQuestionsForEachLanguage($validatedData, $template);
-
-
-        foreach ($this->uploadedfiles as $fileField) {
-                    if ($request->hasFile($fileField)) {
-                        $data = $request->file($fileField);
-                        // Check if data is an array (multiple images or videos)
-                        if (is_array($data)) {
-                            $filePaths = [];
-                            foreach ($data as $item) {
-                                $filename = pathinfo($item->getClientOriginalName(), PATHINFO_FILENAME);
-                                $webpFilename = $filename . '_' . uniqid() . '.webp';
-                                // Optimize, resize and convert the image to WebP
-                                $imagePath = storage_path('app/public/images/' . $webpFilename);
-                                $interventionImage = Image::make($item->getRealPath())
-                                    ->encode('webp', 85) // 85 is the quality percentage
-                                    ->save($imagePath);
-
-                                    // Store image file path
-                                    $filePaths[] = [
-                                        'file_path' => 'images/'.$webpFilename,
-                                        'alt' => $request->alt?? null,
-                                        'type' => 'image'
-                                    ];
-                                    // Handle video URL
-                                }
-                            if ($request->has('youtube_links')){
-                                if ($request->input('youtube_links')) {
-                                    foreach ($request->input('youtube_links') as $link) {
-                                        $url = $this->getYouTubeVideoId($link);
-                                        $filePaths[] = [
-                                            'file_path' => $url,
-                                            'alt' => $request->alt?? null,
-                                            'type' => 'video'
-                                        ];
-                                    }
-                                }
-
-                            }
-                                // Attach the image or video paths to the template
-                                $template->$fileField()->createMany($filePaths);
-                            } else {
-                            // Handle single file (e.g., 'logo' or single image)
-                            if ($request->hasFile($fileField)) {
-                                $item = $request->file($fileField);
-                                $filename = pathinfo($item->getClientOriginalName(), PATHINFO_FILENAME);
-                                $webpFilename = $filename . '_' . uniqid() . '.webp';
-                                // Optimize, resize and convert the image to WebP
-                                $imagePath = storage_path('app/public/images/' . $webpFilename);
-                                $interventionImage = Image::make($item->getRealPath())
-                                    ->encode('webp', 85) // 85 is the quality percentage
-                                    ->save($imagePath);
-
-                                // Save path to the model directly
-                                $template->$fileField = 'images/'.$webpFilename;
-                                $template->save();
-                            }
+            // Handle file uploads
+            foreach ($this->uploadedfiles as $fileField) {
+                if ($request->hasFile($fileField)) {
+                    $files = $request->file($fileField);
+                    
+                    // Check if it's multiple files
+                    if (is_array($files)) {
+                        foreach ($files as $file) {
+                            // Store file temporarily
+                            $tempPath = $file->store('temp');
+                            
+                            // Process multiple files in background
+                            ProcessImageJob::dispatch(
+                                $tempPath,
+                                $file->getClientOriginalName(),
+                                get_class($template),
+                                $template->id,
+                                $fileField,
+                                true
+                            );
                         }
+                    } else {
+                        // Single file - process immediately
+                        $file = $files;
+                        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        $webpFilename = $filename . '_' . uniqid() . '.webp';
+                        
+                        // Process and save image
+                        $imagePath = storage_path('app/public/images/' . $webpFilename);
+                        $image = Image::make($file->getRealPath());
+                        
+                        // Get original aspect ratio
+                        $originalWidth = $image->width();
+                        $originalHeight = $image->height();
+                        
+                        // Calculate new dimensions maintaining 200px height
+                        $newHeight = 200;
+                        $newWidth = ($originalWidth / $originalHeight) * $newHeight;
+                        
+                        $image->resize($newWidth, $newHeight, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })
+                        ->encode('webp', 85)
+                        ->save($imagePath);
 
+                        // Save path to model
+                        $template->$fileField = 'images/' . $webpFilename;
+                        $template->save();
                     }
                 }
+            }
 
             $this->exceptionsModelStore($request, $template);
-            // Commit the transaction
             DB::commit();
 
             return redirect()->route('admin.' . $this->modelName . '.index')
-                ->with('success', 'data added successfully');
+                ->with('success', 'Data added successfully');
 
-//        } catch (\Exception $e) {
-//            // Rollback the transaction if something goes wrong
-//            DB::rollback();
-////            return redirect()->back()->withErrors(['error' => 'An error occurred while saving the template.']);
-//            return redirect()->back()->withErrors(['error' =>$e->getMessage() ]);
-//        }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     public function show($id)
@@ -177,82 +167,73 @@ class GenericController extends Controller
         $validatedData = $request->validate($this->validationRules, $this->validationMessages);
 
         DB::beginTransaction();
-//        try {
-            // Find the template to be updated
+        try {
             $row = $this->model::findOrFail($id);
-
 
             // Update non-translatable fields
             foreach ($this->nonTranslatableFields as $field) {
-                echo $field;
                 if (isset($request->$field))
                     $row->$field = $request->$field ?? null;
             }
             $row->save();
 
-
-        foreach ($this->uploadedfiles as $fileField) {
-
-
-            // Check if the field is plural (indicating a many-to-many relationship)
-            if (Str::plural($fileField) === $fileField) {
-                // Many-to-many relationship case (e.g., 'images' or 'documents')
-                if (request()->has($fileField)) {
-                    $galleryItems = request()->input($fileField);
-                    $itemsToAttach = [];
-
-                    foreach ($galleryItems as $item) {
-                        if ($item['type'] === 'image' && isset($item['file_path'])) {
-                            // Handle image file upload
-                            $file = $item['file'];
-                            $path = $file->store('images', 'public');
-                            $itemsToAttach[] = [
-                                'file_path' => $path,
-                                'alt' => $item['alt'] ?? null,
-                                'type' => 'image'
-                            ];
-                        } elseif ($item['type'] === 'video' && isset($item['file_path'])) {
-                            // Handle video link
-                            $itemsToAttach[] = [
-                                'file_path' => $item['file_path'],
-                                'alt' => $item['alt'] ?? null,
-                                'type' => 'video'
-                            ];
+            // Handle file uploads
+            foreach ($this->uploadedfiles as $fileField) {
+                if ($request->hasFile($fileField)) {
+                    $files = $request->file($fileField);
+                    
+                    // Check if it's multiple files
+                    if (is_array($files)) {
+                        foreach ($files as $file) {
+                            // Store file temporarily
+                            $tempPath = $file->store('temp');
+                            
+                            // Process multiple files in background
+                            ProcessImageJob::dispatch(
+                                $tempPath,
+                                $file->getClientOriginalName(),
+                                get_class($row),
+                                $row->id,
+                                $fileField,
+                                true
+                            );
                         }
+                    } else {
+                        // Single file - process immediately
+                        $file = $files;
+                        
+                        // Delete old file if exists
+                        if ($row->$fileField) {
+                            Storage::disk('public')->delete($row->$fileField);
+                        }
+
+                        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        $webpFilename = $filename . '_' . uniqid() . '.webp';
+                        
+                        // Process and save image
+                        $imagePath = storage_path('app/public/images/' . $webpFilename);
+                        Image::make($file->getRealPath())
+                            ->resize(1200, 1200, function ($constraint) {
+                                $constraint->aspectRatio();
+                                $constraint->upsize();
+                            })
+                            ->encode('webp', 85)
+                            ->save($imagePath);
+
+                        // Save path to model
+                        $row->$fileField = 'images/' . $webpFilename;
+                        $row->save();
                     }
-
-                    // Attach the items to the related model
-                    $row->$fileField()->createMany($itemsToAttach);
-                }
-            }else {
-
-                // Single field (file belongs directly to the same table, e.g., 'logo' or 'image')
-                if (request()->hasFile($fileField)) {
-                    $file = request()->file($fileField); // Get the single file
-
-                    if ($row->$fileField) {
-                        Storage::disk('public')->delete($row->$fileField);
-                    }
-
-                    // Store the file in a specific directory
-                    $path = $file->store('images', 'public');
-
-                    // Save the path directly in the table's column for this field (e.g., 'logo_path')
-                    $row->$fileField = $path;
-                    $row->save();
                 }
             }
-        }
 
-
-            if($this->translatableFields) {
-                // Update translated fields for each language
+            if ($this->translatableFields) {
+                // Handle translations
                 foreach ($this->data['activeLanguages'] as $language) {
                     $langCode = $language->code;
                     foreach ($this->translatableFields as $translatableField) {
                         $translated[$translatableField] = $validatedData[$translatableField][$langCode] ?? null;
                     }
-
 
                     $translatedData = $translated + [
                         'meta_title' => $validatedData['meta_title'][$langCode] ?? null,
@@ -270,15 +251,18 @@ class GenericController extends Controller
                         ];
                     }
 
-
+                    // Handle slug
                     if ($this->modelName == "homes")
                         $translatedData['slug'] = Str::slug('home-'.$langCode);
                     else if ($this->modelName == "abouts")
                         $translatedData['slug'] = Str::slug('about-'.$langCode);
                     else
-                        $translatedData['slug'] = Str::slug($validatedData[$this->slugField][$langCode].'-'.rand(1, 99999)??rand(1, 99999), '-');
+                        $translatedData['slug'] = Str::slug(
+                            ($validatedData[$this->slugField][$langCode] ?? 'default-slug') . '-' . rand(1, 99999),
+                            '-'
+                        );
 
-                    // Update or create translations
+                    // Update translations
                     $row->translations()->updateOrCreate(
                         ['locale' => $langCode],
                         $translatedData
@@ -286,55 +270,16 @@ class GenericController extends Controller
                 }
             }
 
-            if ($this->isTranslatable)
-            {
-                if ($this->seo_question) {
-                    // Handle SEO questions for each language
-                    foreach ($this->data['activeLanguages'] as $language) {
-                        $langCode = $language->code;
-
-                        // Get all existing SEO questions for this template and language
-                        $existingQuestions = $row->seoQuestions()->where('locale', $langCode)->get();
-                        $submittedQuestions = $validatedData['seo_questions'][$langCode] ?? [];
-                        // Track submitted question IDs
-                        $submittedIds = array_column($submittedQuestions, 'id', 'id');
-                        // Delete questions not submitted
-                        foreach ($existingQuestions as $existingQuestion) {
-                            if (!isset($submittedIds[$existingQuestion->id])) {
-                                $existingQuestion->delete();
-                            }
-                        }
-
-                        // Update or create questions
-                        foreach ($submittedQuestions as $seoQuestionData) {
-                            $row->seoQuestions()->updateOrCreate(
-                                [
-                                    'id' => $seoQuestionData['id'] ?? null, // Use existing ID if available
-                                    'locale' => $langCode,
-                                ],
-                                [
-                                    'question_text' => $seoQuestionData['question'] ?? '',
-                                    'answer_text' => $seoQuestionData['answer'] ?? null,
-                                ]
-                            );
-                        }
-                    }
-                }
-            }
-
-
-        $this->exceptionsModelUpdate($request, $row);
-            // Commit the transaction
+            $this->exceptionsModelUpdate($request, $row);
             DB::commit();
 
-            // Redirect with success message
             return redirect()->route('admin.' . $this->modelName . '.index')
-                ->with('success', 'row updated successfully');
-//        } catch (\Exception $e) {
-//            // Rollback in case of an error
-//            DB::rollback();
-//            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-//        }
+                ->with('success', 'Data updated successfully');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     public function destroy($id)
@@ -416,13 +361,6 @@ class GenericController extends Controller
                 );
             }
         }
-    }
-
-
-    function getYouTubeVideoId($url) {
-        $regExp = '/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/';
-        preg_match($regExp, $url, $matches);
-        return $matches[1] ?? null; // Return the video ID or null
     }
 
     /**

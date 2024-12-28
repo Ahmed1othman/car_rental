@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
+use App\Jobs\ProcessCarImage;
+use App\Jobs\ProcessCarImages;
 
 class CarController extends GenericController
 {
@@ -306,54 +308,334 @@ class CarController extends GenericController
         return response()->json(['message' => 'YouTube URLs stored successfully'], 200);
     }
 
+    public function uploadImage(Request $request, $id)
+    {
+        try {
+            $car = Car::findOrFail($id);
+            
+            if ($request->hasFile('images')) {
+                $files = $request->file('images');
+                
+                foreach ($files as $file) {
+                    // Generate unique filename
+                    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $webpFilename = $filename . '_' . uniqid() . '.webp';
+                    
+                    // Define the correct storage paths
+                    $publicPath = 'public/images/' . $webpFilename;
+                    $fullPath = storage_path('app/' . $publicPath);
+                    $relativePath = 'images/' . $webpFilename;
+
+                    // Ensure directory exists
+                    if (!file_exists(dirname($fullPath))) {
+                        mkdir(dirname($fullPath), 0777, true);
+                    }
+
+                    // Process and optimize image
+                    $image = Image::make($file->getRealPath());
+                    
+                    // Get original aspect ratio
+                    $originalWidth = $image->width();
+                    $originalHeight = $image->height();
+                    
+                    // Calculate new dimensions maintaining 200px height
+                    $newHeight = 200;
+                    $newWidth = ($originalWidth / $originalHeight) * $newHeight;
+                    
+                    $image->resize($newWidth, $newHeight, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->encode('webp', 85)
+                    ->save($fullPath);
+
+                    // Create image relation
+                    $car->images()->create([
+                        'file_path' => $relativePath,
+                        'alt' => null,
+                        'type' => 'image'
+                    ]);
+                }
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Images uploaded successfully'
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No images provided'
+            ], 400);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error uploading images: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function uploadDefaultImage(Request $request, $id)
+    {
+        try {
+            $car = Car::findOrFail($id);
+            
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                
+                // Generate unique filename
+                $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $webpFilename = $filename . '_' . uniqid() . '.webp';
+                
+                // Define the correct storage paths
+                $publicPath = 'public/images/' . $webpFilename;
+                $fullPath = storage_path('app/' . $publicPath);
+                $relativePath = 'images/' . $webpFilename;
+
+                // Ensure directory exists
+                if (!file_exists(dirname($fullPath))) {
+                    mkdir(dirname($fullPath), 0777, true);
+                }
+
+                // Process and optimize image
+                $image = Image::make($file->getRealPath());
+                
+                // Get original aspect ratio
+                $originalWidth = $image->width();
+                $originalHeight = $image->height();
+                
+                // Calculate new dimensions maintaining 200px height
+                $newHeight = 200;
+                $newWidth = ($originalWidth / $originalHeight) * $newHeight;
+                
+                $image->resize($newWidth, $newHeight, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->encode('webp', 85)
+                ->save($fullPath);
+
+                // Delete old image if exists
+                if ($car->image) {
+                    Storage::disk('public')->delete($car->image);
+                }
+                
+                // Update car with new image
+                $car->image = $relativePath;
+                $car->save();
+
+                // Clear any cached images
+                clearstatcache(true, public_path('storage/' . $relativePath));
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Default image uploaded successfully',
+                    'data' => [
+                        'image_url' => asset('storage/' . $relativePath),
+                        'image_path' => $relativePath
+                    ]
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No image provided'
+            ], 400);
+
+        } catch (\Exception $e) {
+            \Log::error('Error uploading default image: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error uploading image: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function storeImages(Request $request)
     {
-        $request->validate([
-            'file_path' => 'required|array',
-            'file_path.*' => 'required|image|mimes:jpeg,webp,png,jpg,gif,svg|max:2048',
-            'alt' => 'nullable|string|max:255',
-            'car_id' => 'required|integer',
-        ]);
+        // Log the incoming request data for debugging
+        \Log::info('Request data:', $request->all());
 
-        foreach ($request->file('file_path') as $image) {
-            // Create a unique filename for the WebP image
-            $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-            $webpFilename = $filename . '_' . uniqid() . '.webp';
+        try {
+            // Validate the request (Images should be passed as an array)
+            $request->validate([
+                'file_path' => 'required|array',
+                'file_path.*' => 'required|image|mimes:jpeg,webp,png,jpg,gif,svg|max:10048',
+                'car_id' => 'required|integer',
+            ]);
 
-            // Optimize, resize and convert the image to WebP
-            $imagePath = storage_path('app/public/images/' . $webpFilename);
-            $interventionImage = Image::make($image->getRealPath())
-//                ->resize($desiredWidth, $desiredHeight) // Resize the image to the specified dimensions
-                ->encode('webp', 85) // 85 is the quality percentage
-                ->save($imagePath);
+            // Check if file_path field is present
+            if (!$request->has('file_path')) {
+                return response()->json(['error' => 'The file_path field is required.'], 400);
+            }
 
-            // Save the image details in the database
-            $media = new CarImage();
-            $media->file_path = 'images/'. $webpFilename;
-            $media->alt = $request->input('alt') ?? null;
-            $media->type = 'image';
-            $media->car_id = $request->input('car_id');
-            $media->save();
+            $car = Car::findOrFail($request->car_id);
+            
+            // Ensure temp directory exists
+            if (!Storage::disk('public')->exists('temp')) {
+                Storage::disk('public')->makeDirectory('temp');
+            }
+
+            // Ensure images directory exists
+            if (!Storage::disk('public')->exists('images')) {
+                Storage::disk('public')->makeDirectory('images');
+            }
+
+            $originalPaths = [];
+            $finalPaths = [];
+            
+            // Store original images temporarily
+            foreach ($request->file('file_path') as $image) {
+                // Store original file temporarily
+                $originalFilename = uniqid('temp_') . '.' . $image->getClientOriginalExtension();
+                $originalPath = 'temp/' . $originalFilename;
+                Storage::disk('public')->putFileAs('temp', $image, $originalFilename);
+                $originalPaths[] = $originalPath;
+
+                // Prepare final filename
+                $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                $webpFilename = $filename . '_' . uniqid() . '.webp';
+                $finalPaths[] = 'images/' . $webpFilename;
+            }
+
+            // Dispatch the job to process all images
+            ProcessCarImages::dispatch($car, $finalPaths, $originalPaths);
+
+            return response()->json([
+                'message' => 'Images uploaded successfully. Processing will complete shortly.',
+                'status' => 'processing',
+                'car_id' => $car->id,
+                'total_images' => count($request->file('file_path'))
+            ], 202);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Car not found',
+                'status' => 'error'
+            ], 404);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => $e->errors(),
+                'status' => 'error'
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error in storeImages: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
+            return response()->json([
+                'error' => 'Image processing failed: ' . $e->getMessage(),
+                'status' => 'error'
+            ], 500);
         }
-
-        return response()->json(['message' => 'Images uploaded, optimized, resized, and converted to WebP successfully'], 200);
     }
 
     public function updateDefaultImage(Request $request)
     {
+        try {
+            $request->validate([
+                'default_image_path' => 'required|image|mimes:jpeg,webp,png,jpg,gif,svg|max:10048',
+                'car_id' => 'required|integer',
+            ]);
 
+            $car = Car::findOrFail($request->car_id);
+            
+            if ($car->default_image_path) {
+                Storage::disk('public')->delete($car->default_image_path);
+            }
 
-        // Validate the request (Images should be passed as an array)
-        $request->validate([
-            'default_image_path' => 'required',
-            'car_id' => 'required|integer',
-        ]);
-        $car= Car::find($request->car_id);
-        Storage::disk('public')->delete($car->default_image_path);
-        $image= $request->file('default_image_path');
-        $imagePath = $image->store('images', 'public');
-        $car->update(['default_image_path'=>$imagePath]);
-        return response()->json(['message' => 'Default Image Updated successfully'], 200);
+            if (!$request->hasFile('default_image_path')) {
+                return response()->json(['error' => 'No image file provided'], 400);
+            }
+
+            $image = $request->file('default_image_path');
+            
+            // Ensure temp directory exists
+            if (!Storage::disk('public')->exists('temp')) {
+                Storage::disk('public')->makeDirectory('temp');
+            }
+            
+            // Store original file temporarily
+            $originalFilename = uniqid('temp_') . '.' . $image->getClientOriginalExtension();
+            $originalPath = 'temp/' . $originalFilename;
+            Storage::disk('public')->putFileAs('temp', $image, $originalFilename);
+
+            // Ensure images directory exists
+            if (!Storage::disk('public')->exists('images')) {
+                Storage::disk('public')->makeDirectory('images');
+            }
+
+            // Prepare final filename
+            $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            $webpFilename = $filename . '_' . uniqid() . '.webp';
+            $finalPath = 'images/' . $webpFilename;
+
+            // Dispatch the job to process the image
+            ProcessCarImage::dispatch($car, $finalPath, $originalPath, true);
+
+            return response()->json([
+                'message' => 'Image upload successful. Processing will complete shortly.',
+                'status' => 'processing',
+                'car_id' => $car->id
+            ], 202);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Car not found',
+                'status' => 'error'
+            ], 404);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => $e->errors(),
+                'status' => 'error'
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error in updateDefaultImage: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
+            return response()->json([
+                'error' => 'Image processing failed: ' . $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
     }
 
+    /**
+     * Check the status of image processing for a car
+     */
+    public function checkImageProcessingStatus($carId)
+    {
+        try {
+            $car = Car::findOrFail($carId);
+            
+            // Check if there are any pending jobs for this car
+            $pendingJobs = \DB::table('jobs')
+                ->where('payload', 'like', '%"car_id":' . $carId . '%')
+                ->count();
+
+            // Get total processed images
+            $processedImages = CarImage::where('car_id', $carId)->count();
+
+            if ($pendingJobs > 0) {
+                return response()->json([
+                    'status' => 'processing',
+                    'message' => 'Images are still being processed',
+                    'processed_images' => $processedImages
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'completed',
+                'message' => 'All images have been processed',
+                'total_images' => $processedImages,
+                'images' => CarImage::where('car_id', $carId)
+                    ->select('image_path')
+                    ->get()
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error checking status: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -17,3 +17,7 @@ Route::fallback(function () {
     return redirect('/admin/dashboard');
 });
 
+Route::get('/cars/images/check-status/{carId}', [CarController::class, 'checkImageProcessingStatus']);
+
+Route::post('/cars/{id}/upload-image', [CarController::class, 'uploadImage'])->name('cars.upload-image');
+Route::post('/cars/{id}/upload-default-image', [CarController::class, 'uploadDefaultImage'])->name('cars.upload-default-image');

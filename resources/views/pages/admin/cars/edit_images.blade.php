@@ -40,16 +40,19 @@
                             @foreach($item->images as $media)
                                 <div class="col-md-4 mb-4" style="max-height: 300px; max-width:300px" >
                                     <div class="card h-100">
-                                        <div class="card-img-top" style="max-height: 60%">
-                                            @if($media->type === 'image')
-                                                <img src="{{ asset('storage/' . $media->file_path) }}" class="img-fluid" style="overflow: hidden" alt="{{ $media->alt }}">
+                                        <div class="card-img-top" style="height: 80%">
+                                            <div style="height: 100%">
+                                                @if($media->type === 'image')
+                                                <img src="{{ asset('storage/' . $media->file_path) }}" class="img-fluid" style="overflow: hidden;height: 100%;width: 100%;object-fit: cover;" alt="{{ $media->alt }}">
                                             @elseif($media->type === 'video')
                                                 <div class="embed-responsive embed-responsive-16by9">
                                                     <iframe src="https://www.youtube.com/embed/{{ $media->file_path }}" frameborder="0" allowfullscreen></iframe>
                                                 </div>
                                             @endif
+                                            </div>
+                                        
                                         </div>
-                                        <div class="card-body">
+                                        <div>
                                             <p class="card-text">{{ $media->alt }}</p>
                                             <a href="{{ route('admin.'.$modelName.'.delete_image', $media->id) }}" class="btn btn-danger btn-block delete-media">Delete</a>
                                         </div>

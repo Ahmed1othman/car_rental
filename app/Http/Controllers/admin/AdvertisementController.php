@@ -51,8 +51,8 @@ class AdvertisementController extends GenericController
         ]);
         $this->validationRules = [
             'advertisement_position_id' => 'required|exists:advertisement_positions,id',
-            'mobile_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
-            'web_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:4096',
+            'mobile_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:10096',
+            'web_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:10096',
         ];
 
         $this->validationMessages = [
@@ -67,8 +67,8 @@ class AdvertisementController extends GenericController
         // Define validation rules
         $this->validationRules = [
             'advertisement_position_id' => 'required|exists:advertisement_positions,id',
-            'mobile_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:4096',
-            'web_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:4096',
+            'mobile_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:10096',
+            'web_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:10096',
         ];
 
         // Custom validation messages
