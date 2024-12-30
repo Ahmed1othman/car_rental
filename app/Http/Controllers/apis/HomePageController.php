@@ -124,7 +124,7 @@ class HomePageController extends Controller
                     $q->where('name', 'LIKE', "%{$searchTerm}%");
                 });
             })
-            ->select('categories.id', 'categories.image_path', 'category_translations.slug', 'category_translations.name')
+            ->select('categories.id', 'categories.image_path', 'categories.slug', 'category_translations.name')
             ->withCount('cars') // Count the number of cars for each brand
             ->limit(5) // Adjust the limit as needed
             ->get();
@@ -139,7 +139,7 @@ class HomePageController extends Controller
                     $q->where('name', 'LIKE', "%{$searchTerm}%");
                 });
             })
-            ->select('brands.id', 'brands.logo_path', 'brand_translations.slug', 'brand_translations.name')
+            ->select('brands.id', 'brands.logo_path', 'brands.slug', 'brand_translations.name')
             ->withCount('cars') // Count the number of cars for each brand
             ->limit(5) // Adjust the limit as needed
             ->get();
