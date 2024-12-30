@@ -154,7 +154,7 @@ class HomePageController extends Controller
                     $q->where('name', 'LIKE', "%{$searchTerm}%");
                 });
             })
-            ->select('cars.id', 'cars.default_image_path', 'car_translations.slug', 'car_translations.name')
+            ->select('cars.id', 'cars.default_image_path', 'cars.slug', 'car_translations.name')
             ->limit(5) // Adjust the limit as needed
             ->get();
 
