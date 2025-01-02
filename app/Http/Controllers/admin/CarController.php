@@ -101,7 +101,6 @@ class CarController extends GenericController
             })
             ->where('brand_id', $car->brand_id)
             ->get();
-
         return parent::edit($id);
     }
 
