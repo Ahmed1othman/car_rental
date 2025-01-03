@@ -299,30 +299,24 @@ class GenericController extends Controller
             
             $image = Image::make($file->getRealPath());
             
-            if ($this->modelName == "categories"){
-                //width = 150 height = 88
-                $image->resize(150, 88, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-            }else{
-                // Get original aspect ratio
-                $originalWidth = $image->width();
-                $originalHeight = $image->height();
-                
-                // Calculate new dimensions maintaining aspect ratio
-                $newHeight = 513;
-                $newWidth = ($originalWidth / $originalHeight) * $newHeight;
-                
-                $image->resize($newWidth, $newHeight, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->encode('webp', 85)
-                ->save($imagePath);
+            // Get original aspect ratio
+            $originalWidth = $image->width();
+            $originalHeight = $image->height();
+            
+            // Calculate new dimensions maintaining aspect ratio
+            $newHeight = 513;
+            $newWidth = ($originalWidth / $originalHeight) * $newHeight;
+            
+            $image->resize($newWidth, $newHeight, function ($constraint) {
+                $constraint->aspectRatio();
+            })
+            ->encode('webp', 85)
+            ->save($imagePath);
 
-                // Save path to model
-                $model->$fileField = 'images/' . $webpFilename;
-                $model->save();
-            }
+            // Save path to model
+            $model->$fileField = 'images/' . $webpFilename;
+            $model->save();
+
         } elseif (in_array($extension, $videoExtensions)) {
             // Store video in images directory with original extension
             $finalFilename = $uniqueFilename . '.' . $extension;
