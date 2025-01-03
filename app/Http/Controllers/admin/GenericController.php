@@ -61,9 +61,12 @@ class GenericController extends Controller
             'is_active' => $request->has('is_active') ? true : false,
         ]);
 
-        // Add combined validation for images and videos
         foreach ($this->uploadedfiles as $fileField) {
-            $this->validationRules[$fileField] = 'required|mimes:jpg,jpeg,png,svg,webp,mp4,webm,ogg|max:102400'; // 100MB max
+            if ($request->has($fileField) && is_array($request->file($fileField))) {
+                $this->validationRules[$fileField . '.*'] = 'nullable|mimes:jpg,jpeg,png,svg,webp,mp4,webm,ogg|max:102400'; // 100MB max
+            } else {
+                $this->validationRules[$fileField] = 'nullable|mimes:jpg,jpeg,png,svg,webp,mp4,webm,ogg|max:102400'; // 100MB max
+            }
         }
         
         // Validate the request data
@@ -72,7 +75,7 @@ class GenericController extends Controller
         // Start a database transaction
         DB::beginTransaction();
 
-        try {
+        // try {
             // Store base data (non-translatable)
             $nonTranslatedData = [];
             foreach ($this->nonTranslatableFields as $nonTranslatableField) {
@@ -97,10 +100,10 @@ class GenericController extends Controller
             DB::commit();
             return redirect()->route('admin.' . $this->modelName . '.index')->with('success', ucfirst($this->modelName) . ' created successfully.');
 
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()->with('error', 'Error occurred while creating ' . $this->modelName . ': ' . $e->getMessage())->withInput();
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return redirect()->back()->with('error', 'Error occurred while creating ' . $this->modelName . ': ' . $e->getMessage())->withInput();
+        // }
     }
 
     public function show($id)
@@ -280,53 +283,61 @@ class GenericController extends Controller
     }
 
     protected function processFile($file, $model, $fileField)
-    {
-        // Get file extension
-        $extension = strtolower($file->getClientOriginalExtension());
+{
+    // Get file extension
+    $extension = strtolower($file->getClientOriginalExtension());
 
-        // Define allowed extensions
-        $imageExtensions = ['jpg', 'jpeg', 'png', 'svg', 'webp'];
-        $videoExtensions = ['mp4', 'webm', 'ogg'];
+    // Define allowed extensions
+    $imageExtensions = ['jpg', 'jpeg', 'png', 'svg', 'webp'];
+    $videoExtensions = ['mp4', 'webm', 'ogg'];
 
-        // Generate unique filename with original extension
-        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $uniqueFilename = $filename . '_' . uniqid();
+    // Generate unique filename with original extension
+    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    $uniqueFilename = $filename . '_' . uniqid();
 
-        if (in_array($extension, $imageExtensions)) {
-            // Process image
-            $webpFilename = $uniqueFilename . '.webp';
-            $imagePath = storage_path('app/public/images/' . $webpFilename);
-            
-            $image = Image::make($file->getRealPath());
-            
-            // Get original aspect ratio
-            $originalWidth = $image->width();
-            $originalHeight = $image->height();
-            
-            // Calculate new dimensions maintaining aspect ratio
-            $newHeight = 513;
-            $newWidth = ($originalWidth / $originalHeight) * $newHeight;
-            
-            $image->resize($newWidth, $newHeight, function ($constraint) {
-                $constraint->aspectRatio();
-            })
-            ->encode('webp', 85)
-            ->save($imagePath);
+    if (in_array($extension, $imageExtensions)) {
+        // Process image
+        $webpFilename = $uniqueFilename . '.webp';
+        $imagePath = storage_path('app/public/images/' . $webpFilename);
+        
+        $image = Image::make($file->getRealPath());
+        
+        // Get original aspect ratio
+        $originalWidth = $image->width();
+        $originalHeight = $image->height();
+        
+        // Calculate new dimensions maintaining aspect ratio
+        $newHeight = 513;
+        $newWidth = ($originalWidth / $originalHeight) * $newHeight;
+        
+        $image->resize($newWidth, $newHeight, function ($constraint) {
+            $constraint->aspectRatio();
+        })
+        ->encode('webp', 85)
+        ->save($imagePath);
 
-            // Save path to model
+        // Check if fileField is plural and save accordingly
+        if (Str::endsWith($fileField, 's')) {
+            $model->$fileField()->create(['file_path' => 'images/' . $webpFilename]);
+        } else {
             $model->$fileField = 'images/' . $webpFilename;
             $model->save();
+        }
 
-        } elseif (in_array($extension, $videoExtensions)) {
-            // Store video in images directory with original extension
-            $finalFilename = $uniqueFilename . '.' . $extension;
-            $filePath = $file->storeAs('images', $finalFilename, 'public');
-            
-            // Save path to model
+    } elseif (in_array($extension, $videoExtensions)) {
+        // Store video in images directory with original extension
+        $finalFilename = $uniqueFilename . '.' . $extension;
+        $filePath = $file->storeAs('images', $finalFilename, 'public');
+        
+        // Check if fileField is plural and save accordingly
+        if (Str::endsWith($fileField, 's')) {
+            $model->$fileField()->create(['path' => $filePath]);
+        } else {
             $model->$fileField = $filePath;
             $model->save();
         }
     }
+}
 
     /**
      * @param Request $request

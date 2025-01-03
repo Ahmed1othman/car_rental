@@ -140,14 +140,12 @@ class CarController extends GenericController
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
-            'slug' => 'nullable|string|unique:table_name,slug',
             'daily_main_price' => 'required|numeric|min:0',
             'daily_discount_price' => 'nullable|numeric|min:0|lt:daily_main_price',
             'weekly_main_price' => 'nullable|numeric|min:0',
             'weekly_discount_price' => 'nullable|numeric|min:0|lt:weekly_main_price',
             'monthly_main_price' => 'required|numeric|min:0',
             'monthly_discount_price' => 'nullable|numeric|min:0|lt:monthly_main_price',
-
             'daily_mileage_included' => 'nullable|numeric|min:0',
             'weekly_mileage_included' => 'nullable|numeric|min:0',
             'monthly_mileage_included' => 'nullable|numeric|min:0',
@@ -169,7 +167,6 @@ class CarController extends GenericController
             'color_id' => 'required|exists:colors,id',
             'car_model_id' => 'nullable|exists:car_models,id',
             'maker_id' => 'nullable|exists:makers,id',
-            'default_image_path' => 'nullable',
             'seo_questions.*.*.question' => 'nullable|string|max:255',
             'seo_questions.*.*.answer' => 'nullable|string|max:255',
         ];
@@ -247,7 +244,7 @@ class CarController extends GenericController
             'category_id' => 'required|exists:categories,id',
 //            'body_style_id' => 'nullable|exists:body_styles,id',
 //            'maker_id' => 'nullable|exists:makers,id',
-            'default_image_id' => 'nullable|exists:images,id',
+            'default_image_id' => 'nullable',
             'seo_questions.*.*.question' => 'nullable|string|max:255',
             'seo_questions.*.*.answer' => 'nullable|string|max:255',
         ];
