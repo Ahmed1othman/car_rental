@@ -68,7 +68,7 @@
                                             @endif
                                         </td>
                                         <td>{{ $item->translations->first()->name ?? 'N/A' }}</td>
-                                        <td>{{ $item->translations->first()->slug ?? 'N/A' }}</td>
+                                        <td>{{ $item->slug ?? 'N/A' }}</td>
                                         <td>{{ $item->brand->translations->first()->name ?? 'N/A' }}</td>
                                         <td>
                                             <!-- Combine all switches in one column -->
