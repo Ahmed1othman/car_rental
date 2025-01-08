@@ -95,7 +95,7 @@ class GenericController extends Controller
             $this->handleFileUpload($request, $row);
 
             // Handle SEO questions
-            $this->handleSEOQuestionsForEachLanguage($validatedData, $row);
+            $this->handleStoreSEOQuestions($validatedData, $row);
 
             DB::commit();
             return redirect()->route('admin.' . $this->modelName . '.index')->with('success', ucfirst($this->modelName) . ' created successfully.');
@@ -125,13 +125,14 @@ class GenericController extends Controller
             $this->validationRules[$fileField] = 'sometimes|mimes:jpg,jpeg,png,svg,webp,mp4,webm,ogg|max:102400'; // 100MB max
         }
 
+
         // Validate the request data
         $validatedData = $request->validate($this->validationRules, $this->validationMessages);
 
         // Start a database transaction
         DB::beginTransaction();
 
-        try {
+        // try {
             $row = $this->model::findOrFail($id);
 
             // Delete old file if exists and new file is uploaded
@@ -156,15 +157,15 @@ class GenericController extends Controller
             $this->handleFileUpload($request, $row);
 
             // Handle SEO questions
-            $this->handleSEOQuestionsForEachLanguage($validatedData, $row);
+            $this->handleUpdateSEOQuestions($validatedData, $row);
 
             DB::commit();
             return redirect()->route('admin.' . $this->modelName . '.index')->with('success', ucfirst($this->modelName) . ' updated successfully.');
 
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()->with('error', 'Error occurred while updating ' . $this->modelName . ': ' . $e->getMessage())->withInput();
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return redirect()->back()->with('error', 'Error occurred while updating ' . $this->modelName . ': ' . $e->getMessage())->withInput();
+        // }
     }
 
     public function destroy($id)
@@ -184,21 +185,60 @@ class GenericController extends Controller
     }
 
     /**
+     * Handle storing new SEO questions
      * @param array $validatedData
      * @param $template
      * @return void
      */
-    public function handleSEOQuestionsForEachLanguage(array $validatedData, $template): void
+    public function handleStoreSEOQuestions(array $validatedData, $template): void
     {
         foreach ($this->data['activeLanguages'] as $language) {
             $langCode = $language->code;
             if (isset($validatedData['seo_questions'][$langCode])) {
                 foreach ($validatedData['seo_questions'][$langCode] as $seoQuestionData) {
-                    $seoQuestion = $template->seoQuestions()->create([
-                        'locale' => $langCode,
-                        'question_text' => $seoQuestionData['question'] ?? '',
-                        'answer_text' => $seoQuestionData['answer'] ?? null,
-                    ]);
+                    $questionText = $seoQuestionData['question'] ?? '';
+                    $answerText = $seoQuestionData['answer'] ?? '';
+                    
+                    // Only create if both question and answer are not empty
+                    if (!empty(trim($questionText)) && !empty(trim($answerText))) {
+                        $template->seoQuestions()->create([
+                            'locale' => $langCode,
+                            'question_text' => $questionText,
+                            'answer_text' => $answerText,
+                        ]);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Handle updating SEO questions by removing old ones and adding new ones
+     * @param array $validatedData
+     * @param $template
+     * @return void
+     */
+    public function handleUpdateSEOQuestions(array $validatedData, $template): void
+    {
+        // First, remove all existing questions for this template
+        $template->seoQuestions()->delete();
+        
+        // Then add the new questions
+        foreach ($this->data['activeLanguages'] as $language) {
+            $langCode = $language->code;
+            if (isset($validatedData['seo_questions'][$langCode])) {
+                foreach ($validatedData['seo_questions'][$langCode] as $seoQuestionData) {
+                    $questionText = $seoQuestionData['question'] ?? '';
+                    $answerText = $seoQuestionData['answer'] ?? '';
+                    
+                    // Only create if both question and answer are not empty
+                    if (!empty(trim($questionText)) && !empty(trim($answerText))) {
+                        $template->seoQuestions()->create([
+                            'locale' => $langCode,
+                            'question_text' => $questionText,
+                            'answer_text' => $answerText,
+                        ]);
+                    }
                 }
             }
         }
@@ -265,6 +305,7 @@ class GenericController extends Controller
 
     protected function handleFileUpload($request, $model)
     {
+    
         // Handle file uploads
         foreach ($this->uploadedfiles as $fileField) {
             if ($request->hasFile($fileField)) {

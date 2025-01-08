@@ -55,6 +55,8 @@ class AboutController extends GenericController
         $this->validationMessages = [
 
         ];
+
+       
         return parent::store($request);
 
     }
@@ -94,6 +96,7 @@ class AboutController extends GenericController
         ];
 
         // Delegate to the generic controller's update function
+    
         parent::update($request, $id);
         return back()->with('success', 'About Page updated successfully.');
     }

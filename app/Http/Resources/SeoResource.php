@@ -48,18 +48,21 @@ class SeoResource extends JsonResource
         return [
             '@context' => 'https://schema.org',
             '@type' => 'FAQPage',
-            'mainEntity' => $seoQuestions->map(function ($faq) {
-                return [
-                    '@type' => 'Question',
-                    'name' => $faq->question_text,
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => $faq->answer_text,
-                    ],
-                ];
-            }),
+            'mainEntity' => $seoQuestions
+                ->filter(function ($faq) {
+                    return !empty(trim($faq->question_text)) && !empty(trim($faq->answer_text));
+                })
+                ->map(function ($faq) {
+                    return [
+                        '@type' => 'Question',
+                        'name' => $faq->question_text,
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $faq->answer_text,
+                        ],
+                    ];
+                }),
         ];
-
     }
 
 
