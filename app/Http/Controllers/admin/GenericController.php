@@ -10,9 +10,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use App\Jobs\ProcessImageJob;
+use App\Jobs\ProcessFileJob;
+use App\Traits\ImageProcessingTrait;
 
 class GenericController extends Controller
 {
+    use ImageProcessingTrait;
+    
     protected $model;
     protected $seo_question=true;
     protected $data = [];
@@ -308,7 +312,6 @@ class GenericController extends Controller
 
     protected function handleFileUpload($request, $model)
     {
-    
         // Handle file uploads
         foreach ($this->uploadedfiles as $fileField) {
             if ($request->hasFile($fileField)) {
@@ -317,71 +320,47 @@ class GenericController extends Controller
                 // Check if it's multiple files
                 if (is_array($files)) {
                     foreach ($files as $file) {
-                        $this->processFile($file, $model, $fileField);
+                        // Store file temporarily
+                        $tempPath = $file->store('temp');
+                        
+                        // Dispatch job to process file
+                        ProcessFileJob::dispatch(
+                            get_class($model),
+                            $model->id,
+                            $fileField,
+                            $tempPath,
+                            $file->getClientOriginalName(),
+                            [
+                                'alt' => $request->alt ?? null,
+                                'maxWidth' => 1920,
+                                'maxHeight' => 1080,
+                                'quality' => 95
+                            ],
+                            true
+                        );
                     }
                 } else {
-                    $this->processFile($files, $model, $fileField);
+                    // Store file temporarily
+                    $tempPath = $files->store('temp');
+                    
+                    // Dispatch job to process file
+                    ProcessFileJob::dispatch(
+                        get_class($model),
+                        $model->id,
+                        $fileField,
+                        $tempPath,
+                        $files->getClientOriginalName(),
+                        [
+                            'maxWidth' => 1920,
+                            'maxHeight' => 1080,
+                            'quality' => 95
+                        ],
+                        false
+                    );
                 }
             }
         }
     }
-
-    protected function processFile($file, $model, $fileField)
-{
-    // Get file extension
-    $extension = strtolower($file->getClientOriginalExtension());
-
-    // Define allowed extensions
-    $imageExtensions = ['jpg', 'jpeg', 'png', 'svg', 'webp'];
-    $videoExtensions = ['mp4', 'webm', 'ogg'];
-
-    // Generate unique filename with original extension
-    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    $uniqueFilename = $filename . '_' . uniqid();
-
-    if (in_array($extension, $imageExtensions)) {
-        // Process image
-        $webpFilename = $uniqueFilename . '.webp';
-        $imagePath = storage_path('app/public/images/' . $webpFilename);
-        
-        $image = Image::make($file->getRealPath());
-        
-        // Get original aspect ratio
-        $originalWidth = $image->width();
-        $originalHeight = $image->height();
-        
-        // Calculate new dimensions maintaining aspect ratio
-        $newHeight = 513;
-        $newWidth = ($originalWidth / $originalHeight) * $newHeight;
-        
-        $image->resize($newWidth, $newHeight, function ($constraint) {
-            $constraint->aspectRatio();
-        })
-        ->encode('webp', 85)
-        ->save($imagePath);
-
-        // Check if fileField is plural and save accordingly
-        if (Str::endsWith($fileField, 's')) {
-            $model->$fileField()->create(['file_path' => 'images/' . $webpFilename]);
-        } else {
-            $model->$fileField = 'images/' . $webpFilename;
-            $model->save();
-        }
-
-    } elseif (in_array($extension, $videoExtensions)) {
-        // Store video in images directory with original extension
-        $finalFilename = $uniqueFilename . '.' . $extension;
-        $filePath = $file->storeAs('images', $finalFilename, 'public');
-        
-        // Check if fileField is plural and save accordingly
-        if (Str::endsWith($fileField, 's')) {
-            $model->$fileField()->create(['path' => $filePath]);
-        } else {
-            $model->$fileField = $filePath;
-            $model->save();
-        }
-    }
-}
 
     /**
      * @param Request $request

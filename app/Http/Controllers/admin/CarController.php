@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\admin;
+use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Car_model;
@@ -14,11 +15,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
-use App\Jobs\ProcessCarImage;
+use App\Jobs\ProcessFileJob;
 use App\Jobs\ProcessCarImages;
 
 class CarController extends GenericController
 {
+    use \App\Traits\ImageProcessingTrait;
+
     public function __construct()
     {
         parent::__construct('car');
@@ -313,48 +316,33 @@ class CarController extends GenericController
                 $files = $request->file('images');
                 
                 foreach ($files as $file) {
-                    // Generate unique filename
+                    // Store file temporarily
+                    $tempPath = $file->store('temp');
+                    
+                    // Generate final path
                     $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $webpFilename = $filename . '_' . uniqid() . '.webp';
+                    $finalPath = 'images/' . $filename . '_' . uniqid() . '.webp';
                     
-                    // Define the correct storage paths
-                    $publicPath = 'public/images/' . $webpFilename;
-                    $fullPath = storage_path('app/' . $publicPath);
-                    $relativePath = 'images/' . $webpFilename;
-
-                    // Ensure directory exists
-                    if (!file_exists(dirname($fullPath))) {
-                        mkdir(dirname($fullPath), 0777, true);
-                    }
-
-                    // Process and optimize image
-                    $image = Image::make($file->getRealPath());
-                    
-                    // Get original aspect ratio
-                    $originalWidth = $image->width();
-                    $originalHeight = $image->height();
-                    
-                    // Calculate new dimensions maintaining 200px height
-                    $newHeight = 513;
-                    $newWidth = ($originalWidth / $originalHeight) * $newHeight;
-                    
-                    $image->resize($newWidth, $newHeight, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })
-                    ->encode('webp', 85)
-                    ->save($fullPath);
-
-                    // Create image relation
-                    $car->images()->create([
-                        'file_path' => $relativePath,
-                        'alt' => null,
-                        'type' => 'image'
-                    ]);
+                    // Dispatch job to process file
+                    ProcessFileJob::dispatch(
+                        Car::class,
+                        $car->id,
+                        'images',
+                        $tempPath,
+                        $file->getClientOriginalName(),
+                        [
+                            'maxWidth' => 1920,
+                            'maxHeight' => 1080,
+                            'quality' => 95,
+                            'alt' => null
+                        ],
+                        true
+                    );
                 }
                 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Images uploaded successfully'
+                    'message' => 'Images uploaded successfully. Processing will complete shortly.'
                 ]);
             }
 
@@ -364,6 +352,7 @@ class CarController extends GenericController
             ], 400);
 
         } catch (\Exception $e) {
+            \Log::error('Error uploading images: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Error uploading images: ' . $e->getMessage()
@@ -379,56 +368,31 @@ class CarController extends GenericController
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 
-                // Generate unique filename
+                // Store file temporarily
+                $tempPath = $file->store('temp');
+                
+                // Generate final path
                 $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $webpFilename = $filename . '_' . uniqid() . '.webp';
+                $finalPath = 'images/' . $filename . '_' . uniqid() . '.webp';
                 
-                // Define the correct storage paths
-                $publicPath = 'public/images/' . $webpFilename;
-                $fullPath = storage_path('app/' . $publicPath);
-                $relativePath = 'images/' . $webpFilename;
-
-                // Ensure directory exists
-                if (!file_exists(dirname($fullPath))) {
-                    mkdir(dirname($fullPath), 0777, true);
-                }
-
-                // Process and optimize image
-                $image = Image::make($file->getRealPath());
-                
-                // Get original aspect ratio
-                $originalWidth = $image->width();
-                $originalHeight = $image->height();
-                
-                // Calculate new dimensions maintaining 200px height
-                $newHeight = 513;
-                $newWidth = ($originalWidth / $originalHeight) * $newHeight;
-                
-                $image->resize($newWidth, $newHeight, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->encode('webp', 85)
-                ->save($fullPath);
-
-                // Delete old image if exists
-                if ($car->image) {
-                    Storage::disk('public')->delete($car->image);
-                }
-                
-                // Update car with new image
-                $car->default_image_path = $relativePath;
-                $car->save();
-
-                // Clear any cached images
-                clearstatcache(true, public_path('storage/' . $relativePath));
+                // Dispatch job to process file
+                ProcessFileJob::dispatch(
+                    Car::class,
+                    $car->id,
+                    'default_image_path',
+                    $tempPath,
+                    $file->getClientOriginalName(),
+                    [
+                        'maxWidth' => 1920,
+                        'maxHeight' => 1080,
+                        'quality' => 95
+                    ],
+                    false
+                );
                 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Default image uploaded successfully',
-                    'data' => [
-                        'image_url' => asset('storage/' . $relativePath),
-                        'image_path' => $relativePath
-                    ]
+                    'message' => 'Default image uploaded successfully. Processing will complete shortly.'
                 ]);
             }
 
@@ -448,71 +412,54 @@ class CarController extends GenericController
 
     public function storeImages(Request $request)
     {
-        // Log the incoming request data for debugging
-        \Log::info('Request data:', $request->all());
-
         try {
-            // Validate the request (Images should be passed as an array)
             $request->validate([
                 'file_path' => 'required|array',
                 'file_path.*' => 'required|image|mimes:jpeg,webp,png,jpg,gif,svg|max:10048',
                 'car_id' => 'required|integer',
             ]);
 
-            // Check if file_path field is present
-            if (!$request->has('file_path')) {
-                return response()->json(['error' => 'The file_path field is required.'], 400);
-            }
-
             $car = Car::findOrFail($request->car_id);
             
-            // Ensure temp directory exists
-            if (!Storage::disk('public')->exists('temp')) {
-                Storage::disk('public')->makeDirectory('temp');
+            if ($request->hasFile('file_path')) {
+                foreach ($request->file('file_path') as $file) {
+                    // Store file temporarily
+                    $tempPath = $file->store('temp');
+                    
+                    // Generate final path
+                    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $finalPath = 'images/' . $filename . '_' . uniqid() . '.webp';
+                    
+                    // Dispatch job to process file
+                    ProcessFileJob::dispatch(
+                        Car::class,
+                        $car->id,
+                        'images',
+                        $tempPath,
+                        $file->getClientOriginalName(),
+                        [
+                            'maxWidth' => 1920,
+                            'maxHeight' => 1080,
+                            'quality' => 95,
+                            'alt' => null
+                        ],
+                        true
+                    );
+                }
+                
+                return response()->json([
+                    'message' => 'Images uploaded successfully. Processing will complete shortly.',
+                    'status' => 'processing',
+                    'car_id' => $car->id,
+                    'total_images' => count($request->file('file_path'))
+                ], 202);
             }
-
-            // Ensure images directory exists
-            if (!Storage::disk('public')->exists('images')) {
-                Storage::disk('public')->makeDirectory('images');
-            }
-
-            $originalPaths = [];
-            $finalPaths = [];
-            
-            // Store original images temporarily
-            foreach ($request->file('file_path') as $image) {
-                // Store original file temporarily
-                $originalFilename = uniqid('temp_') . '.' . $image->getClientOriginalExtension();
-                $originalPath = 'temp/' . $originalFilename;
-                Storage::disk('public')->putFileAs('temp', $image, $originalFilename);
-                $originalPaths[] = $originalPath;
-
-                // Prepare final filename
-                $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                $webpFilename = $filename . '_' . uniqid() . '.webp';
-                $finalPaths[] = 'images/' . $webpFilename;
-            }
-
-            // Dispatch the job to process all images
-            ProcessCarImages::dispatch($car, $finalPaths, $originalPaths);
 
             return response()->json([
-                'message' => 'Images uploaded successfully. Processing will complete shortly.',
-                'status' => 'processing',
-                'car_id' => $car->id,
-                'total_images' => count($request->file('file_path'))
-            ], 202);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'error' => 'Car not found',
+                'error' => 'No images provided',
                 'status' => 'error'
-            ], 404);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'error' => $e->errors(),
-                'status' => 'error'
-            ], 422);
+            ], 400);
+
         } catch (\Exception $e) {
             \Log::error('Error in storeImages: ' . $e->getMessage());
             \Log::error($e->getTraceAsString());
@@ -534,55 +481,43 @@ class CarController extends GenericController
 
             $car = Car::findOrFail($request->car_id);
             
-            if ($car->default_image_path) {
-                Storage::disk('public')->delete($car->default_image_path);
+            if ($request->hasFile('default_image_path')) {
+                $file = $request->file('default_image_path');
+                
+                // Store file temporarily
+                $tempPath = $file->store('temp');
+                
+                // Generate final path
+                $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $finalPath = 'images/' . $filename . '_' . uniqid() . '.webp';
+                
+                // Dispatch job to process file
+                ProcessFileJob::dispatch(
+                    Car::class,
+                    $car->id,
+                    'default_image_path',
+                    $tempPath,
+                    $file->getClientOriginalName(),
+                    [
+                        'maxWidth' => 1920,
+                        'maxHeight' => 1080,
+                        'quality' => 95
+                    ],
+                    false
+                );
+                
+                return response()->json([
+                    'message' => 'Image upload successful. Processing will complete shortly.',
+                    'status' => 'processing',
+                    'car_id' => $car->id
+                ], 202);
             }
-
-            if (!$request->hasFile('default_image_path')) {
-                return response()->json(['error' => 'No image file provided'], 400);
-            }
-
-            $image = $request->file('default_image_path');
-            
-            // Ensure temp directory exists
-            if (!Storage::disk('public')->exists('temp')) {
-                Storage::disk('public')->makeDirectory('temp');
-            }
-            
-            // Store original file temporarily
-            $originalFilename = uniqid('temp_') . '.' . $image->getClientOriginalExtension();
-            $originalPath = 'temp/' . $originalFilename;
-            Storage::disk('public')->putFileAs('temp', $image, $originalFilename);
-
-            // Ensure images directory exists
-            if (!Storage::disk('public')->exists('images')) {
-                Storage::disk('public')->makeDirectory('images');
-            }
-
-            // Prepare final filename
-            $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-            $webpFilename = $filename . '_' . uniqid() . '.webp';
-            $finalPath = 'images/' . $webpFilename;
-
-            // Dispatch the job to process the image
-            ProcessCarImage::dispatch($car, $finalPath, $originalPath, true);
 
             return response()->json([
-                'message' => 'Image upload successful. Processing will complete shortly.',
-                'status' => 'processing',
-                'car_id' => $car->id
-            ], 202);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'error' => 'Car not found',
+                'error' => 'No image file provided',
                 'status' => 'error'
-            ], 404);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'error' => $e->errors(),
-                'status' => 'error'
-            ], 422);
+            ], 400);
+
         } catch (\Exception $e) {
             \Log::error('Error in updateDefaultImage: ' . $e->getMessage());
             \Log::error($e->getTraceAsString());

@@ -9,10 +9,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageProcessingTrait;
+use Illuminate\Support\Facades\Log;
 
 class ProcessSingleCarImage implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, ImageProcessingTrait;
 
     protected $car;
     protected $originalPath;
@@ -27,64 +29,37 @@ class ProcessSingleCarImage implements ShouldQueue
 
     public function handle()
     {
-        // Process the image (similar logic as before)
-        $imageContent = Storage::disk('public')->get($this->originalPath);
-        $sourceImage = imagecreatefromstring($imageContent);
-        
-        // Get original dimensions
-        $width = imagesx($sourceImage);
-        $height = imagesy($sourceImage);
-        
-        // Calculate new dimensions (max 800px width/height)
-        $ratio = $width / $height;
-        $newWidth = min($width, 800);
-        $newHeight = intval($newWidth / $ratio);
+        try {
+            // Get the full paths
+            $originalFullPath = Storage::disk('public')->path($this->originalPath);
+            $destinationFullPath = Storage::disk('public')->path($this->finalPath);
+            
+            // Process and optimize the image using our trait
+            $this->processAndOptimizeImage($originalFullPath, $destinationFullPath);
 
-        if ($newHeight > 800) {
-            $newHeight = 800;
-            $newWidth = intval($newHeight * $ratio);
+            // Create car image record
+            CarImage::create([
+                'car_id' => $this->car->id,
+                'file_path' => $this->finalPath
+            ]);
+
+            // Delete the original temporary file
+            Storage::disk('public')->delete($this->originalPath);
+
+            Log::info('Car image processed successfully', [
+                'car_id' => $this->car->id,
+                'path' => $this->finalPath,
+                'size' => filesize($destinationFullPath)
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to process car image', [
+                'car_id' => $this->car->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw $e;
         }
-
-        // Create new image
-        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-        
-        // Preserve transparency
-        imagealphablending($resizedImage, false);
-        imagesavealpha($resizedImage, true);
-        
-        // High-quality resampling
-        imagecopyresampled(
-            $resizedImage, 
-            $sourceImage, 
-            0, 0, 0, 0, 
-            $newWidth, $newHeight, 
-            $width, $height
-        );
-
-        // Create temporary file
-        $tempFile = tempnam(sys_get_temp_dir(), 'img');
-        
-        // Save as WebP with high quality
-        imagewebp($resizedImage, $tempFile, 85);
-        
-        // Clean up resources
-        imagedestroy($sourceImage);
-        imagedestroy($resizedImage);
-
-        // Get the optimized content
-        $optimizedContent = file_get_contents($tempFile);
-        unlink($tempFile);
-
-        // Store the optimized image
-        Storage::disk('public')->put($this->finalPath, $optimizedContent);
-
-        // Create car image record
-        CarImage::create([
-            'car_id' => $this->car->id,
-            'file_path' => $this->finalPath
-        ]);
-
-        // Delete the original temporary file
-        Storage::disk('public')->delete($this->originalPath);
     }
 }
