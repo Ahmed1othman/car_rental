@@ -271,6 +271,17 @@ class GenericController extends Controller
                 'meta_keywords' => $validatedData['meta_keywords'][$langCode] ?? null
             ];
 
+            $translationData = array_merge($translationData, $metaData);
+
+            // Debug the final data before save
+            \Log::info('Translation Data:', $translationData);
+
+            // Create or update translation
+            $model->translations()->updateOrCreate(
+                ['locale' => $langCode],
+                $translationData
+            );
+
             // Only generate slug for English locale
             if ($langCode === 'en' && $this->slugField) {
                 // Generate base slug from the English field value
@@ -292,14 +303,6 @@ class GenericController extends Controller
                 $model->slug = $slug;
                 $model->save();
             }
-
-            $translationData = array_merge($translationData, $metaData);
-
-            // Create or update translation
-            $model->translations()->updateOrCreate(
-                ['locale' => $langCode],
-                $translationData
-            );
         }
     }
 

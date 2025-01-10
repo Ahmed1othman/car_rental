@@ -35,6 +35,8 @@ class DetailedLocationResource extends JsonResource
             'slug' => $translation->slug,
             'name' => $translation->name,
             'description' => $translation->description,
+            'article' => $translation->article,
+            'section_title' => $translation->title,
             'content' =>  $translation->content,
             'seo_data' => [
                 'seo_title' => $translation->meta_title ?? null,

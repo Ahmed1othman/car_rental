@@ -80,7 +80,7 @@
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" name="is_active" class="custom-control-input" id="is_active" value="{{$item->is_active}}" {{$item->is_active?'checked':''}}>
                                             <label class="custom-control-label" for="is_active">Active</label>
-                                        </div>
+                                    </div>
                                     </div>
                                 </div>
 
@@ -89,7 +89,7 @@
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         @foreach($activeLanguages as $lang)
                                             <li class="nav-item">
-                                                <a class="nav-link @if($loop->first) active @endif bg-light text-dark" id="pills-{{ $lang->code }}-tab" data-toggle="pill" href="#pills-{{ $lang->code }}" role="tab" aria-controls="pills-{{ $lang->code }}" aria-selected="true">{{ $lang->name }}</a>
+                                                <a class="nav-link @if(session('active_language') == $lang->code || (session('active_language') == null && $loop->first)) active @endif bg-light text-dark" id="pills-{{ $lang->code }}-tab" data-toggle="pill" href="#pills-{{ $lang->code }}" role="tab" aria-controls="pills-{{ $lang->code }}" aria-selected="true">{{ $lang->name }}</a>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -98,22 +98,23 @@
                                             @php
                                                 $translation = $item->translations->where('locale', $lang->code)->first();
                                             @endphp
-                                            <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
+                                            <div class="tab-pane fade @if(session('active_language') == $lang->code || (session('active_language') == null && $loop->first)) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.' . $lang->code, $translation->name ?? '') }}">
+                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.'.$lang->code, $translation->name ?? '') }}">
                                                 </div>
-
+                                                <div class="form-group">
+                                                    <label for="title_{{ $lang->code }}" class="font-weight-bold">Section Title ({{ $lang->name }})</label>
+                                                    <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code, $translation->title ?? '') }}">
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}">{{ $translation->description ?? '' }}</textarea>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code, $translation->description ?? '') }}</textarea>
                                                 </div>
-
                                                 <div class="form-group">
-                                                    <label for="content_{{ $lang->code }}" class="font-weight-bold">Content ({{ $lang->name }})</label>
-                                                    <textarea name="content[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="content_{{ $lang->code }}">{{ $translation->content ?? '' }}</textarea>
+                                                    <label for="article_{{ $lang->code }}" class="font-weight-bold">Article ({{ $lang->name }})</label>
+                                                    <textarea name="article[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="article_{{ $lang->code }}" rows="5">{{ old('article.'.$lang->code, $translation->article ?? '') }}</textarea>
                                                 </div>
-
                                             </div>
                                         @endforeach
                                     </div>
@@ -124,7 +125,7 @@
                                     <ul class="nav nav-pills mb-3" id="pills-seo-tab" role="tablist">
                                         @foreach($activeLanguages as $lang)
                                             <li class="nav-item">
-                                                <a class="nav-link @if($loop->first) active @endif bg-light text-dark" id="pills-seo-{{ $lang->code }}-tab" data-toggle="pill" href="#pills-seo-{{ $lang->code }}" role="tab" aria-controls="pills-seo-{{ $lang->code }}" aria-selected="true">{{ $lang->name }}</a>
+                                                <a class="nav-link @if(session('active_language') == $lang->code || (session('active_language') == null && $loop->first)) active @endif bg-light text-dark" id="pills-seo-{{ $lang->code }}-tab" data-toggle="pill" href="#pills-seo-{{ $lang->code }}" role="tab" aria-controls="pills-seo-{{ $lang->code }}" aria-selected="true">{{ $lang->name }}</a>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -133,7 +134,7 @@
                                             @php
                                                 $translation = $item->translations->where('locale', $lang->code)->first();
                                             @endphp
-                                            <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-seo-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-seo-{{ $lang->code }}-tab">
+                                            <div class="tab-pane fade @if(session('active_language') == $lang->code || (session('active_language') == null && $loop->first)) show active @endif" id="pills-seo-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-seo-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="meta_title_{{ $lang->code }}" class="font-weight-bold">Meta Title ({{ $lang->name }})</label>
                                                     <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.' . $lang->code, $translation->meta_title ?? '') }}">

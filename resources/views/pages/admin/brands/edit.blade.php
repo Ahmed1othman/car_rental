@@ -127,7 +127,19 @@
                                                 <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                     <div class="form-group">
                                                         <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                        <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.'. $lang->code, $translation->name ?? '') }}">
+                                                        <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.'.$lang->code, $translation->name ?? '') }}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="title_{{ $lang->code }}" class="font-weight-bold">Section Title ({{ $lang->name }})</label>
+                                                        <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code, $translation->title ?? '') }}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
+                                                        <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code, $translation->description ?? '') }}</textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="article_{{ $lang->code }}" class="font-weight-bold">Article ({{ $lang->name }})</label>
+                                                        <textarea name="article[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="article_{{ $lang->code }}" rows="5">{{ old('article.'.$lang->code, $translation->article ?? '') }}</textarea>
                                                     </div>
                                                 </div>
                                             @endforeach

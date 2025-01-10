@@ -122,11 +122,19 @@
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.' . $lang->code, $translation->name ?? '') }}">
+                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.'.$lang->code, $translation->name ?? '') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="title_{{ $lang->code }}" class="font-weight-bold">Section Title ({{ $lang->name }})</label>
+                                                    <input type="text" name="title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="title_{{ $lang->code }}" value="{{ old('title.'.$lang->code, $translation->title ?? '') }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.' . $lang->code, $translation->description ?? '') }}</textarea>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code, $translation->description ?? '') }}</textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="article_{{ $lang->code }}" class="font-weight-bold">Article ({{ $lang->name }})</label>
+                                                    <textarea name="article[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="article_{{ $lang->code }}" rows="5">{{ old('article.'.$lang->code, $translation->article ?? '') }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -150,11 +158,11 @@
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-seo-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-seo-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="meta_title_{{ $lang->code }}" class="font-weight-bold">Meta Title ({{ $lang->name }})</label>
-                                                    <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.' . $lang->code, $translation->meta_title ?? '') }}">
+                                                    <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.'.$lang->code, $translation->meta_title ?? '') }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="meta_description_{{ $lang->code }}" class="font-weight-bold">Meta Description ({{ $lang->name }})</label>
-                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.' . $lang->code, $translation->meta_description ?? '') }}</textarea>
+                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code, $translation->meta_description ?? '') }}</textarea>
                                                 </div>
                                                 <!-- Meta Keywords Field -->
                                                 <div class="form-group">
@@ -171,7 +179,7 @@
                                                     <input type="text" name="meta_keywords[{{ $lang->code }}]"
                                                            class="form-control form-control-lg shadow-sm"
                                                            id="meta_keywords_{{ $lang->code }}"
-                                                           value="{{ old('meta_keywords.' . $lang->code, $keywordString) }}"
+                                                           value="{{ old('meta_keywords.'.$lang->code, $keywordString) }}"
                                                            data-role="tagsinput" placeholder="Enter meta keywords">
                                                 </div>
 
@@ -181,10 +189,10 @@
                                                     @foreach($item->seoQuestions->where('locale', $lang->code) as $index => $seoQuestion)
                                                         <div class="seo-question-group mb-3 p-3 border border-light rounded shadow-sm">
                                                             <div class="form-group">
-                                                                <input type="text" name="seo_questions[{{ $lang->code }}][{{ $index }}][question]" class="form-control form-control-lg shadow-sm mb-2" value="{{ old('seo_questions.' . $lang->code . '.' . $index . '.question', $seoQuestion->question_text) }}" placeholder="Enter Question" />
+                                                                <input type="text" name="seo_questions[{{ $lang->code }}][{{ $index }}][question]" class="form-control form-control-lg shadow-sm mb-2" value="{{ old('seo_questions.'.$lang->code.'.'.$index.'.question', $seoQuestion->question_text) }}" placeholder="Enter Question" />
                                                             </div>
                                                             <div class="form-group">
-                                                                <textarea name="seo_questions[{{ $lang->code }}][{{ $index }}][answer]" class="form-control form-control-lg shadow-sm" placeholder="Enter Answer">{{ old('seo_questions.' . $lang->code . '.' . $index . '.answer', $seoQuestion->answer_text) }}</textarea>
+                                                                <textarea name="seo_questions[{{ $lang->code }}][{{ $index }}][answer]" class="form-control form-control-lg shadow-sm" placeholder="Enter Answer">{{ old('seo_questions.'.$lang->code.'.'.$index.'.answer', $seoQuestion->answer_text) }}</textarea>
                                                             </div>
                                                             <button type="button" class="btn btn-sm btn-danger remove-question">Remove</button>
                                                         </div>

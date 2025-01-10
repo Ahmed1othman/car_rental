@@ -10,7 +10,7 @@ class BrandController extends GenericController
         $this->seo_question =true;
         $this->robots =true;
         $this->slugField ='name';
-        $this->translatableFields = ['name'];
+        $this->translatableFields = ['name', 'title','description','article'];
         $this->nonTranslatableFields = ['is_active'];
         $this->uploadedfiles = ['logo_path'];
     }
@@ -42,6 +42,9 @@ class BrandController extends GenericController
                 }
             }
         }],
+            'description.*' => 'nullable|string',
+            'article.*' => 'nullable|string',
+            'title.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
@@ -90,6 +93,9 @@ class BrandController extends GenericController
                     }
                 }
 },],
+            'description.*' => 'nullable|string',
+            'article.*' => 'nullable|string',
+            'title.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',

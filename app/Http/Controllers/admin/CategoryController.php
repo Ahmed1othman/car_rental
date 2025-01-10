@@ -10,7 +10,7 @@ class CategoryController extends GenericController
         $this->seo_question =true;
         $this->robots =true;
         $this->slugField ='name';
-        $this->translatableFields = ['name','description'];
+        $this->translatableFields = ['name', 'title','description','article'];
         $this->nonTranslatableFields = ['is_active'];
         $this->uploadedfiles=['image_path'];
     }
@@ -24,7 +24,9 @@ class CategoryController extends GenericController
         $this->validationRules = [
             'name.*' => 'required|string|max:255',
             'image_path' => 'required|mimes:jpeg,png,jpg,gif,svg,webp|max:8192',
-            'description.*' => 'nullable|string',
+            'description.*' => 'required|string',
+            'article.*' => 'nullable|string',
+            'title.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
@@ -51,7 +53,9 @@ class CategoryController extends GenericController
         $this->validationRules = [
             'image_path' => 'sometimes|mimes:jpeg,png,jpg,gif,svg,webp|max:8192',
             'name.*' => 'required|string|max:255',
-            'description.*' => 'nullable|string',
+            'description.*' => 'required|string',
+            'article.*' => 'nullable|string',
+            'title.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',

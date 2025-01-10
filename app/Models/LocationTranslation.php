@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LocationTranslation extends Model
 {
     use HasFactory;
+    
     protected $guarded = [];
 
 
     //relations
     public function template(): BelongsTo
     {
-        return $this->belongsTo(location::class);
+        return $this->belongsTo(Location::class);
     }
 
     public function language(): BelongsTo

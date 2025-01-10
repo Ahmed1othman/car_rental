@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CategoryTranslation extends Model
 {
     use HasFactory;
+    
     protected $guarded = [];
 
 
