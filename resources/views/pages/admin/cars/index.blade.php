@@ -72,14 +72,17 @@
                                         <td>{{ $item->brand->translations->first()->name ?? 'N/A' }}</td>
                                         <td>
                                             <!-- Combine all switches in one column -->
-                                            <div class="switch-column">
-                                                <div class="switch-wrapper">
+                                            <div class="switch-column" >
+                                            
+
+                                                <div class="switch-wrapper" >
                                                     <label for="only_on_afandina">Only on Afandina</label>
                                                     <label class="switch">
                                                         <input type="checkbox" class="toggle-status" id="only_on_afandina" data-model="{{ $modelName }}" data-attribute="only_on_afandina" data-id="{{ $item->id }}" {{ $item->only_on_afandina ? 'checked' : '' }}>
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </div>
+
 
                                                 <div class="switch-wrapper">
                                                     <label for="is_flash_sale">Flash Sale</label>

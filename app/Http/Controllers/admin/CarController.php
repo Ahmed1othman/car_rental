@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Feature;
 use App\Models\Gear_type;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -20,210 +20,98 @@ use App\Jobs\ProcessCarImages;
 
 class CarController extends GenericController
 {
-    use \App\Traits\ImageProcessingTrait;
-
     public function __construct()
     {
-        parent::__construct('car');
-        $this->seo_question =true;
-        $this->robots =true;
-        $this->slugField ='name';
-        $this->translatableFields = ['name','description','long_description'];
-        $this->uploadedfiles = ['default_image_path','images'];
+        parent::__construct('Car');
+        
+        $this->seo_question = true;
+        $this->robots = true;
+        $this->slugField = 'name';
+        $this->uploadedfiles = ['images','default_image_path'];
+        $this->translatableFields = ['name', 'description', 'long_description'];
         $this->nonTranslatableFields = [
-            'daily_main_price',
-            'daily_discount_price',
-            'weekly_main_price',
-            'weekly_discount_price',
-            'monthly_main_price',
-            'monthly_discount_price',
-            'daily_mileage_included',
-            'weekly_mileage_included',
-            'monthly_mileage_included',
-            'door_count',
-            'luggage_capacity',
-            'passenger_capacity',
-            'insurance_included',
-            'free_delivery',
-            'is_featured',
-            'crypto_payment_accepted',
-            'is_flash_sale',
-            'only_on_afandina',
-            'show_in_home',
-            'is_active',
-            'status',
-            'gear_type_id',
-            'brand_id',
-            'year_id',
-            'color_id',
-            'car_model_id',
-            'category_id',
+            'brand_id', 'category_id', 'color_id', 'car_model_id', 'year_id', 'maker_id',
+            'daily_main_price', 'daily_discount_price', 'weekly_main_price', 'weekly_discount_price',
+            'monthly_main_price', 'monthly_discount_price', 'door_count', 'luggage_capacity',
+            'passenger_capacity', 'status', 'gear_type_id', 'insurance_included', 'free_delivery',
+            'is_featured', 'crypto_payment_accepted', 'is_flash_sale', 'only_on_afandina','is_active'
         ];
+        
     }
 
     public function create()
     {
         $locale = $this->data['defaultLocale'];
-        $this->data['brands'] = Brand::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-        $this->data['categories'] = Category::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-        $this->data['gearTypes'] = Gear_type::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-        $this->data['colors'] = Color::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-        $this->data['features'] = Feature::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
+        $this->data['brands'] = \App\Models\Brand::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+        $this->data['categories'] = \App\Models\Category::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+        $this->data['colors'] = \App\Models\Color::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+        $this->data['years'] = \App\Models\Year::all();
+        $this->data['gearTypes'] = \App\Models\Gear_type::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+        $this->data['features'] = \App\Models\Feature::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
 
-        $this->data['years'] = Year::get();
         return parent::create();
     }
 
-
-    public function edit($id){
-        $locale = $this->data['defaultLocale'];
-        $this->data['brands'] = Brand::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-        $this->data['categories'] = Category::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-        $this->data['gearTypes'] = Gear_type::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-        $this->data['colors'] = Color::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-
-        $this->data['features'] = Feature::with(['translations' => function ($query) use ($locale) {
-            $query->where('locale', $locale);}])->get();
-
-        $this->data['years'] = Year::get();
-
-        $car = Car::find($id);
-        $this->data['carModels'] = Car_model::select('car_models.id', 'car_model_translations.name')
-            ->leftJoin('car_model_translations', function($join) use ($locale) {
-                $join->on('car_model_translations.car_model_id', '=', 'car_models.id')
-                    ->where('car_model_translations.locale', '=', $locale);
-            })
-            ->where('brand_id', $car->brand_id)
-            ->get();
-        return parent::edit($id);
-    }
-
-    public function store(Request $request)
+    public function edit($id)
     {
-        $request->merge([
-            'insurance_included' => $request->has('insurance_included') ? true : false,
-            'is_flash_sale' => $request->has('is_flash_sale') ? true : false,
-            'is_featured' => $request->has('is_featured') ? true : false,
-            'free_delivery' => $request->has('free_delivery') ? true : false,
-            'is_active' => $request->has('is_active') ? true : false,
-            'crypto_payment_accepted' => $request->has('crypto_payment_accepted') ? true : false,
-            'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
+        $locale = $this->data['defaultLocale'];
+        $this->data['brands'] = \App\Models\Brand::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+        $this->data['categories'] = \App\Models\Category::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+        $this->data['colors'] = \App\Models\Color::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+        $this->data['years'] = \App\Models\Year::all();
+        $this->data['features'] = \App\Models\Feature::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
 
-        ]);
-        $this->validationRules = [
-            'name.*' => [
-                'required','string','max:255',
-                function ($attribute, $value, $fail) {
-                    // Similar logic as explained before
-                    preg_match('/name\.(\w+)/', $attribute, $matches);
-                    $locale = $matches[1] ?? null;
+        $this->data['gearTypes'] = \App\Models\Feature::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
 
-                    if ($locale) {
-                        $exists = \App\Models\BrandTranslation::where('name', $value)
-                            ->where('locale', $locale)
-                            ->exists();
-
-                        if ($exists) {
-                            $fail("The name '{$value}' has already been taken for the locale '{$locale}'.");
-                        }
-                    }
-                }],
-            'description.*' => 'nullable|string',
-            'long_description.*' => 'nullable|string',
-            'locale.*' => 'required|string|in:en,ar',
-            'meta_title.*' => 'nullable|string|max:255',
-            'meta_description.*' => 'nullable|string',
-            'meta_keywords.*' => 'nullable|string',
-            'daily_main_price' => 'required|numeric|min:0',
-            'daily_discount_price' => 'nullable|numeric|min:0|lt:daily_main_price',
-            'weekly_main_price' => 'nullable|numeric|min:0',
-            'weekly_discount_price' => 'nullable|numeric|min:0|lt:weekly_main_price',
-            'monthly_main_price' => 'required|numeric|min:0',
-            'monthly_discount_price' => 'nullable|numeric|min:0|lt:monthly_main_price',
-            'daily_mileage_included' => 'nullable|numeric|min:0',
-            'weekly_mileage_included' => 'nullable|numeric|min:0',
-            'monthly_mileage_included' => 'nullable|numeric|min:0',
-            'door_count' => 'nullable|integer|min:1',
-            'luggage_capacity' => 'nullable|integer|min:0',
-            'passenger_capacity' => 'nullable|integer|min:1',
-            'insurance_included' => 'boolean',
-            'free_delivery' => 'boolean',
-            'crypto_payment_accepted' => 'boolean',
-            'is_featured' => 'boolean',
-            'is_flash_sale' => 'boolean',
-            'is_active' => 'boolean',
-            'show_in_home' => 'boolean',
-            'only_on_afandina' => 'boolean',
-            'status' => 'required|in:available,not_available',
-            'gear_type_id' => 'required|exists:gear_types,id',
-            'brand_id' => 'required|exists:brands,id',
-            'category_id' => 'required|exists:categories,id',
-            'color_id' => 'required|exists:colors,id',
-            'car_model_id' => 'nullable|exists:car_models,id',
-            'maker_id' => 'nullable|exists:makers,id',
-            'seo_questions.*.*.question' => 'nullable|string|max:255',
-            'seo_questions.*.*.answer' => 'nullable|string|max:255',
-        ];
-
-
-        $this->validationMessages = [
-
-        ];
-        return parent::store($request);
-
+        return parent::edit($id);
     }
 
     public function update(Request $request, $id)
     {
+    
+        // Convert checkbox values to boolean
         $request->merge([
-            'insurance_included' => $request->has('insurance_included') ? true : false,
-            'is_flash_sale' => $request->has('is_flash_sale') ? true : false,
-            'is_featured' => $request->has('is_featured') ? true : false,
-            'free_delivery' => $request->has('free_delivery') ? true : false,
-            'is_active' => $request->has('is_active') ? true : false,
-            'crypto_payment_accepted' => $request->has('crypto_payment_accepted') ? true : false,
-            'only_on_afandina' => $request->has('only_on_afandina') ? true : false,
-
+            'insurance_included' => $request->has('insurance_included'),
+            'is_flash_sale' => $request->has('is_flash_sale'),
+            'is_featured' => $request->has('is_featured'),
+            'free_delivery' => $request->has('free_delivery'),
+            'is_active' => $request->has('is_active'),
+            'crypto_payment_accepted' => $request->has('crypto_payment_accepted'),
+            'only_on_afandina' => $request->has('only_on_afandina'),
+    
+            'status' => $request->has('status') ? 'available' : 'not_available',
         ]);
+
+        // Set validation rules
         $this->validationRules = [
-            'name.*' => [
-                'required','string','max:255',
-                function ($attribute, $value, $fail) use ($id) {
-                    // Extract the locale from the field name (e.g., name.en, name.fr)
-                    preg_match('/name\.(\w+)/', $attribute, $matches);
-                    $locale = $matches[1] ?? null;
-
-                    if ($locale) {
-                        // Get the brand ID being updated from the request or route
-
-                        // Check if a record with the same name and locale already exists
-                        $exists = \App\Models\BrandTranslation::where('name', $value)
-                            ->where('locale', $locale)
-                            ->where('brand_id', '!=', $id) // Ignore the current brand's translation
-                            ->exists();
-
-                        if ($exists) {
-                            $fail("The name '{$value}' has already been taken for the locale '{$locale}'.");
-                        }
-                    }
-                },],
+            'name.*' => 'required', 'string', 'max:255',
             'description.*' => 'nullable|string',
             'long_description.*' => 'nullable|string',
-            'locale.*' => 'required|string|in:en,ar',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
             'car_model_id' => 'nullable|exists:car_models,id',
-            'slug' => 'nullable|string|unique:table_name,slug',
+            'year_id' => 'nullable|exists:years,id',
             'daily_main_price' => 'required|numeric|min:0',
             'daily_discount_price' => 'nullable|numeric|min:0|lt:daily_main_price',
             'weekly_main_price' => 'nullable|numeric|min:0',
@@ -233,33 +121,223 @@ class CarController extends GenericController
             'door_count' => 'nullable|integer|min:1',
             'luggage_capacity' => 'nullable|integer|min:0',
             'passenger_capacity' => 'nullable|integer|min:1',
-            'insurance_included' => 'boolean',
-            'free_delivery' => 'boolean',
-            'is_featured' => 'boolean',
-            'is_flash_sale' => 'boolean',
+            // 'status' => 'required|in:available,not_available',
             'color_id' => 'required|exists:colors,id',
-            'only_on_afandina' => 'boolean',
-            'is_active' => 'boolean',
-            'show_in_home'=> 'boolean',
-            'status' => 'required|in:available,not_available',
             'gear_type_id' => 'required|exists:gear_types,id',
             'brand_id' => 'required|exists:brands,id',
+            'year_id' => 'required|exists:years,id',
             'category_id' => 'required|exists:categories,id',
-//            'body_style_id' => 'nullable|exists:body_styles,id',
-//            'maker_id' => 'nullable|exists:makers,id',
-            'default_image_id' => 'nullable',
             'seo_questions.*.*.question' => 'nullable|string|max:255',
             'seo_questions.*.*.answer' => 'nullable|string|max:255',
+            'default_image_path' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
+            'images.*' => 'somtimes|nullable|mimes:jpeg,png,jpg,gif|max:10000',
+            'insurance_included'=>'boolean',
+            'is_flash_sale'=>'boolean',
+            'is_featured'=>'boolean',
+            'free_delivery'=>'boolean',
+            'is_active'=>'boolean',
+            'crypto_payment_accepted'=>'boolean',
+            'only_on_afandina'=>'boolean',
+
+            'status' => 'required|in:available,not_available',
         ];
 
-        // Custom validation messages
-        $this->validationMessages = [
-            // Define any custom messages if necessary
-        ];
+        try {
+            DB::beginTransaction();
 
-        // Delegate to the generic controller's update function
-        return parent::update($request, $id);
+            // Call parent update to handle common functionality
+            $response = parent::update($request, $id);
+
+            // Handle car-specific relationships
+            $car = $this->model::findOrFail($id);
+
+
+            // Handle features
+            if ($request->has('features')) {
+                $car->features()->sync($request->features);
+            }
+
+            // Check if we need to generate descriptions for each translation
+            foreach ($car->translations as $translation) {
+                // Get the submitted data for this locale
+                $requestData = $request->input('translations.' . $translation->locale, []);
+                
+                // Check if description was provided in the request
+                $descriptionProvided = isset($requestData['description']) && !empty($requestData['description']);
+                $longDescriptionProvided = isset($requestData['long_description']) && !empty($requestData['long_description']);
+                
+                // Get the current values from the database
+                $currentDescription = $translation->description;
+                $currentLongDescription = $translation->long_description;
+                
+                // Generate descriptions only if:
+                // 1. No description was provided in the request AND
+                // 2. No description exists in the database OR it's empty
+                if ((!$descriptionProvided && empty($currentDescription)) || 
+                    (!$longDescriptionProvided && empty($currentLongDescription))) {
+                    \App\Jobs\GenerateCarDescriptions::dispatch($car, $translation->locale);
+                }
+            }
+
+            DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Car updated successfully',
+                    'redirect' => route('admin.cars.index')
+                ]);
+            }
+
+            return $response;
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while updating the car: ' . $e->getMessage(),
+                    'errors' => ['general' => [$e->getMessage()]]
+                ], 500);
+            }
+            return back()->with('error', 'An error occurred while updating the car: ' . $e->getMessage())->withInput();
+        }
     }
+
+    public function store(Request $request)
+{
+    // Convert checkbox values to boolean
+    $request->merge([
+        'insurance_included' => $request->has('insurance_included'),
+        'is_flash_sale' => $request->has('is_flash_sale'),
+        'is_featured' => $request->has('is_featured'),
+        'free_delivery' => $request->has('free_delivery'),
+        'is_active' => $request->has('is_active'),
+        'crypto_payment_accepted' => $request->has('crypto_payment_accepted'),
+        'only_on_afandina' => $request->has('only_on_afandina'),
+        'status' => $request->has('status') ? 'available' : 'not_available',
+    ]);
+
+    // Set validation rules
+    $this->validationRules = [
+        'name.*' =>'required', 'string', 'max:255',
+        'description.*' => 'nullable|string',
+        'long_description.*' => 'nullable|string',
+        'meta_title.*' => 'nullable|string|max:255',
+        'meta_description.*' => 'nullable|string',
+        'meta_keywords.*' => 'nullable|string',
+        'car_model_id' => 'nullable|exists:car_models,id',
+        'year_id' => 'nullable|exists:years,id',
+        'daily_main_price' => 'required|numeric|min:0',
+        'daily_discount_price' => 'nullable|numeric|min:0|lt:daily_main_price',
+        'weekly_main_price' => 'nullable|numeric|min:0',
+        'weekly_discount_price' => 'nullable|numeric|min:0|lt:weekly_main_price',
+        'monthly_main_price' => 'required|numeric|min:0',
+        'monthly_discount_price' => 'nullable|numeric|min:0|lt:monthly_main_price',
+        'door_count' => 'nullable|integer|min:1',
+        'luggage_capacity' => 'nullable|integer|min:0',
+        'passenger_capacity' => 'nullable|integer|min:1',
+        // 'status' => 'required|in:available,not_available',
+        'color_id' => 'required|exists:colors,id',
+        'year_id' => 'required|exists:years,id',
+        'gear_type_id' => 'required|exists:gear_types,id',
+        'brand_id' => 'required|exists:brands,id',
+        'category_id' => 'required|exists:categories,id',
+        'seo_questions.*.*.question' => 'nullable|string|max:255',
+        'seo_questions.*.*.answer' => 'nullable|string|max:255',
+        'default_image_path' => 'required|mimes:jpeg,webp,png,jpg,gif,svg|max:10048',
+        'images.*' => 'sometimes|nullable|mimes:jpeg,webp,png,jpg,gif,svg|max:10048',
+        'insurance_included'=>'boolean',
+        'is_flash_sale'=>'boolean',
+        'is_featured'=>'boolean',
+        'free_delivery'=>'boolean',
+        'is_active'=>'boolean',
+        'crypto_payment_accepted'=>'boolean',
+        'only_on_afandina'=>'boolean',
+        'status' => 'required|in:available,not_available',
+    ];
+
+    try {
+        // Validate the request
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $this->validationRules);
+
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        DB::beginTransaction();
+
+        // Call parent store to handle common functionality
+        $response = parent::store($request);
+
+        // If response is redirect (success) and we have a car ID
+        if ($response instanceof \Illuminate\Http\RedirectResponse) {
+            // Get the newly created car
+            $car = $this->model::latest()->first();
+
+            // Handle features
+            if ($request->has('features')) {
+                $car->features()->sync($request->features);
+            }
+
+            // Check if we need to generate descriptions for each translation
+            foreach ($car->translations as $translation) {
+                // Only generate descriptions if they weren't provided by the user
+                $requestData = $request->input('translations.' . $translation->locale, []);
+                $description = $requestData['description'] ?? null;
+                $longDescription = $requestData['long_description'] ?? null;
+                
+                if (empty($description) || empty($longDescription)) {
+                    \App\Jobs\GenerateCarDescriptions::dispatch($car, $translation->locale);
+                }
+            }
+
+            DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Car created successfully',
+                    'redirect' => route('admin.cars.index')
+                ]);
+            }
+
+            return $response;
+        }
+
+        // If we get here, something went wrong in the parent store
+        DB::rollback();
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create car',
+                'errors' => $this->validator->errors()
+            ], 422);
+        }
+
+        return $response;
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while creating the car: ' . $e->getMessage(),
+                'errors' => ['general' => [$e->getMessage()]]
+            ], 500);
+        }
+        return back()->with('error', 'An error occurred while creating the car: ' . $e->getMessage())->withInput();
+    }
+}
 
     public function edit_images($id)
     {

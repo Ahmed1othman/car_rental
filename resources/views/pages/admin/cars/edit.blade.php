@@ -52,9 +52,42 @@
         .btn-secondary:hover {
             background-color: #5a6268;
         }
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 5px solid #3498db;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 @endpush
 @section('content')
+    <!-- Loader Overlay -->
+    <div class="loader-overlay" id="loader-overlay">
+        <div class="text-center">
+            <div class="loader"></div>
+            <p class="mt-2">Processing...</p>
+        </div>
+    </div>
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
@@ -75,18 +108,20 @@
         <section class="content">
             <div class="container-fluid">
                 @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px; color: #f44336;"></i>
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert">
+                        <div class="d-flex">
+                            <i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px;"></i>
                             <div class="flex-grow-1">
-                                <strong>Oops! We found some issues:</strong>
-                                <ol class="mt-2 mb-0 pl-4" style="list-style: decimal;">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                                <h5 class="alert-heading mb-2">Please correct the following errors:</h5>
+                                <ul class="mb-0 pl-3">
+                                    @foreach($errors->getBag('default')->toArray() as $field => $errorMessages)
+                                        @foreach($errorMessages as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
                                     @endforeach
-                                </ol>
+                                </ul>
                             </div>
-                            <button type="button" class="close ml-3" data-dismiss="alert" aria-label="Close" style="font-size: 20px;">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -113,7 +148,7 @@
                         </ul>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.'.$modelName.'.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+                        <form id="editCarForm" action="{{ route('admin.'.$modelName.'.update', $item->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="tab-content" id="custom-tabs-three-tabContent">
@@ -191,10 +226,20 @@
                                                         <select name="year_id" id="year_id" class="form-control shadow-sm select2">
                                                             <option value="">-- Select Year --</option>
                                                             @foreach($years as $year)
-                                                                <option value="{{ $year->id }}" {{ old('year_id', $item->year_id) == $year->id ? 'selected' : '' }}>
+                                                                <option value="{{ $year->id }}" {{ (string)old('year_id', $item->year_id) === (string)$year->id ? 'selected' : '' }}>
                                                                     {{ $year->year }}
                                                                 </option>
                                                             @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="status" class="font-weight-bold">Status</label>
+                                                        <select name="status" id="status" class="form-control shadow-sm">
+                                                            <option value="">-- Select Status --</option>
+                                                            <option value="available" {{ old('status', $item->status) == 'available' ? 'selected' : '' }}>Available</option>
+                                                            <option value="not_available" {{ old('status', $item->status) == 'not_available' ? 'selected' : '' }}>Not Available</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -532,7 +577,88 @@
     </div>
 @endsection
 @push('scripts')
-    <!-- Custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('#editCarForm').on('submit', function(e) {
+                e.preventDefault();
+                showLoader();
+
+                let formData = new FormData(this);
+                
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        hideLoader();
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        hideLoader();
+                        let errorHtml = '<div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert">';
+                        errorHtml += '<div class="d-flex">';
+                        errorHtml += '<i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px;"></i>';
+                        errorHtml += '<div class="flex-grow-1">';
+                        errorHtml += '<h5 class="alert-heading mb-2">Please correct the following errors:</h5>';
+                        errorHtml += '<ul class="mb-0 pl-3">';
+                        
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            // Loop through all error messages
+                            Object.entries(xhr.responseJSON.errors).forEach(([field, messages]) => {
+                                messages.forEach(message => {
+                                    errorHtml += '<li>' + message + '</li>';
+                                });
+                            });
+                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorHtml += '<li>' + xhr.responseJSON.message + '</li>';
+                        } else {
+                            errorHtml += '<li>An unexpected error occurred. Please try again.</li>';
+                        }
+                        
+                        errorHtml += '</ul>';
+                        errorHtml += '</div>';
+                        errorHtml += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+                        errorHtml += '<span aria-hidden="true">&times;</span>';
+                        errorHtml += '</button>';
+                        errorHtml += '</div>';
+                        errorHtml += '</div>';
+
+                        // Remove any existing error alerts
+                        $('.alert-danger').remove();
+                        // Add the new error alert at the top of the container
+                        $('.content .container-fluid').first().prepend(errorHtml);
+                        
+                        // Scroll to the top of the page to show the errors
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                });
+            });
+        });
+
+        function showLoader() {
+            $('#loader-overlay').css('display', 'flex');
+        }
+
+        function hideLoader() {
+            $('#loader-overlay').css('display', 'none');
+        }
+    </script>
     <script>
         $(document).ready(function() {
             // Function to dynamically add SEO Questions/Answers
@@ -568,6 +694,8 @@
         $(document).ready(function() {
             var brandSelect = $('#brand_id');
             var modelSelect = $('#car_model_id');
+            var initialModelId = '{{ old('car_model_id', $item->car_model_id) }}';
+
             function loadModels(brandId, selectedModelId = null) {
                 modelSelect.empty().append('<option value="">-- Select Model --</option>');
                 if (brandId) {
@@ -576,21 +704,31 @@
                         type: "GET",
                         success: function(data) {
                             data.forEach(function(model) {
-                                var selected = selectedModelId == model.id ? 'selected' : '';
+                                var selected = (selectedModelId && selectedModelId == model.id) ? 'selected' : '';
                                 modelSelect.append('<option value="' + model.id + '" ' + selected + '>' + model.name + '</option>');
                             });
+                            // Set the selected value after populating options
+                            if (selectedModelId) {
+                                modelSelect.val(selectedModelId).trigger('change');
+                            }
                         }
                     });
                 }
             }
+
             // Load models on brand change
             brandSelect.change(function() {
-                loadModels($(this).val());
+                var selectedBrandId = $(this).val();
+                // When brand changes, only pass the selected model if it's the initial load
+                loadModels(selectedBrandId, $(this).data('initial-load') ? initialModelId : null);
+                $(this).removeData('initial-load');
             });
+
             // Load models on page load if a brand is already selected
             var initialBrandId = brandSelect.val();
-            var initialModelId = modelSelect.data('selected');
             if (initialBrandId) {
+                // Set a flag for initial load
+                brandSelect.data('initial-load', true);
                 loadModels(initialBrandId, initialModelId);
             }
         });

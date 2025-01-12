@@ -61,10 +61,6 @@ class GenericController extends Controller
 
     public function store(Request $request)
     {
-        $request->merge([
-            'is_active' => $request->has('is_active') ? true : false,
-        ]);
-
         foreach ($this->uploadedfiles as $fileField) {
             if ($request->has($fileField) && is_array($request->file($fileField))) {
                 $this->validationRules[$fileField . '.*'] = 'nullable|mimes:jpg,jpeg,png,svg,webp,mp4,webm,ogg|max:102400'; // 100MB max
@@ -377,13 +373,13 @@ class GenericController extends Controller
             }
         }
 
-        if ($this->modelName == "cars") {
+        // if ($this->modelName == "cars") {
 
-            if ($request->has('features')) {
-                $features = $request->input('features');
-                $template->features()->attach($features);
-            }
-        }
+        //     if ($request->has('features')) {
+        //         $features = $request->input('features');
+        //         $template->features()->attach($features);
+        //     }
+        // }
     }
 
     public function exceptionsModelUpdate(Request $request, $template): void

@@ -61,10 +61,40 @@
         .btn-secondary:hover {
             background-color: #5a6268;
         }
+
+        .loader-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 5px solid #3498db;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 @endpush
 @section('content')
-    <!-- Add the styles here -->
+    <!-- Loader Overlay -->
+    <div class="loader-overlay" id="loader-overlay">
+        <div class="loader"></div>
+    </div>
 
     <div class="content-wrapper">
         <section class="content-header">
@@ -88,18 +118,20 @@
             <div class="container-fluid">
 
                 @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px; color: #f44336;"></i>
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert">
+                        <div class="d-flex">
+                            <i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px;"></i>
                             <div class="flex-grow-1">
-                                <strong>Oops! We found some issues:</strong>
-                                <ol class="mt-2 mb-0 pl-4" style="list-style: decimal;">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                                <h5 class="alert-heading mb-2">Please correct the following errors:</h5>
+                                <ul class="mb-0 pl-3">
+                                    @foreach($errors->getBag('default')->toArray() as $field => $errorMessages)
+                                        @foreach($errorMessages as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
                                     @endforeach
-                                </ol>
+                                </ul>
                             </div>
-                            <button type="button" class="close ml-3" data-dismiss="alert" aria-label="Close" style="font-size: 20px;">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -133,7 +165,7 @@
 
                     <div class="card-body">
                         <!-- Form -->
-                        <form action="{{ route('admin.'.$modelName.'.store') }}" method="POST" enctype="multipart/form-data">
+                        <form id="createCarForm" action="{{ route('admin.'.$modelName.'.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
@@ -151,7 +183,7 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="brand_id" class="font-weight-bold">Brand</label>
-                                                            <select name="brand_id" id="brand_id" class="form-control shadow-sm select2">
+                                                            <select name="brand_id" id="brand_id" class="form-control shadow-sm select2 @error('brand_id') is-invalid @enderror">
                                                                 <option value="">-- Select Brand --</option>
                                                                 @foreach($brands as $brand)
                                                                     <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
@@ -159,6 +191,11 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            @error('brand_id')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
@@ -175,7 +212,7 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="category_id" class="font-weight-bold">Car Category</label>
-                                                            <select name="category_id" id="category_id" class="form-control shadow-sm select2">
+                                                            <select name="category_id" id="category_id" class="form-control shadow-sm select2 @error('category_id') is-invalid @enderror">
                                                                 <option value="">-- Select Category --</option>
                                                                 @foreach($categories as $category)
                                                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -183,13 +220,18 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            @error('category_id')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="gearType_id" class="font-weight-bold">Gear Type</label>
-                                                            <select name="gear_type_id" id="gear_type_id" class="form-control shadow-sm select2">
+                                                            <select name="gear_type_id" id="gear_type_id" class="form-control shadow-sm select2 @error('gear_type_id') is-invalid @enderror">
                                                                 <option value="">-- Select Gear Type --</option>
                                                                 @foreach($gearTypes as $gearType)
                                                                     <option value="{{ $gearType->id }}" {{ old('gear_type_id') == $gearType->id ? 'selected' : '' }}>
@@ -197,13 +239,18 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            @error('gear_type_id')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="color_id" class="font-weight-bold">Color</label>
-                                                            <select name="color_id" id="color_id" class="form-control shadow-sm select2">
+                                                            <select name="color_id" id="color_id" class="form-control shadow-sm select2 @error('color_id') is-invalid @enderror">
                                                                 <option value="">-- Select Color --</option>
                                                                 @foreach($colors as $color)
                                                                     <option value="{{ $color->id }}" style="background-color: {{ $color->color_code }}; color: {{ $color->color_code == '#FFFFFF' ? '#000000' : '#FFFFFF' }};" {{ old('color_id') == $color->id ? 'selected' : '' }}>
@@ -211,6 +258,11 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            @error('color_id')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
@@ -242,19 +294,34 @@
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="door_count" class="font-weight-bold">Number of Doors</label>
-                                                                <input type="number" name="door_count" class="form-control shadow-sm" max="6" min="1" id="door_count" value="{{ old('door_count') }}">
+                                                                <input type="number" name="door_count" class="form-control shadow-sm @error('door_count') is-invalid @enderror" max="6" min="1" id="door_count" value="{{ old('door_count') }}">
+                                                                @error('door_count')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="luggage_capacity" class="font-weight-bold">Number Of Luggage Capacity</label>
-                                                                <input type="number" name="luggage_capacity" class="form-control shadow-sm" max="20" min="0" id="luggage_capacity" value="{{ old('luggage_capacity') }}">
+                                                                <input type="number" name="luggage_capacity" class="form-control shadow-sm @error('luggage_capacity') is-invalid @enderror" max="20" min="0" id="luggage_capacity" value="{{ old('luggage_capacity') }}">
+                                                                @error('luggage_capacity')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="passenger_capacity" class="font-weight-bold">Number of passenger</label>
-                                                                <input type="number" name="passenger_capacity" class="form-control shadow-sm" max="20" min="1" id="passenger_capacity" value="{{ old('passenger_capacity') }}">
+                                                                <input type="number" name="passenger_capacity" class="form-control shadow-sm @error('passenger_capacity') is-invalid @enderror" max="20" min="1" id="passenger_capacity" value="{{ old('passenger_capacity') }}">
+                                                                @error('passenger_capacity')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
                                                             </div>
                                                         </div>
                                                     </div>
@@ -272,20 +339,35 @@
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="daily_main_price" class="font-weight-bold">Daily Main Price</label>
-                                                            <input type="number" name="daily_main_price" class="form-control shadow-sm" id="daily_main_price" value="{{ old('daily_main_price') }}">
+                                                            <input type="number" name="daily_main_price" class="form-control shadow-sm @error('daily_main_price') is-invalid @enderror" id="daily_main_price" value="{{ old('daily_main_price') }}">
+                                                            @error('daily_main_price')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="daily_discount_price" class="font-weight-bold">Daily Price With Discount</label>
-                                                            <input type="number" name="daily_discount_price" class="form-control shadow-sm" id="daily_discount_price" value="{{ old('daily_discount_price') }}">
+                                                            <input type="number" name="daily_discount_price" class="form-control shadow-sm @error('daily_discount_price') is-invalid @enderror" id="daily_discount_price" value="{{ old('daily_discount_price') }}">
+                                                            @error('daily_discount_price')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="daily_mileage_included" class="font-weight-bold">Daily Mileage Included</label>
-                                                            <input type="number" name="daily_mileage_included" class="form-control shadow-sm" id="daily_mileage_included" value="{{ old('daily_mileage_included') }}">
+                                                            <input type="number" name="daily_mileage_included" class="form-control shadow-sm @error('daily_mileage_included') is-invalid @enderror" id="daily_mileage_included" value="{{ old('daily_mileage_included') }}">
+                                                            @error('daily_mileage_included')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -296,19 +378,34 @@
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="weekly_main_price" class="font-weight-bold">Weekly Main Price</label>
-                                                            <input type="text" name="weekly_main_price" class="form-control shadow-sm" id="weekly_main_price" value="{{ old('weekly_main_price') }}">
+                                                            <input type="text" name="weekly_main_price" class="form-control shadow-sm @error('weekly_main_price') is-invalid @enderror" id="weekly_main_price" value="{{ old('weekly_main_price') }}">
+                                                            @error('weekly_main_price')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="weekly_discount_price" class="font-weight-bold">Weekly Price With Discount</label>
-                                                            <input type="number" name="weekly_discount_price" class="form-control shadow-sm" id="weekly_discount_price" value="{{ old('weekly_discount_price') }}">
+                                                            <input type="number" name="weekly_discount_price" class="form-control shadow-sm @error('weekly_discount_price') is-invalid @enderror" id="weekly_discount_price" value="{{ old('weekly_discount_price') }}">
+                                                            @error('weekly_discount_price')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="weekly_mileage_included" class="font-weight-bold">Weekly Mileage Included</label>
-                                                            <input type="number" name="weekly_mileage_included" class="form-control shadow-sm" id="weekly_mileage_included" value="{{ old('weekly_mileage_included') }}">
+                                                            <input type="number" name="weekly_mileage_included" class="form-control shadow-sm @error('weekly_mileage_included') is-invalid @enderror" id="weekly_mileage_included" value="{{ old('weekly_mileage_included') }}">
+                                                            @error('weekly_mileage_included')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -318,19 +415,34 @@
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="monthly_main_price" class="font-weight-bold">Monthly Main Price</label>
-                                                            <input type="number" name="monthly_main_price" class="form-control shadow-sm" id="monthly_main_price" value="{{ old('monthly_main_price') }}">
+                                                            <input type="number" name="monthly_main_price" class="form-control shadow-sm @error('monthly_main_price') is-invalid @enderror" id="monthly_main_price" value="{{ old('monthly_main_price') }}">
+                                                            @error('monthly_main_price')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="monthly_discount_price" class="font-weight-bold">Monthly Price With Discount</label>
-                                                            <input type="number" name="monthly_discount_price" class="form-control shadow-sm" id="monthly_discount_price" value="{{ old('monthly_discount_price') }}">
+                                                            <input type="number" name="monthly_discount_price" class="form-control shadow-sm @error('monthly_discount_price') is-invalid @enderror" id="monthly_discount_price" value="{{ old('monthly_discount_price') }}">
+                                                            @error('monthly_discount_price')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="monthly_mileage_included" class="font-weight-bold">Monthly Mileage Included</label>
-                                                            <input type="number" name="monthly_mileage_included" class="form-control shadow-sm" id="monthly_mileage_included" value="{{ old('monthly_mileage_included') }}">
+                                                            <input type="number" name="monthly_mileage_included" class="form-control shadow-sm @error('monthly_mileage_included') is-invalid @enderror" id="monthly_mileage_included" value="{{ old('monthly_mileage_included') }}">
+                                                            @error('monthly_mileage_included')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -399,7 +511,7 @@
                                                         <select class="form-control car-select" name="features[]" multiple="multiple" style="width: 100%;">
                                                             @foreach($features as $feature)
                                                                 <option value="{{ $feature->id }}" data-icon="{{ $feature->icon->icon_class }}">
-                                                                    {{ $feature->translations->first()->name }}
+                                                                    {{ $feature->translations()->first()->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -483,7 +595,7 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="status" class="font-weight-bold">Car Status</label>
-                                                            <select name="status" id="status" class="form-control shadow-sm">
+                                                            <select name="status" id="status" class="form-control shadow-sm @error('status') is-invalid @enderror">
                                                                 <option value="">-- Select Car Status --</option>
                                                                 <option value="available" {{ old('status') == "available" ? 'selected' : '' }}>
                                                                     Available
@@ -492,6 +604,11 @@
                                                                     Not Available
                                                                 </option>
                                                             </select>
+                                                            @error('status')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
@@ -516,18 +633,33 @@
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="name_{{ $lang->code }}" class="font-weight-bold">Name ({{ $lang->name }})</label>
-                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="name_{{ $lang->code }}" value="{{ old('name.'.$lang->code) }}">
+                                                    <input type="text" name="name[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm @error('name.'.$lang->code) is-invalid @enderror" id="name_{{ $lang->code }}" value="{{ old('name.'.$lang->code) }}">
+                                                    @error('name.'.$lang->code)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="description_{{ $lang->code }}" class="font-weight-bold">Description ({{ $lang->name }})</label>
-                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code) }}</textarea>
+                                                    <textarea name="description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm @error('description.'.$lang->code) is-invalid @enderror" id="description_{{ $lang->code }}" rows="4">{{ old('description.'.$lang->code) }}</textarea>
+                                                    @error('description.'.$lang->code)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
 
 
                                                 <div class="form-group">
                                                     <label for="long_description_{{ $lang->code }}" class="font-weight-bold">Long Description ({{ $lang->name }})</label>
-                                                    <textarea name="long_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="long_description_{{ $lang->code }}">{{ old('long_description.'.$lang->code) }}</textarea>
+                                                    <textarea name="long_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor @error('long_description.'.$lang->code) is-invalid @enderror" id="long_description_{{ $lang->code }}">{{ old('long_description.'.$lang->code) }}</textarea>
+                                                    @error('long_description.'.$lang->code)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         @endforeach
@@ -548,15 +680,30 @@
                                             <div class="tab-pane fade @if($loop->first) show active @endif" id="pills-seo-{{ $lang->code }}" role="tabpanel" aria-labelledby="pills-seo-{{ $lang->code }}-tab">
                                                 <div class="form-group">
                                                     <label for="meta_title_{{ $lang->code }}" class="font-weight-bold">Meta Title ({{ $lang->name }})</label>
-                                                    <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.'.$lang->code) }}">
+                                                    <input type="text" name="meta_title[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm @error('meta_title.'.$lang->code) is-invalid @enderror" id="meta_title_{{ $lang->code }}" value="{{ old('meta_title.'.$lang->code) }}">
+                                                    @error('meta_title.'.$lang->code)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="meta_description_{{ $lang->code }}" class="font-weight-bold">Meta Description ({{ $lang->name }})</label>
-                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code) }}</textarea>
+                                                    <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm @error('meta_description.'.$lang->code) is-invalid @enderror" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code) }}</textarea>
+                                                    @error('meta_description.'.$lang->code)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
                                                 <<div class="form-group">
                                                     <label for="meta_keywords_{{ $lang->code }}" class="font-weight-bold">Meta Keywords ({{ $lang->name }})</label>
-                                                    <input type="text" name="meta_keywords[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_keywords_{{ $lang->code }}" data-role="tagsinput" value="{{ old('meta_keywords.'.$lang->code) }}">
+                                                    <input type="text" name="meta_keywords[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm @error('meta_keywords.'.$lang->code) is-invalid @enderror" id="meta_keywords_{{ $lang->code }}" data-role="tagsinput" value="{{ old('meta_keywords.'.$lang->code) }}">
+                                                    @error('meta_keywords.'.$lang->code)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
 
                                                 <div class="row card">
@@ -631,6 +778,7 @@
 
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Array to store selected images
         let selectedFiles = [];
@@ -817,9 +965,114 @@
             });
         });
 
-    </script>
+        $(document).ready(function() {
+            // Handle form submission
+            $('#createCarForm').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var submitBtn = form.find('button[type="submit"]');
+                var formData = new FormData(this);
 
-    <script>
+                // Show loading overlay
+                $('#loader-overlay').css('display', 'flex');
+                
+                // Disable submit button
+                submitBtn.prop('disabled', true);
+                
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Hide loader
+                        $('#loader-overlay').hide();
+                        
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        // Hide loading overlay
+                        $('#loader-overlay').hide();
+                        
+                        // Enable submit button
+                        submitBtn.prop('disabled', false);
+
+                        var errors = xhr.responseJSON.errors;
+                        
+                        // Clear previous errors
+                        $('.is-invalid').removeClass('is-invalid');
+                        $('.invalid-feedback').remove();
+                        
+                        if (errors) {
+                            // Show error alert at the top
+                            var errorHtml = '<div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3 p-4 rounded-lg" role="alert">' +
+                                '<div class="d-flex">' +
+                                '<i class="fas fa-exclamation-triangle mr-2" style="font-size: 24px;"></i>' +
+                                '<div class="flex-grow-1">' +
+                                '<h5 class="alert-heading mb-2">Please correct the following errors:</h5>' +
+                                '<ul class="mb-0 pl-3">';
+                            
+                            $.each(errors, function(key, messages) {
+                                messages.forEach(function(message) {
+                                    errorHtml += '<li>' + message + '</li>';
+                                    
+                                    // Add error class and message to form field
+                                    var input = $('[name="' + key + '"]');
+                                    if (input.length) {
+                                        input.addClass('is-invalid');
+                                        if (!input.next('.invalid-feedback').length) {
+                                            input.after('<div class="invalid-feedback">' + message + '</div>');
+                                        }
+                                    }
+                                });
+                            });
+                            
+                            errorHtml += '</ul></div>' +
+                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                                '</button>' +
+                                '</div></div>';
+                            
+                            // Remove any existing error alerts
+                            $('.alert-danger').remove();
+                            // Add the new error alert at the top of the form
+                            form.before(errorHtml);
+                        }
+
+                        // Also show in SweetAlert
+                        var errorMessage = '<ul class="list-unstyled mb-0">';
+                        $.each(errors, function(key, messages) {
+                            messages.forEach(function(message) {
+                                errorMessage += '<li><i class="fas fa-times-circle mr-2" style="color: #f44336;"></i>' + message + '</li>';
+                            });
+                        });
+                        errorMessage += '</ul>';
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error!',
+                            html: errorMessage,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+
         $(document).ready(function() {
             function formatFeature(feature) {
                 if (!feature.id) {
