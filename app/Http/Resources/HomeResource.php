@@ -15,6 +15,8 @@ class HomeResource extends JsonResource
         $homeData = $this->resource['homeData']->translations->first();
         $contactData = $this->resource['contactData'];
 
+        $locale = app()->getLocale() ?? 'en';
+
         return [
             'header_section' => [
                 'hero_header_title' => $homeData->hero_header_title,

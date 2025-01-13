@@ -82,7 +82,7 @@ class ConvertNumbersToArabic
                         'mobile_image',
                         'content',
                         'seo_image',
-
+                        'schemas'
 
                     ], true) ||
                     filter_var($value, FILTER_VALIDATE_URL)
