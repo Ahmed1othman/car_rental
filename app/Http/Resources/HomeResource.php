@@ -64,7 +64,7 @@ class HomeResource extends JsonResource
                 'short_videos' => ShortVideoResource::collection($this->resource['shortVideos']),
             ],
             'seo_data' => [
-                'schemas' => [
+                'schemas' => array_filter([
                     'organization_schema' => $this->getOrganizationSchema(),
                     'local_business_schema' => $this->getLocalBusinessSchema(),
                     'breadcrumb_schema' => $this->getBreadcrumbSchema([
@@ -73,7 +73,7 @@ class HomeResource extends JsonResource
                             'name' => __('messages.home')
                         ]
                     ]),
-                ]
+                ])
             ],
         ];
     }

@@ -112,7 +112,7 @@ class DetailedCarResource extends JsonResource
                 ],
                 'seo_image' => $base_url.$this->default_image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
-                'schemas'=>[
+                'schemas'=>array_filter([
                     'faq_schema'=> $this->getFAQSchema($seoQuestions),
                     'product_schema'=>$this->productSchema($translation, $brandName, $prices, $currency),
                     'organization_schema' => $this->getOrganizationSchema(),
@@ -142,7 +142,7 @@ class DetailedCarResource extends JsonResource
                         'date_modified' => $this->updated_at->toIso8601String(),
                         'date_published' => $this->created_at->toIso8601String(),
                     ]),
-                ],
+                ]),
             ],
             'no_deposit' => $this->no_debosite??1,
             'discount_rate' => ceil(($this->daily_main_price - $this->daily_discount_price) * 100 / $this->daily_main_price),

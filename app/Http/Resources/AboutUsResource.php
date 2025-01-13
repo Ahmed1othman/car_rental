@@ -46,7 +46,7 @@ class AboutUsResource extends JsonResource
                 'meta_keywords' => $metaKeywords,
                 'seo_image' => $base_url . $this->why_choose_image_path ?? null,
                 'seo_image_alt' => $translation->meta_title ?? null,
-                'schemas' => [
+                'schemas' => array_filter([
                     'faq_schema' => $this->getFAQSchema($seoQuestions),
                     'organization_schema' => $this->getOrganizationSchema(),
                     'webpage_schema' => $this->getWebPageSchema([
@@ -65,7 +65,7 @@ class AboutUsResource extends JsonResource
                             'name' => $translation->meta_title ?? __('messages.about_us')
                         ]
                     ])
-                ]
+                ])
             ],
         ];
     }

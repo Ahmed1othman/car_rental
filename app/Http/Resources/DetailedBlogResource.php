@@ -62,7 +62,7 @@ class DetailedBlogResource extends JsonResource
                 ],
                 'seo_image' => $base_url . $this->image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
-                'schemas'=>[
+                'schemas'=>array_filter([
                     'faq_schema'=> $this->getFAQSchema($seoQuestions),
                     'organization_schema' => $this->getOrganizationSchema(),
                     'webpage_schema' => $this->getWebPageSchema([
@@ -97,7 +97,7 @@ class DetailedBlogResource extends JsonResource
                         'date_published' => $this->created_at->toIso8601String(),
                         'keywords' => $metaKeywords ?? ''
                     ])
-                ]
+                ])
             ],
 
         ];

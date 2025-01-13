@@ -6,21 +6,29 @@ trait FAQSchemaTrait
 {
     protected function getFAQSchema($seoQuestions)
     {
-        $questions = $seoQuestions->map(function($question) {
+        // Filter valid questions (must have both question and answer)
+        $validQuestions = $seoQuestions->filter(function($question) {
+            return !empty(trim($question->question)) && !empty(trim($question->answer));
+        })->map(function($question) {
             return [
                 '@type' => 'Question',
-                'name' => $question->question,
+                'name' => trim($question->question),
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text' => $question->answer
+                    'text' => trim($question->answer)
                 ]
             ];
-        })->all();
+        })->values()->all();
+
+        // Only return schema if there's at least one valid question
+        if (empty($validQuestions)) {
+            return null;
+        }
 
         return [
             '@context' => 'https://schema.org',
             '@type' => 'FAQPage',
-            'mainEntity' => $questions
+            'mainEntity' => $validQuestions
         ];
     }
 }
