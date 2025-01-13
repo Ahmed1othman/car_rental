@@ -6,9 +6,15 @@ use App\Models\Blog;
 use App\Models\StaticTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Traits\OrganizationSchemaTrait;
+use App\Traits\BreadcrumbSchemaTrait;
+use App\Traits\WebPageSchemaTrait;
+use App\Traits\FAQSchemaTrait;
 
 class DetailedBrandResource extends JsonResource
 {
+    use OrganizationSchemaTrait, WebPageSchemaTrait, BreadcrumbSchemaTrait, FAQSchemaTrait;
+
     /**
      * Transform the resource into an array.
      *
@@ -26,13 +32,13 @@ class DetailedBrandResource extends JsonResource
 
         // Decode and format meta keywords if they exist
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
-$metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
+        $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
         $seoQuestionSchema = $this->jsonLD($seoQuestions);        $car_counts = $this->getCounts($locale);
         return [
             'id' => $this->id,
-            'slug' => $translation->slug??null,
+            'slug' => $this->slug??null,
             'name' => $translation->name??null,
             'description' => $translation->description,
             'article' => $translation->article,
@@ -50,7 +56,31 @@ $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArr
                 'seo_image' => $base_url.$this->logo_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>[
-                    'faq_schema'=>$seoQuestionSchema,
+                    'faq_schema'=> $this->getFAQSchema($seoQuestions),
+                    'organization_schema' => $this->getOrganizationSchema(),
+                    'local_business_schema' => $this->getLocalBusinessSchema(),
+                    'breadcrumb_schema' => $this->getBreadcrumbSchema([
+                        [
+                            'url' => config('app.url') . "/{$locale}/home",
+                            'name' => __('messages.home')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/product/filter",
+                            'name' => __('messages.cars')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/product/brand/{$this->slug}",
+                            'name' => $translation->name
+                        ]
+                    ]),
+                    'webpage_schema' => $this->getWebPageSchema([
+                        'url' => config('app.url') . "/{$locale}/product/brand/{$this->slug}",
+                        'name' => $translation->name,
+                        'description' => $translation->meta_description,
+                        'image' => asset('storage/' . $this->logo_path),
+                        'date_modified' => $this->updated_at->toIso8601String(),
+                        'date_published' => $this->created_at->toIso8601String(),
+                    ]),
                 ]
             ],
         ];

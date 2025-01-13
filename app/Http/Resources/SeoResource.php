@@ -4,9 +4,12 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Traits\OrganizationSchemaTrait;
+use App\Traits\FAQSchemaTrait;
 
 class SeoResource extends JsonResource
 {
+    use OrganizationSchemaTrait, FAQSchemaTrait;
     /**
      * Transform the resource into an array.
      *
@@ -23,7 +26,7 @@ class SeoResource extends JsonResource
         $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
-        $seoQuestionSchema = $this->jsonLD($seoQuestions);        return [
+        $seoQuestionSchema = $this->getFAQSchema($seoQuestions);        return [
             'seo_data' => [
                 'seo_title' => $translation->meta_title ?? null,
                 'seo_description' => $translation->meta_description ?? null,
@@ -43,59 +46,6 @@ class SeoResource extends JsonResource
         ];
     }
 
-    public function jsonLD($seoQuestions)
-    {
-        return [
-            '@context' => 'https://schema.org',
-            '@type' => 'FAQPage',
-            'mainEntity' => $seoQuestions
-                ->filter(function ($faq) {
-                    return !empty(trim($faq->question_text)) && !empty(trim($faq->answer_text));
-                })
-                ->map(function ($faq) {
-                    return [
-                        '@type' => 'Question',
-                        'name' => $faq->question_text,
-                        'acceptedAnswer' => [
-                            '@type' => 'Answer',
-                            'text' => $faq->answer_text,
-                        ],
-                    ];
-                }),
-        ];
-    }
+    // Removed the jsonLD function as it's no longer needed
 
-
-
-    public function getOrganizationSchema()
-    {
-        return [
-            "@context" => "https://schema.org",
-            "@type" => "CarRental",
-            "name" => "Afandina Car Rental",
-            "url" => config('app.url'),
-            "logo" => asset('images/logo.png'),
-            "image" => asset('images/office.jpg'),
-            "description" => "Afandina Car Rental offers a wide range of vehicles for rent in Dubai, ensuring comfort, convenience, and competitive pricing.",
-            "address" => [
-                "@type" => "PostalAddress",
-                "streetAddress" => "123 Sheikh Zayed Road",
-                "addressLocality" => "Dubai",
-                "addressRegion" => "Dubai",
-                "postalCode" => "00000",
-                "addressCountry" => "UAE"
-            ],
-            "contactPoint" => [
-                "@type" => "ContactPoint",
-                "telephone" => "+971-50-123-4567",
-                "contactType" => "Customer Service",
-                "areaServed" => "Dubai, UAE",
-                "availableLanguage" => ["English", "Arabic"]
-            ],
-            "sameAs" => [
-                "https://www.facebook.com/AfandinaCarRental",
-                "https://www.instagram.com/AfandinaCarRental"
-            ]
-        ];
-    }
 }

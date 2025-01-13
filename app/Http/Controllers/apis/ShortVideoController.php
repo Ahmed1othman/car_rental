@@ -54,7 +54,6 @@ class ShortVideoController extends Controller
 
     public function show(Request $request, $slug)
     {
-        $language = $request->header('Accept-Language') ?? 'en';
         $video = Short_video::where('slug', $slug)->firstOrFail();
         return new DetailedShortVideoResource($video);
     }

@@ -4,9 +4,15 @@ namespace App\Http\Resources;
 use App\Models\Car;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Currency;
+use App\Traits\OrganizationSchemaTrait;
+use App\Traits\BreadcrumbSchemaTrait;
+use App\Traits\WebPageSchemaTrait;
+use App\Traits\FAQSchemaTrait;
 
 class DetailedCarResource extends JsonResource
 {
+    use OrganizationSchemaTrait, WebPageSchemaTrait, BreadcrumbSchemaTrait, FAQSchemaTrait;
+
     public function toArray($request)
     {
         $base_url = asset('storage/');
@@ -46,7 +52,7 @@ class DetailedCarResource extends JsonResource
         $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
-        $seoQuestionSchema = $this->jsonLD($seoQuestions);
+        $seoQuestionSchema = $this->getFAQSchema($seoQuestions);
         return array_merge($prices, [
             'id' => $this->id,
             'door_count' => $this->door_count,
@@ -77,7 +83,7 @@ class DetailedCarResource extends JsonResource
             'car_model' => $carModel ? $carModel->name : null,
             'category' => $categoryName,
             'default_image_path' => $this->default_image_path,
-            'slug' => $translation->slug ?? null,
+            'slug' => $this->slug ?? null,
             'name' => $translation->name ?? null,
             "description"=> $translation->description?? null,
             "long_description"=> $translation->long_description?? null,
@@ -107,32 +113,40 @@ class DetailedCarResource extends JsonResource
                 'seo_image' => $base_url.$this->default_image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>[
-                    'faq_schema'=>$seoQuestionSchema,
-                    'product_schema'=> $this->productSchema($translation, $brandName, $prices, $currency),
+                    'faq_schema'=> $this->getFAQSchema($seoQuestions),
+                    'product_schema'=>$this->productSchema($translation, $brandName, $prices, $currency),
+                    'organization_schema' => $this->getOrganizationSchema(),
+                    'local_business_schema' => $this->getLocalBusinessSchema(
+                        asset('storage/' . $this->image_path),
+                        'AED ' . $prices['daily_discount_price'] . ' per day'
+                    ),
+                    'breadcrumb_schema' => $this->getBreadcrumbSchema([
+                        [
+                            'url' => config('app.url') . "/{$locale}/home",
+                            'name' => __('messages.home')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/product/filter",
+                            'name' => __('messages.cars')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/product/car/{$this->slug}",
+                            'name' => $translation->name
+                        ]
+                    ]),
+                    'webpage_schema' => $this->getWebPageSchema([
+                        'url' => config('app.url') . "/{$locale}/product/car/{$this->slug}",
+                        'name' => $translation->name,
+                        'description' => $translation->meta_description,
+                        'image' => asset('storage/' . $this->image_path),
+                        'date_modified' => $this->updated_at->toIso8601String(),
+                        'date_published' => $this->created_at->toIso8601String(),
+                    ]),
                 ],
             ],
             'no_deposit' => $this->no_debosite??1,
             'discount_rate' => ceil(($this->daily_main_price - $this->daily_discount_price) * 100 / $this->daily_main_price),
         ]);
-    }
-
-    public function jsonLD($seoQuestions)
-    {
-        return [
-            '@context' => 'https://schema.org',
-            '@type' => 'FAQPage',
-            'mainEntity' => $seoQuestions->map(function ($faq) {
-                return [
-                    '@type' => 'Question',
-                    'name' => $faq->question_text,
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => $faq->answer_text,
-                    ],
-                ];
-            }),
-        ];
-
     }
 
     public function productSchema($translation, $brandName, array $prices, $currency): array

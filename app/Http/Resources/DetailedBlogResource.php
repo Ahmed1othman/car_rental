@@ -5,9 +5,16 @@ namespace App\Http\Resources;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Traits\OrganizationSchemaTrait;
+use App\Traits\WebPageSchemaTrait;
+use App\Traits\BreadcrumbSchemaTrait;
+use App\Traits\BlogPostingSchemaTrait;
+use App\Traits\FAQSchemaTrait;
 
 class DetailedBlogResource extends JsonResource
 {
+    use OrganizationSchemaTrait, WebPageSchemaTrait, BreadcrumbSchemaTrait, BlogPostingSchemaTrait, FAQSchemaTrait;
+
     /**
      * Transform the resource into an array.
      *
@@ -28,7 +35,6 @@ class DetailedBlogResource extends JsonResource
         $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
-        $seoQuestionSchema = $this->jsonLD($seoQuestions);
         $recentlyBlog = Blog::where('is_active', true)
             ->whereNot('id', $this->id)
             ->orderBy('created_at', 'desc')
@@ -38,7 +44,7 @@ class DetailedBlogResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'slug' => $translation->slug ?? null,
+            'slug' => $this->slug ?? null,
             'title' => $translation->title ?? null,
             'description' => $translation->description ?? null,
             'content' => $translation->content ?? null,
@@ -57,9 +63,40 @@ class DetailedBlogResource extends JsonResource
                 'seo_image' => $base_url . $this->image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>[
-                    'faq_schema'=>$seoQuestionSchema,
-                    'main_schema'=>$seoQuestionSchema,
-
+                    'faq_schema'=> $this->getFAQSchema($seoQuestions),
+                    'organization_schema' => $this->getOrganizationSchema(),
+                    'webpage_schema' => $this->getWebPageSchema([
+                        'url' => config('app.url') . "/{$locale}/blogs/{$this->slug}",
+                        'name' => $translation->title ?? '',
+                        'description' => $translation->meta_description ?? '',
+                        'image' => asset('storage/' . $this->image_path),
+                        'date_modified' => $this->updated_at->toIso8601String(),
+                        'date_published' => $this->created_at->toIso8601String(),
+                    ]),
+                    'breadcrumb_schema' => $this->getBreadcrumbSchema([
+                        [
+                            'url' => config('app.url') . "/{$locale}/home",
+                            'name' => __('messages.home')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/blogs",
+                            'name' => __('messages.blogs')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/blogs/{$this->slug}",
+                            'name' => $translation->title ?? ''
+                        ]
+                    ]),
+                    'blog_posting_schema' => $this->getBlogPostingSchema([
+                        'url' => config('app.url') . "/{$locale}/blogs/{$this->slug}",
+                        'title' => $translation->title ?? '',
+                        'description' => $translation->meta_description ?? '',
+                        'content' => $translation->content ?? '',
+                        'image' => asset('storage/' . $this->image_path),
+                        'date_modified' => $this->updated_at->toIso8601String(),
+                        'date_published' => $this->created_at->toIso8601String(),
+                        'keywords' => $metaKeywords ?? ''
+                    ])
                 ]
             ],
 

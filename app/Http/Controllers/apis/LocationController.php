@@ -55,7 +55,6 @@ class LocationController extends Controller
 
     public function show(Request $request, $slug)
     {
-        $language = $request->header('Accept-Language') ?? 'en';
         $location = Location::where('slug', $slug)->firstOrFail();
         return new DetailedLocationResource($location);
     }

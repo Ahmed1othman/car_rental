@@ -117,15 +117,9 @@ class CarController extends Controller
 
 
     public function getBrandCars(Request $request,$slug){
-        $language = $request->header('Accept-Language', 'en');
-        app()->setLocale($language);
-
-        $brand = Brand::whereHas('translations', function ($q) use ($slug) {
-            $q->where('slug',$slug);
-        })->firstOrFail();
+        $brand = Brand::where('slug', $slug)->firstOrFail();
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
             ->where('is_active', true);
-
         $query->whereHas('brand', function ($q) use ($brand) {
             $q->where('id', $brand->id);
         });
@@ -150,7 +144,7 @@ class CarController extends Controller
         // Handle pagination with validation
         $perPage = min(max($request->input('per_page', 10), 1), 10);
 
-
+        
         return [
             'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
             'brands' => new DetailedBrandResource($brand)
@@ -162,9 +156,7 @@ class CarController extends Controller
         $language = $request->header('Accept-Language', 'en');
         app()->setLocale($language);
 
-        $category = Category::whereHas('translations', function ($q) use ($slug) {
-            $q->where('slug',$slug);
-        })->firstOrFail();
+        $category = Category::where('slug',$slug)->firstOrFail();
 
         if (!$category)
             return response()->json(['error' => 'Category not found'], 404);

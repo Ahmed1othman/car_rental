@@ -54,7 +54,6 @@ class ServiceController extends Controller
 
     public function show(Request $request, $slug)
     {
-        $language = $request->header('Accept-Language') ?? 'en';
         $service = Service::where('slug', $slug)->firstOrFail();
         return new DetailedServiceResource($service);
     }

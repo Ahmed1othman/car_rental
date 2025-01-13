@@ -53,7 +53,6 @@ class BrandController extends Controller
 
     public function show(Request $request, $slug)
     {
-        $language = $request->header('Accept-Language') ?? 'en';
         $brand = Brand::where('slug', $slug)->firstOrFail();
         return new DetailedBrandResource($brand);
     }

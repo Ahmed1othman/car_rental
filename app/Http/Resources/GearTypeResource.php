@@ -24,7 +24,7 @@ class GearTypeResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'slug' => $translations->slug,
+            'slug' => $this->slug,
             'name' => $translations->name,
             'car_count'=>$car_counts,
         ];

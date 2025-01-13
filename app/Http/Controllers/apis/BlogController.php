@@ -42,8 +42,6 @@ class BlogController extends Controller
 
     public function show(Request $request, $slug)
     {
-        $language = $request->header('Accept-Language') ?? 'en';
-
         // Find blog by the single slug in the main table
         $blog = Blog::where('slug', $slug)->firstOrFail();
         

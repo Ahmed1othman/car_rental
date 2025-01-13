@@ -4,11 +4,17 @@ namespace App\Http\Resources;
 
 use App\Models\Blog;
 use App\Models\StaticTranslation;
+use App\Traits\BreadcrumbSchemaTrait;
+use App\Traits\FAQSchemaTrait;
+use App\Traits\OrganizationSchemaTrait;
+use App\Traits\WebPageSchemaTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DetailedLocationResource extends JsonResource
 {
+    use OrganizationSchemaTrait, WebPageSchemaTrait, BreadcrumbSchemaTrait, FAQSchemaTrait;
+
     /**
      * Transform the resource into an array.
      *
@@ -32,7 +38,7 @@ class DetailedLocationResource extends JsonResource
         $seoQuestionSchema = $this->jsonLD($seoQuestions);//        $car_counts = $this->getCounts($locale);
         return [
             'id' => $this->id,
-            'slug' => $translation->slug,
+            'slug' => $this->slug,
             'name' => $translation->name,
             'description' => $translation->description,
             'article' => $translation->article,
@@ -49,7 +55,31 @@ class DetailedLocationResource extends JsonResource
                 'seo_image' => $base_url.$this->image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>[
-                    'faq_schema'=>$seoQuestionSchema,
+                    'faq_schema'=> $this->getFAQSchema($seoQuestions),
+                    'organization_schema' => $this->getOrganizationSchema(),
+                    'local_business_schema' => $this->getLocalBusinessSchema(),
+                    'breadcrumb_schema' => $this->getBreadcrumbSchema([
+                        [
+                            'url' => config('app.url') . "/{$locale}/home",
+                            'name' => __('messages.home')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/product/filter",
+                            'name' => __('messages.cars')
+                        ],
+                        [
+                            'url' => config('app.url') . "/{$locale}/product/location/{$this->slug}",
+                            'name' => $translation->name
+                        ]
+                    ]),
+                    'webpage_schema' => $this->getWebPageSchema([
+                        'url' => config('app.url') . "/{$locale}/product/location/{$this->slug}",
+                        'name' => $translation->name,
+                        'description' => $translation->meta_description,
+                        'image' => asset('storage/' . $this->image_path),
+                        'date_modified' => $this->updated_at->toIso8601String(),
+                        'date_published' => $this->created_at->toIso8601String(),
+                    ]),
                 ]
             ],
         ];
