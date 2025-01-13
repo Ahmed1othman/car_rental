@@ -525,7 +525,7 @@
 
                                         <div class="card mb-4">
                                             <div class="card-header bg-light">
-                                                <h3 class="card-title">Upload Car Images</h3>
+                                                <h3 class="card-title">Upload Media Files</h3>
                                             </div>
                                             <div class="card-body">
 
@@ -544,17 +544,18 @@
                                                     </div>
                                                     <div class="col-md-9">
                                                         <div class="form-group">
-                                                            <label for="file_path">Upload Images:</label>
-                                                            <input type="file" class="form-control" name="images[]" id="image-files" multiple>
+                                                            <label for="file_path">Upload Media Files (Images & Videos):</label>
+                                                            <div class="custom-file">
+                                                                <input type="file" class="custom-file-input" name="media[]" id="media-files" multiple accept="image/*,video/mp4,video/webm,video/ogg">
+                                                                <label class="custom-file-label" for="media-files">Choose files</label>
+                                                            </div>
+                                                            <small class="form-text text-muted">
+                                                                Supported formats: Images (JPG, PNG, GIF, WebP) and Videos (MP4, WebM, OGG). Maximum file size: 100MB
+                                                            </small>
                                                         </div>
 
-                                                        <!-- For multiple YouTube links -->
-                                                        <div class="form-group">
-                                                            <label for="youtube_links">YouTube Links:</label>
-                                                            <div id="youtube-links">
-                                                                <input type="text" class="form-control youtube-link" name="youtube_links[]" placeholder="Enter YouTube link" data-index="0">
-                                                            </div>
-                                                            <button type="button" class="btn btn-secondary mt-2" id="add-link">Add Another Link</button>
+                                                        <div id="preview" class="preview-grid mt-3">
+                                                            <!-- Preview items will be added here -->
                                                         </div>
 
                                                         <div class="form-group">
@@ -780,18 +781,18 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Array to store selected images
+        // Array to store selected media files
         let selectedFiles = [];
 
-        // Handle image preview
-        document.getElementById('image-files').addEventListener('change', function(event) {
-            var files = Array.from(event.target.files); // Convert FileList to Array
-            selectedFiles = selectedFiles.concat(files); // Add new files to the array
-            displayImagePreviews(); // Update previews
+        // Handle media file preview
+        document.getElementById('media-files').addEventListener('change', function(event) {
+            var files = Array.from(event.target.files);
+            selectedFiles = selectedFiles.concat(files);
+            displayMediaPreviews();
         });
 
-        // Function to display image previews
-        function displayImagePreviews() {
+        // Function to display media previews
+        function displayMediaPreviews() {
             var previewDiv = document.getElementById('preview');
             previewDiv.innerHTML = ''; // Clear previous previews
 
@@ -800,112 +801,48 @@
                 reader.onload = function(e) {
                     let div = document.createElement('div');
                     div.classList.add('preview-item');
-                    div.setAttribute('data-type', 'image');
                     div.setAttribute('data-index', index);
-                    div.innerHTML = `
-                    <img src="${e.target.result}" class="img-fluid">
-                    <button type="button" class="remove-preview" data-type="image" data-index="${index}">×</button>
-                `;
+
+                    if (file.type.startsWith('image/')) {
+                        div.setAttribute('data-type', 'image');
+                        div.innerHTML = `
+                            <img src="${e.target.result}" class="img-fluid">
+                            <button type="button" class="remove-preview" data-type="image" data-index="${index}">×</button>
+                        `;
+                    } else if (file.type.startsWith('video/')) {
+                        div.setAttribute('data-type', 'video');
+                        div.innerHTML = `
+                            <video src="${e.target.result}" controls class="img-fluid"></video>
+                            <button type="button" class="remove-preview" data-type="video" data-index="${index}">×</button>
+                        `;
+                    }
                     previewDiv.appendChild(div);
                 };
                 reader.readAsDataURL(file);
             });
         }
 
-        // Handle YouTube link addition
-        document.getElementById('add-link').addEventListener('click', function() {
-            var youtubeLinksDiv = document.getElementById('youtube-links');
-            var emptyInput = Array.from(document.querySelectorAll('.youtube-link')).some(input => input.value.trim() === '');
-
-            if (emptyInput) {
-                alert('Please fill in the empty YouTube link field before adding another one.');
-            } else {
-                var newIndex = document.querySelectorAll('.youtube-link').length;
-                var newInput = document.createElement('input');
-                newInput.setAttribute('type', 'text');
-                newInput.setAttribute('class', 'form-control youtube-link mt-2');
-                newInput.setAttribute('name', 'youtube_links[]');
-                newInput.setAttribute('placeholder', 'Enter YouTube link');
-                newInput.setAttribute('data-index', newIndex); // Add unique index for tracking
-                youtubeLinksDiv.appendChild(newInput);
-            }
-        });
-
-        // Handle real-time YouTube link preview
-        document.getElementById('youtube-links').addEventListener('input', function(event) {
-            if (event.target.matches('.youtube-link')) {
-                var previewDiv = document.getElementById('preview');
-
-                // Clear previous preview related to the same input
-                let currentPreview = event.target.closest('.youtube-link').dataset.previewId;
-                if (currentPreview) {
-                    document.getElementById(currentPreview).remove();
-                }
-
-                var embedUrl = getYouTubeEmbedUrl(event.target.value.trim());
-                if (embedUrl) {
-                    let div = document.createElement('div');
-                    let previewId = 'youtube-preview-' + Math.random().toString(36).substring(2, 9);
-                    div.classList.add('preview-item');
-                    div.id = previewId;
-                    div.setAttribute('data-type', 'video');
-                    div.setAttribute('data-index', event.target.getAttribute('data-index')); // Link to input
-                    div.innerHTML = `
-                    <iframe src="${embedUrl}" frameborder="0" allowfullscreen></iframe>
-                    <button type="button" class="remove-preview" data-type="video" data-index="${event.target.getAttribute('data-index')}">×</button>
-                `;
-                    previewDiv.appendChild(div);
-                    // Store the preview ID in the input's dataset for future reference
-                    event.target.dataset.previewId = previewId;
-                }
-            }
-        });
-
-        // Event delegation to handle preview removal for both images and videos
+        // Event delegation for preview removal
         document.getElementById('preview').addEventListener('click', function(event) {
             if (event.target.classList.contains('remove-preview')) {
                 let previewType = event.target.getAttribute('data-type');
                 let inputIndex = event.target.getAttribute('data-index');
+                let previewItem = event.target.closest('.preview-item');
 
-                // If removing a video, remove the corresponding YouTube input
-                if (previewType === 'video') {
+                if (previewType === 'youtube') {
                     let input = document.querySelector(`.youtube-link[data-index="${inputIndex}"]`);
                     if (input) {
-                        input.remove();
+                        input.value = '';
+                        delete input.dataset.previewId;
                     }
+                } else {
+                    selectedFiles.splice(inputIndex, 1);
+                    displayMediaPreviews();
+                    return;
                 }
-
-                // If removing an image, handle image input reset
-                if (previewType === 'image') {
-                    selectedFiles.splice(inputIndex, 1); // Remove the image from the array
-                    displayImagePreviews(); // Update previews
-                    resetFileInput(); // Update the file input to match the remaining selected files
-                }
-
-                // Remove the preview item
-                event.target.closest('.preview-item').remove();
+                previewItem.remove();
             }
         });
-
-        // Reset file input with remaining files
-        function resetFileInput() {
-            const dataTransfer = new DataTransfer(); // Use DataTransfer to manipulate the file input
-            selectedFiles.forEach((file) => {
-                dataTransfer.items.add(file); // Add remaining files back to the file input
-            });
-
-            // Update the file input with the new DataTransfer object
-            document.getElementById('image-files').files = dataTransfer.files;
-        }
-
-        // Function to get YouTube embed URL from link
-        function getYouTubeEmbedUrl(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
-        }
-
-
 
         $(document).ready(function() {
             // Function to dynamically add SEO Questions/Answers

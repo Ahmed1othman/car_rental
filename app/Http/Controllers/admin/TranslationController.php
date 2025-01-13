@@ -26,6 +26,7 @@ class TranslationController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            
         ];
 
         $this->validationMessages = [

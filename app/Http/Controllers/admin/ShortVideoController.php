@@ -27,6 +27,7 @@ class ShortVideoController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
         ];
 
         $this->validationMessages = [
@@ -38,6 +39,9 @@ class ShortVideoController extends GenericController
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+        ]);
         // Define validation rules
         $this->validationRules = [
             'title.*' => 'nullable|string|max:255',
@@ -47,6 +51,7 @@ class ShortVideoController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
         ];
 
         // Custom validation messages

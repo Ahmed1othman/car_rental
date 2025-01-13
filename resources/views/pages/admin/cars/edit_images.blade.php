@@ -8,7 +8,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 20px;
-        margin-top: 20px;
+        margin: 20px 0;
     }
 
     .preview-item {
@@ -18,13 +18,37 @@
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         background-color: #fff;
+        height: 200px;
+        width: 293px;
+        margin: 10px 5px 10px 5px;
+        display: flex
+    ;
+        flex-direction: column;
+        gap: 10px;
     }
 
-    .preview-item img {
+    .preview-media {
+        flex: 1;
         width: 100%;
-        height: 200px;
+        height: 150px;
         object-fit: cover;
         border-radius: 4px;
+    }
+
+    .preview-delete {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 0, 0, 0.8);
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
     }
 
     .loader-overlay {
@@ -72,6 +96,42 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+
+    .media-card {
+        height: 250px;
+        margin-bottom: 15px;
+    }
+
+    .media-card .card-body {
+        padding: 10px;
+    }
+
+    .media-preview {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 4px;
+    }
+
+    .media-actions {
+        padding: 5px 0;
+    }
+
+    .media-alt {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
 </style>
 @endpush
 
@@ -81,7 +141,7 @@
     <div class="loader-overlay" id="loader-overlay">
         <div class="text-center">
             <div class="loader"></div>
-            <div class="mt-2">Processing Images...</div>
+            <div class="mt-2">Processing Media...</div>
             <div class="upload-progress">
                 <div class="progress-bar" role="progressbar"></div>
             </div>
@@ -117,28 +177,33 @@
             <!-- Existing Media -->
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="card-title">Existing Media</h3>
+                    <h3 class="card-title">Current Media</h3>
                 </div>
-                <div class="card-body">
-                    <div id="media-container" class="row">
+                <div class="card-body p-2">
+                    <div class="row" id="media-container">
                         @foreach($item->images as $media)
-                            <div class="col-md-4 mb-4" style="max-height: 300px; max-width:300px" >
-                                <div class="card h-100">
-                                    <div class="card-img-top" style="height: 80%">
-                                        <div style="height: 100%">
-                                            @if($media->type === 'image')
-                                            <img src="{{ asset('storage/' . $media->file_path) }}" class="img-fluid" style="overflow: hidden;height: 100%;width: 100%;object-fit: cover;" alt="{{ $media->alt }}">
-                                        @elseif($media->type === 'video')
-                                            <div class="embed-responsive embed-responsive-16by9">
-                                                <iframe src="https://www.youtube.com/embed/{{ $media->file_path }}" frameborder="0" allowfullscreen></iframe>
-                                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="card media-card">
+                                    <div class="card-body p-2">
+                                        @if($media->type == 'video')
+                                            <video class="media-preview" controls>
+                                                <source src="{{ asset('storage/' . $media->file_path) }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        @else
+                                            <img src="{{ asset('storage/' . $media->file_path) }}" 
+                                                 class="media-preview"
+                                                 alt="{{ $media->alt }}">
                                         @endif
+                                        <div class="media-actions">
+                                            @if($media->alt)
+                                                <div class="media-alt">{{ $media->alt }}</div>
+                                            @endif
+                                            <button class="btn btn-danger btn-sm btn-block delete-media" 
+                                                    data-id="{{ $media->id }}">
+                                                Delete
+                                            </button>
                                         </div>
-                                    
-                                    </div>
-                                    <div>
-                                        <p class="card-text">{{ $media->alt }}</p>
-                                        <a href="{{ route('admin.'.$modelName.'.delete_image', $media->id) }}" class="btn btn-danger btn-block delete-media">Delete</a>
                                     </div>
                                 </div>
                             </div>
@@ -147,80 +212,55 @@
                 </div>
             </div>
 
-            <div class="card mb-4">
-                <div class="card-header bg-danger text-white">
-                    <h3 class="card-title">Upload Default Image</h3>
-                </div>
-                <div class="card-body">
-                    <form id="uploadDefaultImageForm" action="{{ route('cars.upload-default-image', $item->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label class="font-weight-bold">Default Image</label>
-                            <div class="custom-file">
-                                <input type="file" name="image" class="custom-file-input image-upload" id="default_image_path" data-preview="imagePreviewLogo" accept="image/*" required>
-                                <label class="custom-file-label" for="default_image_path">Upload Default Image</label>
-                            </div>
-                            <div class="mt-3">
-                                <img id="imagePreviewLogo" src="{{$item->default_image_path?asset('storage/'.$item->default_image_path):'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'%3E400x400%3C/text%3E%3C/svg%3E' }}" alt="Logo Preview" class="shadow image-rectangle-preview" style="max-height: 300px; width: 300px; object-fit: cover; border: 2px solid #ddd;">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-danger">Upload Default Image</button>
-                    </form>
-                </div>
-            </div>
-
-
-            <!-- Upload Media -->
+            <!-- Default Image Upload -->
             <div class="card mb-4">
                 <div class="card-header bg-success text-white">
-                    <h3 class="card-title">Upload Images/Videos</h3>
+                    <h3 class="card-title">Default Image</h3>
                 </div>
                 <div class="card-body">
-                    <form id="uploadMediaForm" enctype="multipart/form-data">
-                        @csrf
+                    <form id="defaultImageForm" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="file_path">Upload Images/Videos</label>
-                            <input type="file" name="file_path[]" class="form-control-file" id="mediaUpload" accept="image/*,video/*" multiple>
+                            <label for="defaultImage">Select Default Image</label>
+                            <input type="file" class="form-control-file" id="defaultImage" 
+                                   name="image" accept="image/*" required>
+                            <div id="defaultImagePreview" class="mt-3">
+                                @if($item->default_image_path)
+                                    <img src="{{ asset('storage/' . $item->default_image_path) }}" 
+                                         alt="Default Image" 
+                                         class="media-preview" 
+                                         style="max-height: 200px; width: auto;">
+                                @endif
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label>Preview:</label>
-                            <div id="mediaPreviews" class="d-flex flex-wrap"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="alt">Alt Text (Optional)</label>
-                            <input type="text" name="alt" class="form-control" placeholder="Enter alt text">
-                        </div>
-
-                        <button type="submit" class="btn btn-success">Upload</button>
+                        <button type="submit" class="btn btn-success">Upload Default Image</button>
                     </form>
                 </div>
             </div>
 
-            <!-- Add YouTube Videos -->
+            <!-- Additional Media Upload -->
             <div class="card mb-4">
                 <div class="card-header bg-info text-white">
-                    <h3 class="card-title">Add YouTube Videos</h3>
+                    <h3 class="card-title">Upload Images & Videos</h3>
                 </div>
                 <div class="card-body">
-                    <form id="youtubeForm">
-                        @csrf
-                        <div id="youtubeUrlsContainer">
-                            <div class="form-group youtube-url-group">
-                                <label for="youtube_url">YouTube URL</label>
-                                <div class="input-group">
-                                    <input type="text" name="youtube_urls[]" class="form-control youtubeUrl" placeholder="Enter YouTube video URL">
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-outline-secondary preview-btn">Preview</button>
-                                    </div>
-                                </div>
-                                <div class="youtube-preview mt-2" style="display: none;"></div>
-                            </div>
+                    <form id="mediaUploadForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="mediaUpload">Select Files</label>
+                            <input type="file" class="form-control-file" id="mediaUpload" 
+                                   name="files[]" multiple accept="image/*,video/*" required>
+                            <small class="form-text text-muted">
+                                Supported formats: Images (JPG, PNG, GIF) and Videos (MP4, WebM)
+                            </small>
                         </div>
-
-                        <button type="button" class="btn btn-secondary" id="addYouTubeUrl">Add Another YouTube URL</button>
-                        <button type="submit" class="btn btn-info">Add YouTube Videos</button>
+                        <div class="form-group">
+                            <label for="alt">Alt Text (Optional)</label>
+                            <input type="text" class="form-control" id="alt" name="alt" 
+                                   placeholder="Enter alt text for the media">
+                        </div>
+                        <div class="row" id="mediaPreviewContainer">
+                            <!-- Preview will be shown here -->
+                        </div>
+                        <button type="submit" class="btn btn-info">Upload Media</button>
                     </form>
                 </div>
             </div>
@@ -234,307 +274,231 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const mediaUpload = document.getElementById('mediaUpload');
-        const mediaPreviews = document.getElementById('mediaPreviews');
-        const addYouTubeUrlBtn = document.getElementById('addYouTubeUrl');
-        const youtubeUrlsContainer = document.getElementById('youtubeUrlsContainer');
-        const uploadMediaForm = document.getElementById('uploadMediaForm');
-        const uploadDefaultImageForm = document.getElementById('uploadDefaultImageForm');
-        const youtubeForm = document.getElementById('youtubeForm');
-        const mediaContainer = document.getElementById('media-container');
+        const mediaPreviewContainer = document.getElementById('mediaPreviewContainer');
+        const mediaUploadForm = document.getElementById('mediaUploadForm');
+        const loaderOverlay = document.getElementById('loader-overlay');
+        const progressBar = document.querySelector('.progress-bar');
         const successAlert = document.getElementById('success-alert');
         const successMessage = document.getElementById('success-message');
-        const errorContainer = document.getElementById('error-container');
-        const loaderOverlay = document.getElementById('loader-overlay');
+        let selectedFiles = new Map();
 
-        function showSuccessMessage(message) {
-            successMessage.textContent = message;
-            successAlert.style.display = 'block';
-            setTimeout(() => {
-                successAlert.style.display = 'none';
-            }, 5000);
+        function createPreviewElement(file, fileId) {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            previewItem.dataset.fileId = fileId;
+
+            // Add delete button
+            const deleteBtn = document.createElement('div');
+            deleteBtn.className = 'preview-delete';
+            deleteBtn.innerHTML = '×';
+            deleteBtn.onclick = function() {
+                selectedFiles.delete(fileId);
+                previewItem.remove();
+                updateFileInput();
+            };
+
+            // Create preview
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.className = 'preview-media';
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                previewItem.appendChild(img);
+            } else if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.className = 'preview-media';
+                video.controls = true;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    video.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                previewItem.appendChild(video);
+            }
+
+            // Add file name
+            const fileName = document.createElement('div');
+            fileName.className = 'media-alt';
+            fileName.textContent = file.name;
+            
+            previewItem.appendChild(deleteBtn);
+            previewItem.appendChild(fileName);
+            return previewItem;
         }
 
-        function showErrorMessage(message) {
-            errorContainer.innerHTML = `
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            `;
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            mediaUpload.files = dataTransfer.files;
         }
+
+        mediaUpload.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            mediaPreviewContainer.innerHTML = '';
+            selectedFiles.clear();
+            
+            files.forEach(file => {
+                const fileId = Date.now() + Math.random().toString(36).substr(2, 9);
+                selectedFiles.set(fileId, file);
+                const previewElement = createPreviewElement(file, fileId);
+                mediaPreviewContainer.appendChild(previewElement);
+            });
+            
+            updateFileInput();
+        });
+
+        mediaUploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (selectedFiles.size === 0) {
+                showMessage('Please select files to upload', true);
+                return;
+            }
+
+            showLoader();
+            const formData = new FormData();
+            
+            selectedFiles.forEach((file) => {
+                formData.append('files[]', file);
+            });
+            formData.append('alt', document.getElementById('alt').value);
+
+            try {
+                const response = await axios.post(`/cars/{{ $item->id }}/upload-image`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        if (progressBar) {
+                            progressBar.style.width = percentCompleted + '%';
+                        }
+                    }
+                });
+
+                if (response.data.success) {
+                    showMessage(response.data.message);
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    showMessage(response.data.message, true);
+                }
+            } catch (error) {
+                showMessage(error.response?.data?.message || 'Error uploading media', true);
+            } finally {
+                hideLoader();
+            }
+        });
 
         function showLoader() {
-            loaderOverlay.style.display = 'flex';
+            if (loaderOverlay) {
+                loaderOverlay.style.display = 'flex';
+            }
+            if (progressBar) {
+                progressBar.style.width = '0%';
+                progressBar.parentElement.style.display = 'block';
+            }
         }
 
         function hideLoader() {
-            loaderOverlay.style.display = 'none';
-            document.querySelector('.upload-progress').style.display = 'none';
-            document.querySelector('.progress-bar').style.width = '0%';
+            if (loaderOverlay) {
+                loaderOverlay.style.display = 'none';
+            }
+            if (progressBar) {
+                progressBar.parentElement.style.display = 'none';
+            }
         }
 
-        function updateProgress(percent) {
-            const progressBar = document.querySelector('.progress-bar');
-            const progressContainer = document.querySelector('.upload-progress');
-            progressContainer.style.display = 'block';
-            progressBar.style.width = percent + '%';
+        function showMessage(message, isError = false) {
+            if (successAlert && successMessage) {
+                successMessage.textContent = message;
+                successAlert.classList.remove('alert-success', 'alert-danger');
+                successAlert.classList.add(isError ? 'alert-danger' : 'alert-success');
+                successAlert.style.display = 'block';
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 5000);
+            }
         }
 
-        // Preview image or video before upload
-        mediaUpload.addEventListener('change', function(event) {
-            mediaPreviews.innerHTML = '';
-            Array.from(event.target.files).forEach(file => {
-                const reader = new FileReader();
-                const previewContainer = document.createElement('div');
-                previewContainer.className = 'm-2';
-
-                reader.onload = function(e) {
-                    if (file.type.startsWith('image/')) {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.className = 'img-thumbnail';
-                        img.style.width = '200px';
-                        img.style.height = '200px';
-                        previewContainer.appendChild(img);
-                    } else if (file.type.startsWith('video/')) {
-                        const video = document.createElement('video');
-                        video.src = e.target.result;
-                        video.controls = true;
-                        video.className = 'img-thumbnail';
-                        video.style.width = '200px';
-                        video.style.height = '200px';
-                        previewContainer.appendChild(video);
-                    }
-                };
-                reader.readAsDataURL(file);
-                mediaPreviews.appendChild(previewContainer);
+        // Delete media functionality
+        document.querySelectorAll('.delete-media').forEach(button => {
+            button.addEventListener('click', function() {
+                const mediaId = this.getAttribute('data-id');
+                const mediaCard = this.closest('.col-md-3');
+                
+                if (confirm('Are you sure you want to delete this media?')) {
+                    // Show loader while deleting
+                    showLoader();
+                    
+                    axios.delete(`/admin/cars/delete-image/${mediaId}`)
+                        .then(response => {
+                            if (response.data.success) {
+                                // Remove the media card from the DOM
+                                mediaCard.remove();
+                                showMessage(response.data.message);
+                            } else {
+                                alert(response.data.message || 'Failed to delete media');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert(error.response?.data?.message || 'Failed to delete media. Please try again.');
+                        })
+                        .finally(() => {
+                            // Hide loader
+                            hideLoader();
+                        });
+                }
             });
         });
 
-        // Add another YouTube URL input
-        addYouTubeUrlBtn.addEventListener('click', function() {
-            const newUrlGroup = document.createElement('div');
-            newUrlGroup.className = 'form-group youtube-url-group';
-            newUrlGroup.innerHTML = `
-                <label for="youtube_url">YouTube URL</label>
-                <div class="input-group">
-                    <input type="text" name="youtube_urls[]" class="form-control youtubeUrl" placeholder="Enter YouTube video URL">
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-outline-secondary preview-btn">Preview</button>
-                    </div>
-                </div>
-                <div class="youtube-preview mt-2" style="display: none;"></div>
-            `;
-            youtubeUrlsContainer.appendChild(newUrlGroup);
-        });
-
-        // YouTube preview functionality
-        youtubeUrlsContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('preview-btn')) {
-                const urlInput = event.target.closest('.youtube-url-group').querySelector('.youtubeUrl');
-                const previewContainer = event.target.closest('.youtube-url-group').querySelector('.youtube-preview');
-                updateYouTubePreview(urlInput, previewContainer);
-            }
-        });
-
-        function updateYouTubePreview(input, previewContainer) {
-            const youtubeUrl = input.value;
-            if (youtubeUrl) {
-                const videoId = extractYoutubeVideoId(youtubeUrl);
-                if (videoId) {
-                    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                    previewContainer.innerHTML = `
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="${embedUrl}" allowfullscreen></iframe>
-                        </div>
+        // Preview for default image
+        const defaultImage = document.getElementById('defaultImage');
+        const defaultImagePreview = document.getElementById('defaultImagePreview');
+        defaultImage.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    defaultImagePreview.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" style="max-height: 200px;">
                     `;
-                    previewContainer.style.display = 'block';
-                } else {
-                    previewContainer.innerHTML = '<p class="text-danger">Invalid YouTube URL</p>';
-                    previewContainer.style.display = 'block';
                 }
-            } else {
-                previewContainer.style.display = 'none';
+                reader.readAsDataURL(file);
             }
-        }
+        });
 
-        function extractYoutubeVideoId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
-        // Upload media (images/videos) using AJAX
-        uploadMediaForm.addEventListener('submit', function(e) {
+        // Handle default image upload
+        const defaultImageForm = document.getElementById('defaultImageForm');
+        defaultImageForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             showLoader();
 
             const formData = new FormData(this);
-            formData.append('car_id', '{{ $item->id }}');
-
-            const xhr = new XMLHttpRequest();
-
-            xhr.upload.onprogress = function(e) {
-                if (e.lengthComputable) {
-                    const percentComplete = (e.loaded / e.total) * 100;
-                    updateProgress(percentComplete);
-                }
-            };
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            if (response.success) {
-                                showSuccessMessage('Media uploaded successfully');
-                                uploadMediaForm.reset();
-                                mediaPreviews.innerHTML = '';
-                                // Force reload after a brief delay
-                                setTimeout(function() {
-                                    window.location.href = window.location.href;
-                                    window.location.reload();
-                                }, 500);
-                                window.location.reload();
-                            } else {
-                                showErrorMessage(response.message || 'Error uploading media');
-                                hideLoader();
-                                window.location.reload();
-                            }
-                        } catch (error) {
-                            console.error('Error parsing response:', error);
-                            showErrorMessage('Error processing server response');
-                            hideLoader();
-                            window.location.reload();
+            try {
+                const response = await axios.post(`/cars/{{ $item->id }}/upload-default-image`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        if (progressBar) {
+                            progressBar.style.width = percentCompleted + '%';
                         }
-                    } else {
-                        showErrorMessage('Error uploading media');
-                        hideLoader();
-                        window.location.reload();
                     }
-                }
-            };
+                });
 
-            xhr.onerror = function() {
-                showErrorMessage('Error uploading media');
-                hideLoader();
-            };
-
-            xhr.open('POST', '{{ route("admin." . $modelName . ".storeImages") }}', true);
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-            xhr.send(formData);
-        });
-
-        uploadDefaultImageForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            showLoader();
-
-            const formData = new FormData(this);
-
-            const xhr = new XMLHttpRequest();
-
-            xhr.upload.onprogress = function(e) {
-                if (e.lengthComputable) {
-                    const percentComplete = (e.loaded / e.total) * 100;
-                    updateProgress(percentComplete);
-                }
-            };
-
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        showSuccessMessage('Default image uploaded successfully');
-                        const previewImg = document.getElementById('imagePreviewLogo');
-                        if (response.data && response.data.image_url) {
-                            previewImg.src = response.data.image_url + '?t=' + new Date().getTime();
-                        }
-                        location.reload();
-                    } else {
-                        showErrorMessage(response.message || 'Error uploading default image');
-                    }
+                if (response.data.success) {
+                    showMessage(response.data.message);
+                    setTimeout(() => window.location.reload(), 1000);
                 } else {
-                    showErrorMessage('Error uploading default image');
+                    showMessage(response.data.message, true);
                 }
+            } catch (error) {
+                showMessage(error.response?.data?.message || 'Error uploading default image', true);
+            } finally {
                 hideLoader();
-            };
-
-            xhr.onerror = function() {
-                showErrorMessage('Error uploading default image');
-                hideLoader();
-            };
-
-            xhr.open('POST', this.action, true);
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-            xhr.send(formData);
-        });
-
-        // Add YouTube videos using AJAX
-        youtubeForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            showLoader();
-
-            const formData = new FormData(this);
-            formData.append('car_id', '{{ $item->id }}');
-
-            const xhr = new XMLHttpRequest();
-
-            xhr.upload.onprogress = function(e) {
-                if (e.lengthComputable) {
-                    const percentComplete = (e.loaded / e.total) * 100;
-                    updateProgress(percentComplete);
-                }
-            };
-
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        showSuccessMessage('YouTube videos added successfully');
-                        mediaContainer.innerHTML += response.data.html;
-                        youtubeForm.reset();
-                        document.querySelectorAll('.youtube-preview').forEach(preview => {
-                            preview.style.display = 'none';
-                        });
-                        location.reload();
-                    } else {
-                        showErrorMessage('Error adding YouTube videos: ' + response.data.message);
-                    }
-                } else {
-                    showErrorMessage('Error adding YouTube videos');
-                }
-                hideLoader();
-            };
-
-            xhr.onerror = function() {
-                showErrorMessage('Error adding YouTube videos');
-                hideLoader();
-            };
-
-            xhr.open('POST', '{{ route("admin." . $modelName . ".storeYouTube") }}', true);
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-            xhr.send(formData);
-        });
-
-        // Delete media using AJAX
-        mediaContainer.addEventListener('click', function(e) {
-            if (e.target.classList.contains('delete-media')) {
-                e.preventDefault();
-                const deleteUrl = e.target.getAttribute('href');
-                const mediaItem = e.target.closest('.col-md-4');
-
-                if (confirm('Are you sure you want to delete this media?')) {
-                    axios.delete(deleteUrl)
-                        .then(response => {
-                            showSuccessMessage('Media deleted successfully');
-                            mediaItem.remove();
-                        })
-                        .catch(error => {
-                            showErrorMessage('Error deleting media: ' + error.response.data.message);
-                        });
-                }
             }
         });
     });

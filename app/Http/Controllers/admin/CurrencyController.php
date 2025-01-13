@@ -29,6 +29,8 @@ class CurrencyController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
+            'is_default' => 'boolean',
         ];
 
         $this->validationMessages = [
@@ -55,6 +57,8 @@ class CurrencyController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
+            'is_default' => 'boolean',
         ];
 
         // Custom validation messages

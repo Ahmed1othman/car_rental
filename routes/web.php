@@ -28,3 +28,7 @@ Route::get('/test-queue', function () {
     \App\Jobs\TestQueueJob::dispatch();
     return 'Job dispatched! Check your logs.';
 });
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+    Route::delete('/cars/delete-image/{id}', [CarController::class, 'deleteImage'])->name('cars.delete-image');
+});

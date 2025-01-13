@@ -61,8 +61,9 @@
                                         <td>{{ $item->translations->first()->name ?? 'N/A' }}</td>
                                         <td>{{ $item->brand->translations()->where('locale','en')->first()->name ?? 'N/A' }}</td>
                                         <td>
+                                            <!-- Custom Toggle Switch -->
                                             <label class="switch">
-                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
+                                                <input type="checkbox" class="toggle-status" data-model="{{ $modelName }}" data-attribute="is_active" data-id="{{ $item->id }}" {{ $item->is_active ? 'checked' : '' }}>
                                                 <span class="slider round"></span>
                                             </label>
                                         </td>

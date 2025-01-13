@@ -61,6 +61,11 @@ class GenericController extends Controller
 
     public function store(Request $request)
     {
+        //merge the is_active field to request
+        $request->merge([
+            'is_active' => $request->has('is_active') ? true : false,
+        ]);
+        
         foreach ($this->uploadedfiles as $fileField) {
             if ($request->has($fileField) && is_array($request->file($fileField))) {
                 $this->validationRules[$fileField . '.*'] = 'nullable|mimes:jpg,jpeg,png,svg,webp,mp4,webm,ogg|max:102400'; // 100MB max

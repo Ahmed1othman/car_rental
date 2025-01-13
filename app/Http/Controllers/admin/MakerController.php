@@ -18,7 +18,6 @@ class MakerController extends GenericController
             'is_active' => $request->has('is_active') ? true : false,
         ]);
         $this->validationRules = [
-            'general_field' => 'required|string|max:255',
             'name.*' => 'required|string|max:255',
             'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',

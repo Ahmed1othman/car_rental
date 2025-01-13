@@ -27,6 +27,8 @@ class FaqController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
+            'show_in_home' => 'boolean',
         ];
 
         $this->validationMessages = [
@@ -52,6 +54,8 @@ class FaqController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
+            'show_in_home' => 'boolean',
         ];
 
         // Custom validation messages

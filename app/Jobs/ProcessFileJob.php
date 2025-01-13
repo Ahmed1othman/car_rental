@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Traits\FileProcessingTrait;
+use Intervention\Image\Facades\Image;
+use App\Models\CarImage;
 
 class ProcessFileJob implements ShouldQueue
 {
@@ -52,49 +54,72 @@ class ProcessFileJob implements ShouldQueue
     public function handle()
     {
         try {
-            // Get the model instance
             $model = $this->model::findOrFail($this->modelId);
             
-            // Get the temp file
-            $tempFile = Storage::disk('local')->get($this->tempPath);
-            $tempFullPath = Storage::disk('local')->path($this->tempPath);
-            
-            // Create UploadedFile instance from temp file
-            $file = new \Illuminate\Http\UploadedFile(
-                $tempFullPath,
-                $this->originalName,
-                Storage::disk('local')->mimeType($this->tempPath),
-                null,
-                true
-            );
-
             // Process the file
-            $destinationPath = $this->getDestinationPath($model);
-            $processedPath = $this->processFile($file, $destinationPath, $this->options);
-
-            // Save the file path to the model
-            if ($this->isMultiple) {
-                $relation = Str::plural($this->field);
-                $model->$relation()->create([
-                    'file_path' => $processedPath,
-                    'type' => $this->getFileType($file),
-                    'alt' => $this->options['alt'] ?? null
-                ]);
+            $file = Storage::get($this->tempPath);
+            
+            // Generate final path
+            $filename = pathinfo($this->originalName, PATHINFO_FILENAME);
+            $originalExtension = strtolower(pathinfo($this->originalName, PATHINFO_EXTENSION));
+            
+            // Check if the file is a video
+            $videoExtensions = ['mp4', 'webm', 'ogg'];
+            $isVideo = in_array($originalExtension, $videoExtensions);
+            
+            if ($isVideo) {
+                // For videos, keep the original extension
+                $extension = '.' . $originalExtension;
+                $finalPath = 'media/' . $filename . '_' . uniqid() . $extension;
+                
+                // Store the video file directly without processing
+                Storage::disk('public')->put($finalPath, $file);
             } else {
-                $model->{$this->field} = $processedPath;
+                // For images, process with Intervention Image
+                $extension = '.webp';
+                $finalPath = 'media/' . $filename . '_' . uniqid() . $extension;
+                
+                // Process image with Intervention Image
+                $image = Image::make($file);
+                
+                // Resize if needed
+                if (isset($this->options['maxWidth']) && isset($this->options['maxHeight'])) {
+                    $image->resize($this->options['maxWidth'], $this->options['maxHeight'], function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+                }
+                
+                // Convert to WebP and save
+                $image->encode('webp', $this->options['quality'] ?? 90);
+                Storage::disk('public')->put($finalPath, $image->stream());
+            }
+            
+            // Update model or create media record
+            if ($this->isMultiple) {
+                // Create new CarImage record
+                $media = new CarImage();
+                $media->file_path = $finalPath;
+                $media->alt = $this->options['alt'] ?? null;
+                $media->type = $isVideo ? 'video' : 'image';
+                $media->car_id = $model->id;
+                $media->save();
+            } else {
+                // Update model's image field directly
+                $model->{$this->field} = $finalPath;
                 $model->save();
             }
-
+            
             // Clean up temp file
-            Storage::disk('local')->delete($this->tempPath);
-
+            Storage::delete($this->tempPath);
+            
             Log::info('File processed successfully', [
-                'model' => get_class($model),
+                'model' => $this->model,
                 'model_id' => $this->modelId,
                 'field' => $this->field,
-                'path' => $processedPath
+                'path' => $finalPath
             ]);
-
+            
         } catch (\Exception $e) {
             Log::error('Failed to process file', [
                 'model' => $this->model,
@@ -102,7 +127,6 @@ class ProcessFileJob implements ShouldQueue
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
             throw $e;
         }
     }

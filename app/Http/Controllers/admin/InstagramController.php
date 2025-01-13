@@ -22,6 +22,8 @@ class InstagramController extends GenericController
         ]);
         $this->validationRules = [
             'instagram_url' => 'required|string|max:255',
+            'is_active' => 'boolean',
+            'show_in_home' => 'boolean',
         ];
 
         $request->validate($this->validationRules);
@@ -36,6 +38,8 @@ class InstagramController extends GenericController
         // Define validation rules
         $this->validationRules = [
             'instagram_url' => 'required|string|max:255',
+            'is_active' => 'boolean',
+            'show_in_home' => 'boolean',
         ];
         $request->validate($this->validationRules);
         // Delegate to the generic controller's update function

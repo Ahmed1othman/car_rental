@@ -75,6 +75,9 @@ class HomeController extends GenericController
             'seo_questions.*.*.answer' => 'nullable|string',
             'robots_index.*' => 'nullable',
             'robots_follow.*' => 'nullable',
+            'is_active' => 'boolean',
+            'hero_header_video_path' => 'mimetypes:video/mp4,video/x-matroska,video/quicktime,video/webm',
+
         ];
 
         $this->validationMessages = [
@@ -116,6 +119,8 @@ class HomeController extends GenericController
             'seo_questions.*.*.answer' => 'nullable|string',
             'robots_index.*' => 'nullable',
             'robots_follow.*' => 'nullable',
+            'is_active' => 'boolean',
+            'hero_header_video_path' => 'mimetypes:video/mp4,video/x-matroska,video/quicktime,video/webm',
         ];
 
         // Custom validation messages

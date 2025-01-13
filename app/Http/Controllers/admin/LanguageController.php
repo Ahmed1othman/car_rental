@@ -27,6 +27,7 @@ class LanguageController extends GenericController
             'name' => 'required|string|max:255|unique:languages,name',
             'flag' => 'nullable|string',
             'is_active' => 'boolean',
+            
         ];
 
         $this->validationMessages = [

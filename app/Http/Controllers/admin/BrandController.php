@@ -52,6 +52,7 @@ class BrandController extends GenericController
             'seo_questions.*.*.answer' => 'nullable|string',
             'robots_index.*' => 'nullable',
             'robots_follow.*' => 'nullable',
+            'is_active' => 'boolean',
         ];
 
         $this->validationMessages = [
@@ -103,6 +104,7 @@ class BrandController extends GenericController
             'seo_questions.*.*.answer' => 'nullable|string',
             'robots_index.*' => 'nullable',
             'robots_follow.*' => 'nullable',
+            'is_active' => 'boolean',
         ];
 
         // Custom validation messages

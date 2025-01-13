@@ -36,6 +36,8 @@ class FeatureController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
+            
         ];
 
         $this->validationMessages = [
@@ -56,6 +58,7 @@ class FeatureController extends GenericController
             'meta_keywords.*' => 'nullable|string',
             'seo_questions.*.*.question' => 'nullable|string',
             'seo_questions.*.*.answer' => 'nullable|string',
+            'is_active' => 'boolean',
         ];
 
         // Custom validation messages

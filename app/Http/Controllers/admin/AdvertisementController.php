@@ -53,6 +53,7 @@ class AdvertisementController extends GenericController
             'advertisement_position_id' => 'required|exists:advertisement_positions,id',
             'mobile_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:10096',
             'web_image_path' => 'required|mimes:jpg,jpeg,png,webp|max:10096',
+            'is_active' => 'boolean',
         ];
 
         $this->validationMessages = [
@@ -69,6 +70,7 @@ class AdvertisementController extends GenericController
             'advertisement_position_id' => 'required|exists:advertisement_positions,id',
             'mobile_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:10096',
             'web_image_path' => 'nullable|mimes:jpg,jpeg,png,webp|max:10096',
+            'is_active' => 'boolean',
         ];
 
         // Custom validation messages

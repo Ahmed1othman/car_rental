@@ -27,7 +27,7 @@ class CarController extends GenericController
         $this->seo_question = true;
         $this->robots = true;
         $this->slugField = 'name';
-        $this->uploadedfiles = ['images','default_image_path'];
+        $this->uploadedfiles = ['media', 'default_image_path'];
         $this->translatableFields = ['name', 'description', 'long_description'];
         $this->nonTranslatableFields = [
             'brand_id', 'category_id', 'color_id', 'car_model_id', 'year_id', 'maker_id',
@@ -129,8 +129,8 @@ class CarController extends GenericController
             'category_id' => 'required|exists:categories,id',
             'seo_questions.*.*.question' => 'nullable|string|max:255',
             'seo_questions.*.*.answer' => 'nullable|string|max:255',
-            'default_image_path' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
-            'images.*' => 'somtimes|nullable|mimes:jpeg,png,jpg,gif|max:10000',
+            'default_image_path' => 'sometimes|nullable|image|mimes:jpeg,webp,png,jpg,gif|max:10048',
+            'media.*' => 'somtimes|nullable|mimes:jpeg,webp,png,jpg,gif,svg,mp4,webm,ogg|max:102400',
             'insurance_included'=>'boolean',
             'is_flash_sale'=>'boolean',
             'is_featured'=>'boolean',
@@ -246,7 +246,7 @@ class CarController extends GenericController
         'seo_questions.*.*.question' => 'nullable|string|max:255',
         'seo_questions.*.*.answer' => 'nullable|string|max:255',
         'default_image_path' => 'required|mimes:jpeg,webp,png,jpg,gif,svg|max:10048',
-        'images.*' => 'sometimes|nullable|mimes:jpeg,webp,png,jpg,gif,svg|max:10048',
+        'media.*' => 'sometimes|nullable|mimes:jpeg,webp,png,jpg,gif,svg,mp4,webm,ogg|max:102400',
         'insurance_included'=>'boolean',
         'is_flash_sale'=>'boolean',
         'is_featured'=>'boolean',
@@ -347,42 +347,29 @@ class CarController extends GenericController
 
     public function deleteImage($id)
     {
-        // Find the media record in the database by ID
-        $media = CarImage::find($id);
+        try {
+            // Find the media record in the database by ID
+            $media = CarImage::findOrFail($id);
 
-        if ($media) {
-            if ($media->type=="image")
-                Storage::disk('public')->delete($media->file_path);
+            // Get the file path
+            $filePath = $media->file_path;
 
-            // Optionally delete the database record
+            // Delete the database record first
             $media->delete();
 
-            return response()->json(['message' => 'Image deleted successfully'], 200);
+            // Then try to delete the file if it exists
+            if ($filePath && Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+
+            return response()->json(['success' => true, 'message' => 'File deleted successfully'], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting media: ' . $e->getMessage());
+            return response()->json([
+                'success' => false, 
+                'message' => 'Error deleting file: ' . $e->getMessage()
+            ], 500);
         }
-
-        return response()->json(['message' => 'Image not found'], 404);
-    }
-
-    public function storeYoutubeUrls(Request $request)
-    {
-        // Validate the request (URLs should be passed as an array)
-        $request->validate([
-            'youtube_urls' => 'required|array',
-            'youtube_urls.*' => 'required',
-            'car_id' => 'required|integer',
-        ]);
-        // Loop through the URLs and store them in the database
-        foreach ($request->input('youtube_urls') as $url) {
-
-            $media = new CarImage();
-            $media->file_path = $this->getYouTubeVideoId($url);
-            $media->alt = $request->input('alt')??null; // Assume alt text is also passed as an array
-            $media->type = 'video';
-            $media->car_id = $request->input('car_id');
-            $media->save();
-        }
-
-        return response()->json(['message' => 'YouTube URLs stored successfully'], 200);
     }
 
     public function uploadImage(Request $request, $id)
@@ -390,50 +377,74 @@ class CarController extends GenericController
         try {
             $car = Car::findOrFail($id);
             
-            if ($request->hasFile('images')) {
-                $files = $request->file('images');
+            if (!$request->hasFile('files')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No files provided'
+                ], 400);
+            }
+
+            $files = $request->file('files');
+            if (!is_array($files)) {
+                $files = [$files];
+            }
+            
+            foreach ($files as $file) {
+                $mimeType = $file->getMimeType();
+                $isVideo = str_starts_with($mimeType, 'video/');
                 
-                foreach ($files as $file) {
-                    // Store file temporarily
-                    $tempPath = $file->store('temp');
+                // Store file temporarily
+                $tempPath = $file->store('temp');
+                
+                // Generate final path
+                $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $isVideo ? '.' . $file->getClientOriginalExtension() : '.webp';
+                $finalPath = 'media/' . $filename . '_' . uniqid() . $extension;
+                
+                if ($isVideo) {
+                    // Move video file directly
+                    Storage::disk('public')->put($finalPath, file_get_contents($file));
                     
-                    // Generate final path
-                    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $finalPath = 'images/' . $filename . '_' . uniqid() . '.webp';
+                    // Create database record
+                    $media = new CarImage();
+                    $media->file_path = $finalPath;
+                    $media->alt = $request->input('alt') ?? null;
+                    $media->type = 'video';
+                    $media->car_id = $car->id;
+                    $media->save();
                     
-                    // Dispatch job to process file
+                    // Clean up temp file
+                    Storage::delete($tempPath);
+                } else {
+                    // Process image through job
                     ProcessFileJob::dispatch(
                         Car::class,
                         $car->id,
-                        'images',
+                        'media',
                         $tempPath,
                         $file->getClientOriginalName(),
                         [
                             'maxWidth' => 1920,
                             'maxHeight' => 1080,
                             'quality' => 95,
-                            'alt' => null
+                            'alt' => $request->input('alt') ?? null,
+                            'type' => 'image'
                         ],
                         true
                     );
                 }
-                
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Images uploaded successfully. Processing will complete shortly.'
-                ]);
             }
-
+            
             return response()->json([
-                'success' => false,
-                'message' => 'No images provided'
-            ], 400);
+                'success' => true,
+                'message' => 'Files uploaded successfully. Processing will complete shortly.'
+            ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error uploading images: ' . $e->getMessage());
+            \Log::error('Error uploading files: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Error uploading images: ' . $e->getMessage()
+                'message' => 'Error uploading files: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -512,7 +523,7 @@ class CarController extends GenericController
                     ProcessFileJob::dispatch(
                         Car::class,
                         $car->id,
-                        'images',
+                        'media',
                         $tempPath,
                         $file->getClientOriginalName(),
                         [
