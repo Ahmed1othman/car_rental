@@ -14,10 +14,12 @@ class BlogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $locale = app()->getLocale()??"en";
+        $translations = $this->translations->where('locale',$locale)->first();
         return [
             'id' => $this->id,
-            'title' => $this->translations->first()->title??null,
-            'description' => $this->translations->first()->description??null,
+            'title' => $translations->title??null,
+            'description' => $translations->description??null,
             'slug' => $this->slug,
             'image_path' => $this->image_path ? asset('storage/'.$this->image_path) : null,
             'created_at' => $this->created_at ? $this->created_at->format('j M, Y') : null
