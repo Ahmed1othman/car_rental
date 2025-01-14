@@ -6,12 +6,13 @@ use App\Traits\BreadcrumbSchemaTrait;
 use App\Traits\FAQSchemaTrait;
 use App\Traits\OrganizationSchemaTrait;
 use App\Traits\WebPageSchemaTrait;
+use App\Traits\BlogPostingSchemaTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DetailedLocationResource extends JsonResource
 {
-    use FAQSchemaTrait, OrganizationSchemaTrait , WebPageSchemaTrait, BreadcrumbSchemaTrait;
+    use FAQSchemaTrait, OrganizationSchemaTrait, WebPageSchemaTrait, BreadcrumbSchemaTrait, BlogPostingSchemaTrait;
 
     /**
      * Transform the resource into an array.
@@ -23,9 +24,10 @@ class DetailedLocationResource extends JsonResource
         $locale = app()->getLocale()?? "en";
         $translation = $this->translations->where('locale',$locale)->first();
         $base_url = config('app.url');
+        
         $metaKeywords = $translation->meta_keywords ? explode(',', $translation->meta_keywords) : [];
 
-        $seoQuestions = $this->seo_questions;
+        $seoQuestions = collect($this->seo_questions)->where('locale', $locale);
 
         return [
             'id' => $this->id,
@@ -34,7 +36,6 @@ class DetailedLocationResource extends JsonResource
             'description' => $translation->description??null,
             'content' => $translation->content??null,
             'image_path' => $this->image_path ? asset('storage/'.$this->image_path) : null,
-            'cars' => CarResource::collection($this->cars),
             'seo_data' => [
                 'meta_title' => $translation->meta_title??null,
                 'meta_description' => $translation->meta_description??null,
@@ -44,15 +45,14 @@ class DetailedLocationResource extends JsonResource
                 'schemas'=>array_filter([
                     'faq_schema'=> $this->getFAQSchema($seoQuestions),
                     'organization_schema' => $this->getOrganizationSchema(),
-                    'local_business_schema' => $this->getLocalBusinessSchema(),
                     'breadcrumb_schema' => $this->getBreadcrumbSchema([
                         [
                             'url' => config('app.url') . "/{$locale}/home",
-                            'name' => __('messages.home')
+                            'name' => "home page"
                         ],
                         [
                             'url' => config('app.url') . "/{$locale}/product/filter",
-                            'name' => __('messages.cars')
+                            'name' => "search car rental in dubai" 
                         ],
                         [
                             'url' => config('app.url') . "/{$locale}/product/location/{$this->slug}",
@@ -67,6 +67,16 @@ class DetailedLocationResource extends JsonResource
                         'date_modified' => $this->updated_at->toIso8601String(),
                         'date_published' => $this->created_at->toIso8601String(),
                     ]),
+                    'blog_posting_schema' => $this->getBlogPostingSchema([
+                        'url' => config('app.url') . "/{$locale}/product/location/{$this->slug}",
+                        'title' => $translation->title ?? '',
+                        'description' => $translation->description ?? '',
+                        'content' => $translation->article ?? '',
+                        'image' => asset('storage/' . $this->image_path),
+                        'date_modified' => $this->updated_at->toIso8601String(),
+                        'date_published' => $this->created_at->toIso8601String(),
+                        'keywords' => $metaKeywords ?? ''
+                    ])
                 ]),
             ],
         ];

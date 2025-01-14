@@ -6,6 +6,10 @@ trait FAQSchemaTrait
 {
     protected function getFAQSchema($seoQuestions)
     {
+        if (!$seoQuestions) {
+            return null;
+        }
+
         // Filter valid questions (must have both question and answer)
         $validQuestions = $seoQuestions->filter(function($question) {
             return !empty(trim($question->question)) && !empty(trim($question->answer));
