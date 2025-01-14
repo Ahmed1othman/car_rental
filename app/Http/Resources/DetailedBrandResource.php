@@ -13,7 +13,7 @@ use App\Traits\FAQSchemaTrait;
 
 class DetailedBrandResource extends JsonResource
 {
-    use OrganizationSchemaTrait, WebPageSchemaTrait, BreadcrumbSchemaTrait, FAQSchemaTrait;
+    use OrganizationSchemaTrait, WebPageSchemaTrait,BlogPostingSchemaTrait, BreadcrumbSchemaTrait, FAQSchemaTrait;
 
     /**
      * Transform the resource into an array.
@@ -81,6 +81,16 @@ class DetailedBrandResource extends JsonResource
                         'date_modified' => $this->updated_at->toIso8601String(),
                         'date_published' => $this->created_at->toIso8601String(),
                     ]),
+                    'blog_posting_schema' => $this->getBlogPostingSchema([
+                        'url' => config('app.url') . "/{$locale}/product/brand/{$this->slug}",
+                        'title' => $translation->title ?? '',
+                        'description' => $traslation->description ?? '',
+                        'content' => $translation->article ?? '',
+                        'image' => asset('storage/' . $this->logo_path),
+                        'date_modified' => $this->updated_at->toIso8601String(),
+                        'date_published' => $this->created_at->toIso8601String(),
+                        'keywords' => $metaKeywords ?? ''
+                    ])
                 ]),
             ],
         ];

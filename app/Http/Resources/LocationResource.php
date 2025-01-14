@@ -24,6 +24,10 @@ class LocationResource extends JsonResource
             'slug' => $this->slug,
             'description' => $translations->description??null,
             'content' => $translations->content??null,
+            'image_path' => $this->image_path ? asset('storage/'.$this->image_path) : null,
+            'meta_title' => $translations->meta_title??null,
+            'meta_description' => $translations->meta_description??null,
+            'meta_keywords' => $translations->meta_keywords??null,
         ];
     }
 
