@@ -197,9 +197,7 @@ class CarController extends Controller
         $language = $request->header('Accept-Language', 'en');
         app()->setLocale($language);
 
-        $location = Location::whereHas('translations', function ($q) use ($slug) {
-            $q->where('slug',$slug);
-        })->firstOrFail();
+        $location = Location::where('slug',$slug)->firstOrFail();
         $query = Car::with(['translations', 'images', 'color.translations', 'brand.translations', 'category.translations'])
             ->where('is_active', true);
 
