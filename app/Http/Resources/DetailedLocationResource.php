@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use App\Traits\BreadcrumbSchemaTrait;
 use App\Traits\FAQSchemaTrait;
-use App\Traits\LocalBusinessSchemaTrait;
 use App\Traits\OrganizationSchemaTrait;
 use App\Traits\WebPageSchemaTrait;
 use Illuminate\Http\Request;
@@ -12,7 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class DetailedLocationResource extends JsonResource
 {
-    use FAQSchemaTrait, OrganizationSchemaTrait, LocalBusinessSchemaTrait, WebPageSchemaTrait, BreadcrumbSchemaTrait;
+    use FAQSchemaTrait, OrganizationSchemaTrait , WebPageSchemaTrait, BreadcrumbSchemaTrait;
 
     /**
      * Transform the resource into an array.
