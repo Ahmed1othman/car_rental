@@ -321,9 +321,20 @@ class GenerateCarDescriptions implements ShouldQueue
 
         $t = $titles[$this->locale] ?? $titles['default'];
 
-        $html = "<article class='car-description' itemscope itemtype='https://schema.org/Car'>";
-        $html .= "<h1 itemprop='name'>{$t['title']}</h1>";
-        $html .= "<div class='car-intro'><p itemprop='description'>{$t['intro']}</p></div>";
+        // Determine text direction based on locale
+        $dir = ($translation->locale === 'ar') ? 'rtl' : 'ltr';
+
+        // Start the article with directionality
+        $html = "<article dir='{$dir}'>";
+
+        // Add header
+        $html .= "<header class='car-header'>";
+        $html .= "<h1>{$t['title']}</h1>";
+        $html .= "</header>";
+
+        // Add content sections
+        $html .= "<div class='car-content'>";
+        $html .= "<p>{$t['intro']}</p>";
 
         if (!empty($features)) {
             $html .= "<section class='car-features'>";
@@ -400,74 +411,6 @@ class GenerateCarDescriptions implements ShouldQueue
         
         $html .= "</article>";
 
-        if ($this->locale === 'ar') {
-            $html = $this->formatArabicDescription($html);
-        } else {
-            $html = $this->formatEnglishDescription($html);
-        }
-
         $translation->long_description = $html;
-    }
-
-    protected function formatArabicDescription($description)
-    {
-        $sections = explode("\n\n", trim($description));
-        $formattedSections = [];
-        
-        foreach ($sections as $index => $section) {
-            if ($index === 0) {
-                // First section is the main title
-                $formattedSections[] = "<h1>{$section}</h1>";
-            } elseif (strpos($section, ':') !== false || strlen($section) < 50) {
-                // Likely a section heading
-                $section = str_replace(':', '', $section);
-                $formattedSections[] = "<h2>{$section}</h2>";
-            } else {
-                // Regular content
-                if (strpos($section, '•') !== false || strpos($section, '-') !== false) {
-                    // Convert bullet points to proper HTML list
-                    $items = array_map('trim', explode("\n", $section));
-                    $listItems = array_map(function($item) {
-                        return "<li>" . trim(str_replace(['•', '-'], '', $item)) . "</li>";
-                    }, $items);
-                    $formattedSections[] = "<ul>" . implode("\n", $listItems) . "</ul>";
-                } else {
-                    $formattedSections[] = "<p>{$section}</p>";
-                }
-            }
-        }
-
-        return "<div dir='rtl'>" . implode("\n\n", $formattedSections) . "</div>";
-    }
-
-    protected function formatEnglishDescription($description)
-    {
-        $sections = explode("\n\n", trim($description));
-        $formattedSections = [];
-        
-        foreach ($sections as $index => $section) {
-            if ($index === 0) {
-                // First section is the main title
-                $formattedSections[] = "<h1>{$section}</h1>";
-            } elseif (strpos($section, ':') !== false || strlen($section) < 50) {
-                // Likely a section heading
-                $section = str_replace(':', '', $section);
-                $formattedSections[] = "<h2>{$section}</h2>";
-            } else {
-                // Regular content
-                if (strpos($section, '•') !== false || strpos($section, '-') !== false) {
-                    // Convert bullet points to proper HTML list
-                    $items = array_map('trim', explode("\n", $section));
-                    $listItems = array_map(function($item) {
-                        return "<li>" . trim(str_replace(['•', '-'], '', $item)) . "</li>";
-                    }, $items);
-                    $formattedSections[] = "<ul>" . implode("\n", $listItems) . "</ul>";
-                } else {
-                    $formattedSections[] = "<p>{$section}</p>";
-                }
-            }
-        }
-
-        return "<div>" . implode("\n\n", $formattedSections) . "</div>";
     }
 }
