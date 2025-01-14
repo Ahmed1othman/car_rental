@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Traits\OrganizationSchemaTrait;
 use App\Traits\BreadcrumbSchemaTrait;
+use App\Traits\BlogPostingSchemaTrait;
 use App\Traits\WebPageSchemaTrait;
 use App\Traits\FAQSchemaTrait;
 
