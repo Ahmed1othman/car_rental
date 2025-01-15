@@ -88,7 +88,7 @@ class CarController extends GenericController
 
     public function update(Request $request, $id)
     {
-    
+
         // Convert checkbox values to boolean
         $request->merge([
             'insurance_included' => $request->has('insurance_included'),
@@ -143,11 +143,11 @@ class CarController extends GenericController
         ];
 
         try {
-            DB::beginTransaction();
 
             // Call parent update to handle common functionality
             $response = parent::update($request, $id);
 
+            
             // Handle car-specific relationships
             $car = $this->model::findOrFail($id);
 
@@ -179,8 +179,6 @@ class CarController extends GenericController
                 }
             }
 
-            DB::commit();
-
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -192,7 +190,6 @@ class CarController extends GenericController
             return $response;
 
         } catch (\Exception $e) {
-            DB::rollback();
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
