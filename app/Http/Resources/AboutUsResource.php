@@ -28,8 +28,8 @@ class AboutUsResource extends JsonResource
 
         return [
             'about_us_data' => [
-                'our_mission_image_path'=> $base_url . $this->our_mission_image_path,
-                'why_choose_image_path'=> $base_url . $this->why_choose_image_path,
+                'our_mission_image_path'=> $base_url .'/'. $this->our_mission_image_path,
+                'why_choose_image_path'=> $base_url .'/'. $this->why_choose_image_path,
                 'about_main_header_title' => $translation->about_main_header_title,
                 'about_main_header_paragraph' => $translation->about_main_header_paragraph,
                 'about_our_agency_title' => $translation->about_our_agency_title,
