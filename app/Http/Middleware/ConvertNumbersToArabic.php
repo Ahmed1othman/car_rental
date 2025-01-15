@@ -82,6 +82,9 @@ class ConvertNumbersToArabic
                         'mobile_image',
                         'content',
                         'seo_image',
+                        'article',
+                        'long_description',
+                        'content',
                         'schemas'
 
                     ], true) ||
