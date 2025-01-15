@@ -36,7 +36,10 @@ class DetailedBrandResource extends JsonResource
         $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
-        $seoQuestionSchema = $this->jsonLD($seoQuestions);        $car_counts = $this->getCounts($locale);
+        dd($seoQuestions);
+
+        // $seoQuestionSchema = $this->jsonLD($seoQuestions);
+        $car_counts = $this->getCounts($locale);
         return [
             'id' => $this->id,
             'slug' => $this->slug??null,
