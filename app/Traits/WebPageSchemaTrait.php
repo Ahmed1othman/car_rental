@@ -34,7 +34,12 @@ trait WebPageSchemaTrait
                     'datePublished' => $datePublished,
                     'dateModified' => $dateModified,
                     'description' => $description,
-                    'inLanguage' => app()->getLocale() . '-AE'
+                    'inLanguage' => app()->getLocale() . '-AE',
+                    'author' => [
+                        '@type' => 'Organization',
+                        'name' => 'Afandina Car Rental LLC',
+                        '@id' => config('app.url') . '/#organization'
+                    ]
                 ],
                 [
                     '@type' => 'WebSite',

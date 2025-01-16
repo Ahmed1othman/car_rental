@@ -26,7 +26,8 @@ trait OrganizationSchemaTrait
                         'streetAddress' => '79H2+CQC - Deira - Dubai',
                         'addressLocality' => 'Dubai',
                         'addressRegion' => 'Dubai',
-                        'addressCountry' => 'United Arab Emirates'
+                        'postalCode' => '00000',
+                        'addressCountry' => 'AE'
                     ],
                     'geo' => [
                         '@type' => 'GeoCoordinates',
@@ -34,7 +35,11 @@ trait OrganizationSchemaTrait
                         'longitude' => '55.3516818'
                     ],
                     'hasMap' => 'https://maps.app.goo.gl/UzNNvHCWiDtGew6b9',
-                    'telephone' => '+971 50 551 2025'
+                    'telephone' => '+971 50 551 2025',
+                    'priceRange' => 'AED 150 - AED 5000',
+                    'openingHours' => 'Mo-Su 00:00-23:59',
+                    'paymentAccepted' => 'Cash, Credit Card, Cryptocurrency',
+                    'currenciesAccepted' => 'AED, USD'
                 ],
                 [
                     '@type' => 'LocalBusiness',
@@ -53,7 +58,8 @@ trait OrganizationSchemaTrait
                         'streetAddress' => '79H2+CQC - Deira - Dubai',
                         'addressLocality' => 'Dubai',
                         'addressRegion' => 'Dubai',
-                        'addressCountry' => 'United Arab Emirates'
+                        'postalCode' => '00000',
+                        'addressCountry' => 'AE'
                     ],
                     'geo' => [
                         '@type' => 'GeoCoordinates',
@@ -61,7 +67,11 @@ trait OrganizationSchemaTrait
                         'longitude' => '55.3516818'
                     ],
                     'hasMap' => 'https://maps.app.goo.gl/UzNNvHCWiDtGew6b9',
-                    'telephone' => '+971 50 551 2025'
+                    'telephone' => '+971 50 551 2025',
+                    'priceRange' => 'AED 150 - AED 5000',
+                    'openingHours' => 'Mo-Su 00:00-23:59',
+                    'paymentAccepted' => 'Cash, Credit Card, Cryptocurrency',
+                    'currenciesAccepted' => 'AED, USD'
                 ],
                 [
                     '@type' => 'ImageObject',
@@ -86,14 +96,18 @@ trait OrganizationSchemaTrait
             '@id' => 'https://afandinacarrental.com/',
             'url' => 'https://afandinacarrental.com/',
             'telephone' => '+971 50 551 2025',
-            'priceRange' => $priceRange ?? 'AED 150 - AED 5000 per day',
+            'priceRange' => $priceRange ?? 'AED 150 - AED 5000',
             'address' => [
                 '@type' => 'PostalAddress',
                 'streetAddress' => '79H2+CQC - Deira - Dubai',
                 'addressLocality' => 'Dubai',
                 'addressRegion' => 'Dubai',
-                'addressCountry' => 'United Arab Emirates'
-            ]
+                'postalCode' => '00000',
+                'addressCountry' => 'AE'
+            ],
+            'openingHours' => 'Mo-Su 00:00-23:59',
+            'paymentAccepted' => 'Cash, Credit Card, Cryptocurrency',
+            'currenciesAccepted' => 'AED, USD'
         ];
     }
 }
