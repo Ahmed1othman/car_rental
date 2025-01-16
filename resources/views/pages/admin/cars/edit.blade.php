@@ -463,7 +463,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="long_description_{{ $lang->code }}" class="font-weight-bold">Long Description ({{ $lang->name }})</label>
-                                                    <textarea name="long_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm teny-editor" id="long_description_{{ $lang->code }}">{{ old('long_description.'.$lang->code,$translation->long_description??'') }}</textarea>
+                                                    <textarea name="translations[{{ $lang->code }}][long_description]" class="form-control form-control-lg shadow-sm ckeditor" id="long_description_{{ $lang->code }}" rows="6">{{ old('translations.'.$lang->code.'.long_description', $translation->long_description ?? '') }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -578,10 +578,17 @@
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <script>
         $(document).ready(function() {
             $('#editCarForm').on('submit', function(e) {
                 e.preventDefault();
+
+                // Update CKEditor instances
+                for (var instanceName in CKEDITOR.instances) {
+                    CKEDITOR.instances[instanceName].updateElement();
+                }
+
                 showLoader();
 
                 let formData = new FormData(this);
@@ -691,6 +698,28 @@
             }
             @endforeach
         });
+        $(document).ready(function() {
+            // Initialize CKEditor for each language
+            @foreach($activeLanguages as $lang)
+                CKEDITOR.replace('long_description_{{ $lang->code }}', {
+                    height: 300,
+                    removeButtons: 'Save,Form,About',
+                    allowedContent: true
+                });
+            @endforeach
+
+            // Ensure CKEditor content is updated before form submission
+            $('#editCarForm').on('submit', function() {
+                @foreach($activeLanguages as $lang)
+                    var editor = CKEDITOR.instances['long_description_{{ $lang->code }}'];
+                    if (editor) {
+                        editor.updateElement();
+                    }
+                @endforeach
+            });
+        });
+    </script>
+    <script>
         $(document).ready(function() {
             var brandSelect = $('#brand_id');
             var modelSelect = $('#car_model_id');

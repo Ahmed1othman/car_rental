@@ -88,7 +88,6 @@ class CarController extends GenericController
 
     public function update(Request $request, $id)
     {
-
         // Convert checkbox values to boolean
         $request->merge([
             'insurance_included' => $request->has('insurance_included'),
@@ -98,9 +97,25 @@ class CarController extends GenericController
             'is_active' => $request->has('is_active'),
             'crypto_payment_accepted' => $request->has('crypto_payment_accepted'),
             'only_on_afandina' => $request->has('only_on_afandina'),
-    
             'status' => $request->has('status') ? 'available' : 'not_available',
         ]);
+
+        // Log the incoming request data for debugging
+        \Log::info('Request Data:', $request->all());
+
+        // Process translations data
+        if ($request->has('translations')) {
+            \Log::info('Translations Data:', $request->input('translations'));
+            foreach ($request->input('translations') as $locale => $data) {
+                foreach ($this->translatableFields as $field) {
+                    if (isset($data[$field])) {
+                        $request->merge([
+                            "{$field}.{$locale}" => $data[$field]
+                        ]);
+                    }
+                }
+            }
+        }
 
         // Set validation rules
         $this->validationRules = [
@@ -143,18 +158,32 @@ class CarController extends GenericController
         ];
 
         try {
-
             // Call parent update to handle common functionality
             $response = parent::update($request, $id);
 
-            
             // Handle car-specific relationships
             $car = $this->model::findOrFail($id);
-
 
             // Handle features
             if ($request->has('features')) {
                 $car->features()->sync($request->features);
+            }
+
+            // Update translations directly if needed
+            if ($request->has('translations')) {
+                foreach ($car->translations as $translation) {
+                    $locale = $translation->locale;
+                    $translationData = $request->input("translations.{$locale}");
+                    
+                    if ($translationData) {
+                        foreach ($this->translatableFields as $field) {
+                            if (isset($translationData[$field])) {
+                                $translation->{$field} = $translationData[$field];
+                            }
+                        }
+                        $translation->save();
+                    }
+                }
             }
 
             // Check if we need to generate descriptions for each translation
@@ -178,6 +207,7 @@ class CarController extends GenericController
                     \App\Jobs\GenerateCarDescriptions::dispatch($car, $translation->locale);
                 }
             }
+
 
             if ($request->ajax()) {
                 return response()->json([
@@ -214,6 +244,9 @@ class CarController extends GenericController
         'only_on_afandina' => $request->has('only_on_afandina'),
         'status' => $request->has('status') ? 'available' : 'not_available',
     ]);
+
+    // Log the incoming request data for debugging
+    \Log::info('Request Data:', $request->all());
 
     // Set validation rules
     $this->validationRules = [

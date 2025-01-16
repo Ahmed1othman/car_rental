@@ -134,10 +134,7 @@ class GenericController extends Controller
         // Validate the request data
         $validatedData = $request->validate($this->validationRules, $this->validationMessages);
 
-        // Start a database transaction
-        DB::beginTransaction();
-
-        // try {
+        try {
             $row = $this->model::findOrFail($id);
 
             // Delete old file if exists and new file is uploaded
@@ -164,13 +161,13 @@ class GenericController extends Controller
             // Handle SEO questions
             $this->handleUpdateSEOQuestions($validatedData, $row);
 
-            DB::commit();
+
             return redirect()->route('admin.' . $this->modelName . '.index')->with('success', ucfirst($this->modelName) . ' updated successfully.');
 
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return redirect()->back()->with('error', 'Error occurred while updating ' . $this->modelName . ': ' . $e->getMessage())->withInput();
-        // }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error occurred while updating ' . $this->modelName . ': ' . $e->getMessage())->withInput();
+        }
     }
 
     public function destroy($id)
@@ -257,6 +254,9 @@ class GenericController extends Controller
      */
     protected function handleModelTranslations($validatedData, $model, $id = null)
     {
+        // Log the incoming validated data
+        \Log::info('Validated Translation Data:', $validatedData);
+
         foreach ($this->data['activeLanguages'] as $language) {
             $langCode = $language->code;
 
@@ -286,6 +286,9 @@ class GenericController extends Controller
                 ['locale' => $langCode],
                 $translationData
             );
+
+            // Log the translation data before saving
+            \Log::info('Saving Translation:', $model->translations()->where('locale', $langCode)->first()->toArray());
 
             // Only generate slug for English locale
             if ($langCode === 'en' && $this->slugField) {
