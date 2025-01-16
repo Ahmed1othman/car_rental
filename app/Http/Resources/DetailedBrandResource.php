@@ -35,6 +35,15 @@ class DetailedBrandResource extends JsonResource
         $metaKeywordsArray = $translation && $translation->meta_keywords ? json_decode($translation->meta_keywords, true) : null;
         $metaKeywords = $metaKeywordsArray ? implode(', ', array_column($metaKeywordsArray, 'value')) : null;
 
+        // Debug SEO questions
+        \Log::info('Brand SEO Questions Debug', [
+            'brand_id' => $this->id,
+            'brand_name' => $translation->name ?? 'N/A',
+            'total_questions' => $this->seoQuestions->count(),
+            'locale_questions' => $this->seoQuestions->where('locale', $locale)->count(),
+            'locale' => $locale
+        ]);
+
         $seoQuestions = $this->seoQuestions->where('locale',$locale);
         // $seoQuestionSchema = $this->jsonLD($seoQuestions);
         $car_counts = $this->getCounts($locale);
@@ -55,7 +64,7 @@ class DetailedBrandResource extends JsonResource
                     'index'=>$translation->robots_index?? 'noindex',
                     'follow'=>$translation->robots_follow?? 'nofollow',
                 ],
-                'seo_image' => $base_url.$this->logo_path?? null,
+                'seo_image' => $base_url."/". $this->logo_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>array_filter([
                     'faq_schema'=> $this->getFAQSchema($seoQuestions),

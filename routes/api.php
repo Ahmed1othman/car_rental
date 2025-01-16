@@ -54,3 +54,22 @@ Route::middleware(['language','currency','cta'])->group(function () {
     Route::get('seo-pages',[HomePageController::class,'SEO']);
     Route::get('currencies',[GeneralController::class,'getCurrencies']);
 });
+
+// Debug route for SEO questions
+Route::get('/debug/brand-seo/{brand}', function($brand) {
+    $brandModel = \App\Models\Brand::where('slug', $brand)->first();
+    if (!$brandModel) {
+        return response()->json(['error' => 'Brand not found'], 404);
+    }
+    
+    return response()->json([
+        'brand_id' => $brandModel->id,
+        'total_questions' => $brandModel->seoQuestions()->count(),
+        'questions_by_locale' => $brandModel->seoQuestions()
+            ->select('locale')
+            ->selectRaw('count(*) as count')
+            ->groupBy('locale')
+            ->get(),
+        'all_questions' => $brandModel->seoQuestions()->get()
+    ]);
+});

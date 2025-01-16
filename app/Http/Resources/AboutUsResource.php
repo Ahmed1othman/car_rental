@@ -44,7 +44,7 @@ class AboutUsResource extends JsonResource
                 'meta_title' => $translation->meta_title ?? null,
                 'meta_description' => $translation->meta_description ?? null,
                 'meta_keywords' => $metaKeywords,
-                'seo_image' => $base_url . $this->why_choose_image_path ?? null,
+                'seo_image' => $base_url ."/". $this->why_choose_image_path ?? null,
                 'seo_image_alt' => $translation->meta_title ?? null,
                 'schemas' => array_filter([
                     'faq_schema' => $this->getFAQSchema($seoQuestions),

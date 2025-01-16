@@ -110,7 +110,7 @@ class DetailedCarResource extends JsonResource
                     'index'=>$translation->robots_index?? 'noindex',
                     'follow'=>$translation->robots_follow?? 'nofollow',
                 ],
-                'seo_image' => $base_url.$this->default_image_path?? null,
+                'seo_image' => $base_url."/". $this->default_image_path?? null,
                 'seo_image_alt' => $translation->meta_title?? null,
                 'schemas'=>array_filter([
                     'faq_schema'=> $this->getFAQSchema($seoQuestions),
