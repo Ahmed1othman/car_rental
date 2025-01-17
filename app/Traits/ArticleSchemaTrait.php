@@ -2,13 +2,13 @@
 
 namespace App\Traits;
 
-trait BlogPostingSchemaTrait
+trait ArticleSchemaTrait
 {
-    protected function getBlogPostingSchema($data = [])
+    protected function getArticleSchema($data = [])
     {
         return [
             '@context' => 'https://schema.org',
-            '@type' => 'BlogPosting',
+            '@type' => 'Article',
             '@id' => $data['url'] . '#article',
             'headline' => $data['title'],
             'description' => $data['description'],
@@ -17,7 +17,6 @@ trait BlogPostingSchemaTrait
             'image' => [
                 '@type' => 'ImageObject',
                 'url' => $data['image'],
-                'contentUrl' => $data['image'],
                 'height' => 675,
                 'width' => 1200
             ],
