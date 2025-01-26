@@ -47,6 +47,7 @@
                                 <thead class="bg-dark text-light">
                                 <tr>
                                     <th>#</th>
+                                    <th>Order</th>
                                     <th>Question</th>
                                     <th>Answer</th>
                                     <th>Status</th>
@@ -59,6 +60,7 @@
                                 @foreach ($items as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->order }}</td>
                                         <td>{{ $item->translations->first()->question ?? 'N/A' }}</td>
                                         <td>{{ $item->translations->first()->answer ?? 'N/A' }}</td>
                                         <td>

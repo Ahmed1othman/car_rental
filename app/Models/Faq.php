@@ -12,10 +12,11 @@ class Faq extends Model
     use HasFactory;
     protected $guarded = [];
 
-    // Add default ordering
     protected static function boot()
     {
         parent::boot();
+        
+        // Default sorting by order
         static::addGlobalScope('order', function ($builder) {
             $builder->orderBy('order', 'asc');
         });

@@ -29,12 +29,10 @@ class HomePageController extends Controller
     use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
-        $homeData = $this->getHome($language);
-        $per_page = $homeData->per_page ?? 10; // Get per_page from database, fallback to 10
-        
         $brands = $this->getBrandsList($language);
-        $onlyOnAfandina = $this->getCars($language,'only_on_afandina', null, true, $per_page);
-        $specialOffers = $this->getCars($language,'is_flash_sale', null, true, $per_page);
+        $onlyOnAfandina = $this->getCars($language,'only_on_afandina',10);
+        $specialOffers = $this->getCars($language,'is_flash_sale',10);
+        $homeData = $this->getHome($language);
         $advertisements = $this->getAdvertisements($language);
         $contactData = Contact::first();
         $services = $this->getServicesList($language);

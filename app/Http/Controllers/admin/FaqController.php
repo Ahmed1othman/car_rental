@@ -10,7 +10,7 @@ class FaqController extends GenericController
         $this->seo_question =true;
         $this->slugField ='question';
         $this->translatableFields = ['question','answer'];
-        $this->nonTranslatableFields = ['is_active','show_in_home'];
+        $this->nonTranslatableFields = ['is_active','show_in_home', 'order'];
     }
 
     public function store(Request $request)
@@ -33,12 +33,11 @@ class FaqController extends GenericController
         ];
 
         $this->validationMessages = [
-            'order.required' => 'The display order field is required.',
-            'order.integer' => 'The display order must be a number.',
-            'order.min' => 'The display order must be at least 0.',
+            'order.required' => 'The order field is required.',
+            'order.integer' => 'The order must be a number.',
+            'order.min' => 'The order must be at least 0.',
         ];
         return parent::store($request);
-
     }
 
     public function update(Request $request, $id)
@@ -49,9 +48,9 @@ class FaqController extends GenericController
         ]);
         // Define validation rules
         $this->validationRules = [
-            'order' => 'required|integer|min:0',
-            'question.*' => 'required|string|max:255',
-            'answer.*' => 'nullable|string',
+            'order' => 'required|numeric',
+            'name.*' => 'required|string|max:255',
+            'description.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
@@ -61,12 +60,12 @@ class FaqController extends GenericController
             'show_in_home' => 'boolean',
         ];
 
+        // Custom validation messages
         $this->validationMessages = [
-            'order.required' => 'The display order field is required.',
-            'order.integer' => 'The display order must be a number.',
-            'order.min' => 'The display order must be at least 0.',
+            // Define any custom messages if necessary
         ];
+
+        // Delegate to the generic controller's update function
         return parent::update($request, $id);
     }
-
 }

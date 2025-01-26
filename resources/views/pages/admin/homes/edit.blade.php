@@ -101,16 +101,6 @@
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="per_page" class="font-weight-bold">Items Per Page</label>
-                                                <input type="number" name="per_page" class="form-control form-control-lg shadow-sm" id="per_page" value="{{ old('per_page', $item->per_page ?? 10) }}" min="1" max="50">
-                                                <small class="form-text text-muted">Number of items to display per page (between 1 and 50)</small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
                                             <div class="form-group text-center">
                                                 <!-- Video Preview with Placeholder -->
                                                 <div class="mb-3">
@@ -241,7 +231,7 @@
                                                     <input type="text" name="faq_section_title[{{ $lang->code }}]" class="form-control shadow-sm" id="faq_section_title_[{{ $lang->code }}]" value="{{ old('faq_section_title.' . $lang->code ,$translation->faq_section_title??'') }}">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="faq_section_paragraph_{{ $lang->code }}" class="font-weight-bold">FAQ Section Paragraph ({{ $lang->name }})</label>
+                                                    <label for="faq_section_paragraph_{{ $lang->code }}" class="font-weight-bold">FAQ Section Paragraph({{ $lang->name }})</label>
                                                     <textarea name="faq_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="faq_section_paragraph_{{ $lang->code }}" rows="4">{{ old('faq_section_paragraph.' . $lang->code, $translation->faq_section_paragraph ?? '') }}</textarea>
                                                 </div>
 

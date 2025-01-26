@@ -155,14 +155,14 @@ trait DBTrait
 
 
 
-    public function getCars($language, $condition, $limit = null, $paginate = null, $per_page = 10)
+    public function getCars($language, $condition, $limit = null, $paginate = null)
     {
         $currentCurrency = $this->getCurrency($language);
         $currency = \App\Models\Currency::find(app('currency_id'));
         $currencyLanguage = $currency->translations->where('locale', $language)->first();
 
-        // Build the base query
-        $query = \Illuminate\Support\Facades\DB::table('cars')
+        // Fetch car details without images
+        $cars = DB::table('cars')
             ->select(
                 'cars.id',
                 'cars.daily_main_price',
@@ -193,129 +193,78 @@ trait DBTrait
                 'cars.slug',
                 'car_translations.name'
             )
-            ->leftJoin('car_translations', function ($join) use ($language) {
+            ->leftJoin('car_translations', function ($join) use ($language,$currency,$currencyLanguage) {
                 $join->on('cars.id', '=', 'car_translations.car_id')
                     ->where('car_translations.locale', '=', $language);
             })
             ->leftJoin('colors', 'colors.id', '=', 'cars.color_id')
             ->leftJoin('years', 'years.id', '=', 'cars.year_id')
+            ->leftJoin('brands', 'brands.id', '=', 'cars.brand_id')
+            ->leftJoin('categories', 'categories.id', '=', 'cars.category_id')
             ->leftJoin('color_translations', function ($join) use ($language) {
                 $join->on('colors.id', '=', 'color_translations.color_id')
                     ->where('color_translations.locale', '=', $language);
             })
-            ->leftJoin('brands', 'brands.id', '=', 'cars.brand_id')
             ->leftJoin('brand_translations', function ($join) use ($language) {
                 $join->on('brands.id', '=', 'brand_translations.brand_id')
                     ->where('brand_translations.locale', '=', $language);
             })
-            ->leftJoin('categories', 'categories.id', '=', 'cars.category_id')
             ->leftJoin('category_translations', function ($join) use ($language) {
                 $join->on('categories.id', '=', 'category_translations.category_id')
                     ->where('category_translations.locale', '=', $language);
             })
-            ->where('cars.is_active', '=', 1);
+            ->where('cars.is_active', true)
+            ->where('cars.' . $condition, true)
+            ->limit($limit)
+            ->get();
 
-        // Apply condition if specified
-        if ($condition == 'is_flash_sale') {
-            $query->where('cars.is_flash_sale', '=', 1);
-        } elseif ($condition == 'only_on_afandina') {
-            $query->where('cars.is_featured', '=', 1);
-        }
+        // Fetch all images separately
+        $carImages = DB::table('car_images')
+            ->whereIn('car_id', $cars->pluck('id'))
+            ->get()
+            ->groupBy('car_id');
 
-        // Apply limit if specified and not paginating
-        if ($limit && !$paginate) {
-            $query->limit($limit);
-        }
+        // Attach images to each car
+        $cars->transform(function ($car) use ($carImages, $currentCurrency,$currencyLanguage,$currency) {
+            $defaultImage = collect([
+                [
+                    'file_path' => $car->default_image_path,
+                    'alt' => 'Default Image',  // Customize if needed
+                    'type' => 'image',         // Default type
+                ]
+            ]);
 
-        // Get results
-        if ($paginate) {
-            $results = $query->paginate($per_page);
-            
-            // Get all car IDs from the current page
-            $carIds = $results->getCollection()->pluck('id')->toArray();
-            
-            // Fetch images for these cars
-            $carImages = \Illuminate\Support\Facades\DB::table('car_images')
-                ->whereIn('car_id', $carIds)
-                ->get()
-                ->groupBy('car_id');
+            $car->images = $defaultImage->concat(
+                $carImages->get($car->id, collect())->map(function ($image) {
+                    return [
+                        'file_path' => $image->file_path,
+                        'alt' => $image->alt,
+                        'type' => $image->type
+                    ];
+                })
+            );
+            // Convert prices based on currency
+            $car->daily_main_price = ceil($car->daily_main_price * $currentCurrency->exchange_rate);
+            $car->daily_discount_price = ceil($car->daily_discount_price * $currentCurrency->exchange_rate);
+            $car->weekly_main_price = ceil($car->weekly_main_price * $currentCurrency->exchange_rate);
+            $car->weekly_discount_price = ceil($car->weekly_discount_price * $currentCurrency->exchange_rate);
+            $car->monthly_main_price = ceil($car->monthly_main_price * $currentCurrency->exchange_rate);
+            $car->monthly_discount_price = ceil($car->monthly_discount_price * $currentCurrency->exchange_rate);
 
-            // Transform the data in the paginator
-            $results->getCollection()->transform(function ($car) use ($carImages, $currentCurrency, $currency, $currencyLanguage) {
-                return $this->transformCarData($car, $carImages, $currentCurrency, $currency, $currencyLanguage);
-            });
+            $car->no_deposit = 1;
+            $car->discount_rate = ceil(($car->daily_main_price - $car->daily_discount_price) * 100 / $car->daily_main_price);
 
-            return [
-                'current_page' => $results->currentPage(),
-                'data' => $results->items(),
-                'first_page_url' => $results->url(1),
-                'from' => $results->firstItem(),
-                'last_page' => $results->lastPage(),
-                'last_page_url' => $results->url($results->lastPage()),
-                'next_page_url' => $results->nextPageUrl(),
-                'path' => $results->path(),
-                'per_page' => (int)$results->perPage(),
-                'prev_page_url' => $results->previousPageUrl(),
-                'to' => $results->lastItem(),
-                'total' => $results->total(),
+            $car->currency=[
+                'name' => $currencyLanguage->name,
+                'code' => $currency->code,
+                'symbol' => $currency->symbol,
             ];
-        } else {
-            $results = $query->get();
-            
-            // Fetch all images
-            $carImages = \Illuminate\Support\Facades\DB::table('car_images')
-                ->whereIn('car_id', $results->pluck('id'))
-                ->get()
-                ->groupBy('car_id');
+            return $car;
+        });
 
-            return $results->map(function ($car) use ($carImages, $currentCurrency, $currency, $currencyLanguage) {
-                return $this->transformCarData($car, $carImages, $currentCurrency, $currency, $currencyLanguage);
-            });
-        }
+        return $cars;
     }
 
-    private function transformCarData($car, $carImages, $currentCurrency, $currency, $currencyLanguage)
-    {
-        $car = (array)$car;
-        
-        // Add images
-        $defaultImage = collect([
-            [
-                'file_path' => $car['default_image_path'],
-                'alt' => 'Default Image',
-                'type' => 'image',
-            ]
-        ]);
-
-        $car['images'] = $defaultImage->concat(
-            $carImages->get($car['id'], collect())->map(function ($image) {
-                return [
-                    'file_path' => $image->file_path,
-                    'alt' => $image->alt,
-                    'type' => $image->type
-                ];
-            })
-        );
-
-        // Transform prices
-        $car['daily_main_price'] = ceil($car['daily_main_price'] * $currentCurrency->exchange_rate);
-        $car['daily_discount_price'] = ceil($car['daily_discount_price'] * $currentCurrency->exchange_rate);
-        $car['weekly_main_price'] = ceil($car['weekly_main_price'] * $currentCurrency->exchange_rate);
-        $car['weekly_discount_price'] = ceil($car['weekly_discount_price'] * $currentCurrency->exchange_rate);
-        $car['monthly_main_price'] = ceil($car['monthly_main_price'] * $currentCurrency->exchange_rate);
-        $car['monthly_discount_price'] = ceil($car['monthly_discount_price'] * $currentCurrency->exchange_rate);
-
-        $car['no_deposit'] = 1;
-        $car['discount_rate'] = ceil(($car['daily_main_price'] - $car['daily_discount_price']) * 100 / $car['daily_main_price']);
-
-        $car['currency'] = [
-            'name' => $currencyLanguage->name,
-            'code' => $currency->code,
-            'symbol' => $currency->symbol,
-        ];
-
-        return (object)$car;
-    }
 
     public function getFaqList($language, $condition = null, $limit = null, $paginate = null)
     {
