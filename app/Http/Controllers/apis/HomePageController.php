@@ -29,9 +29,9 @@ class HomePageController extends Controller
     use DBTrait;
     public function index(Request $request){
         $language = $request->header('Accept-Language') ?? 'en';
-        $brands = $this->getBrandsList($language);
-        $onlyOnAfandina = $this->getCars($language,'only_on_afandina',10);
-        $specialOffers = $this->getCars($language,'is_flash_sale',10);
+        // $brands = $this->getBrandsList($language);
+        $onlyOnAfandina = $this->getCars($language,'only_on_afandina',20);
+        $specialOffers = $this->getCars($language,'is_flash_sale',20);
         $homeData = $this->getHome($language);
         $advertisements = $this->getAdvertisements($language);
         $contactData = Contact::first();
