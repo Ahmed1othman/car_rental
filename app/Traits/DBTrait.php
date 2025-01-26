@@ -230,22 +230,74 @@ trait DBTrait
         // Get results
         if ($paginate) {
             $results = $query->paginate($per_page);
+            
+            // Get all car IDs from the current page
+            $carIds = $results->getCollection()->pluck('id')->toArray();
+            
+            // Fetch images for these cars
+            $carImages = \Illuminate\Support\Facades\DB::table('car_images')
+                ->whereIn('car_id', $carIds)
+                ->get()
+                ->groupBy('car_id');
+
             // Transform the data in the paginator
-            $results->getCollection()->transform(function ($car) use ($currentCurrency, $currency, $currencyLanguage) {
-                return $this->transformCarData($car, $currentCurrency, $currency, $currencyLanguage);
+            $results->getCollection()->transform(function ($car) use ($carImages, $currentCurrency, $currency, $currencyLanguage) {
+                return $this->transformCarData($car, $carImages, $currentCurrency, $currency, $currencyLanguage);
             });
-            return $results;
+
+            return [
+                'current_page' => $results->currentPage(),
+                'data' => $results->items(),
+                'first_page_url' => $results->url(1),
+                'from' => $results->firstItem(),
+                'last_page' => $results->lastPage(),
+                'last_page_url' => $results->url($results->lastPage()),
+                'next_page_url' => $results->nextPageUrl(),
+                'path' => $results->path(),
+                'per_page' => (int)$results->perPage(),
+                'prev_page_url' => $results->previousPageUrl(),
+                'to' => $results->lastItem(),
+                'total' => $results->total(),
+            ];
         } else {
             $results = $query->get();
-            return $results->map(function ($car) use ($currentCurrency, $currency, $currencyLanguage) {
-                return $this->transformCarData($car, $currentCurrency, $currency, $currencyLanguage);
+            
+            // Fetch all images
+            $carImages = \Illuminate\Support\Facades\DB::table('car_images')
+                ->whereIn('car_id', $results->pluck('id'))
+                ->get()
+                ->groupBy('car_id');
+
+            return $results->map(function ($car) use ($carImages, $currentCurrency, $currency, $currencyLanguage) {
+                return $this->transformCarData($car, $carImages, $currentCurrency, $currency, $currencyLanguage);
             });
         }
     }
 
-    private function transformCarData($car, $currentCurrency, $currency, $currencyLanguage)
+    private function transformCarData($car, $carImages, $currentCurrency, $currency, $currencyLanguage)
     {
         $car = (array)$car;
+        
+        // Add images
+        $defaultImage = collect([
+            [
+                'file_path' => $car['default_image_path'],
+                'alt' => 'Default Image',
+                'type' => 'image',
+            ]
+        ]);
+
+        $car['images'] = $defaultImage->concat(
+            $carImages->get($car['id'], collect())->map(function ($image) {
+                return [
+                    'file_path' => $image->file_path,
+                    'alt' => $image->alt,
+                    'type' => $image->type
+                ];
+            })
+        );
+
+        // Transform prices
         $car['daily_main_price'] = ceil($car['daily_main_price'] * $currentCurrency->exchange_rate);
         $car['daily_discount_price'] = ceil($car['daily_discount_price'] * $currentCurrency->exchange_rate);
         $car['weekly_main_price'] = ceil($car['weekly_main_price'] * $currentCurrency->exchange_rate);
