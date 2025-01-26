@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AdvertisementResource;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\HomeResource;
+use App\Http\Resources\LocationResource;
 use App\Http\Resources\SeoResource;
 use App\Http\Resources\ShortVideoResource;
 use App\Models\About;
@@ -19,6 +20,7 @@ use App\Models\Home;
 use App\Models\HomeTranslation;
 use App\Models\Service;
 use App\Models\Short_video;
+use App\Models\Location;
 use App\Traits\DBTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +41,9 @@ class HomePageController extends Controller
         $contactData = Contact::first();
         $services = $this->getServicesList($language);
         $documents = $this->getDocumentsList($language);
-        $locations = $this->getLocationsList($language);
+        $locations = \App\Models\Location::with(['translations' => function ($query) use ($language) {
+            $query->where('locale', $language);
+        }])->where('is_active', true)->get();
         $shortVideos = Short_video::get();
 
         $data = [
@@ -49,7 +53,7 @@ class HomePageController extends Controller
             'advertisements' => $advertisements,
             'specialOffers' => $specialOffers,
             'services' => $services,
-            'locations' => $locations,
+            'locations' => LocationResource::collection($locations),
             'documents' => $documents,
             'shortVideos' => $shortVideos,
         ];
