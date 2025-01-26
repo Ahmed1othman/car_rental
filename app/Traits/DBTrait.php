@@ -155,7 +155,7 @@ trait DBTrait
 
 
 
-    public function getCars($language, $condition, $limit = null, $paginate = null)
+    public function getCars($language, $condition, $limit = null, $paginate = null, $per_page = 10)
     {
         $currentCurrency = $this->getCurrency($language);
         $currency = \App\Models\Currency::find(app('currency_id'));
@@ -214,9 +214,12 @@ trait DBTrait
                     ->where('category_translations.locale', '=', $language);
             })
             ->where('cars.is_active', true)
-            ->where('cars.' . $condition, true)
-            ->limit($limit)
-            ->get();
+            ->when($condition === 'only_on_afandina', function ($query) {
+                return $query->where('cars.only_on_afandina', true);
+            })
+            ->when($condition === 'is_flash_sale', function ($query) {
+                return $query->where('cars.is_flash_sale', true);
+            });
 
         // Fetch all images separately
         $carImages = DB::table('car_images')
@@ -262,7 +265,17 @@ trait DBTrait
             return $car;
         });
 
-        return $cars;
+        // Apply pagination if requested
+        if ($paginate) {
+            return $cars->paginate($per_page);
+        }
+
+        // Apply limit if specified
+        if ($limit) {
+            $cars->limit($limit);
+        }
+
+        return $cars->get();
     }
 
 

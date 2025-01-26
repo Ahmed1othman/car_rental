@@ -80,6 +80,11 @@
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
                                     <div class="form-group">
+                                        <label for="per_page" class="font-weight-bold">Items Per Page</label>
+                                        <input type="number" name="per_page" class="form-control form-control-lg shadow-sm" id="per_page" value="{{ old('per_page', 10) }}" min="1" max="50">
+                                        <small class="form-text text-muted">Number of items to display per page (between 1 and 50)</small>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="general_field" class="font-weight-bold">General Field</label>
                                         <input type="text" name="general_field" class="form-control form-control-lg shadow-sm" id="general_field" value="{{ old('general_field') }}">
                                     </div>
@@ -157,7 +162,7 @@
                                                     <label for="meta_description_{{ $lang->code }}" class="font-weight-bold">Meta Description ({{ $lang->name }})</label>
                                                     <textarea name="meta_description[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_description_{{ $lang->code }}" rows="3">{{ old('meta_description.'.$lang->code) }}</textarea>
                                                 </div>
-                                                <<div class="form-group">
+                                                <div class="form-group">
                                                     <label for="meta_keywords_{{ $lang->code }}" class="font-weight-bold">Meta Keywords ({{ $lang->name }})</label>
                                                     <input type="text" name="meta_keywords[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="meta_keywords_{{ $lang->code }}" data-role="tagsinput" value="{{ old('meta_keywords.'.$lang->code) }}">
                                                 </div>

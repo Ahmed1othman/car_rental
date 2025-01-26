@@ -12,6 +12,15 @@ class Faq extends Model
     use HasFactory;
     protected $guarded = [];
 
+    // Add default ordering
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('order', function ($builder) {
+            $builder->orderBy('order', 'asc');
+        });
+    }
+
     //relations
     public function translations(): HasMany
     {
@@ -22,6 +31,4 @@ class Faq extends Model
     {
         return $this->morphMany(SeoQuestion::class, 'seo_questionable');
     }
-
-
 }

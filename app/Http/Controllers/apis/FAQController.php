@@ -19,9 +19,10 @@ class FAQController extends Controller
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = $this->getHome($language);
         // Start with a base query
-        $query = Faq::where('is_active',true)->with(['translations' => function ($query) use ($language) {
-            $query->where('locale', $language);
-        }]);
+        $query = Faq::where('is_active',true)
+            ->with(['translations' => function ($query) use ($language) {
+                $query->where('locale', $language);
+            }]);
 
         // 1. Filter by brand name (translated)
         if ($request->has('filters')) {
@@ -35,6 +36,13 @@ class FAQController extends Controller
                     });
                 }
             }
+        }
+
+        // Apply custom ordering if specified
+        if ($request->has('sort')) {
+            $sortField = $request->input('sort', 'order');
+            $sortDirection = $request->input('direction', 'asc');
+            $query->orderBy($sortField, $sortDirection);
         }
 
         // 4. Pagination check

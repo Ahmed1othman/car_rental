@@ -20,6 +20,7 @@ class FaqController extends GenericController
             'show_in_home' => $request->has('show_in_home') ? true : false,
         ]);
         $this->validationRules = [
+            'order' => 'required|integer|min:0',
             'question.*' => 'required|string|max:255',
             'answer.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
@@ -32,7 +33,9 @@ class FaqController extends GenericController
         ];
 
         $this->validationMessages = [
-
+            'order.required' => 'The display order field is required.',
+            'order.integer' => 'The display order must be a number.',
+            'order.min' => 'The display order must be at least 0.',
         ];
         return parent::store($request);
 
@@ -46,9 +49,9 @@ class FaqController extends GenericController
         ]);
         // Define validation rules
         $this->validationRules = [
-            'order' => 'required|numeric',
-            'name.*' => 'required|string|max:255',
-            'description.*' => 'nullable|string',
+            'order' => 'required|integer|min:0',
+            'question.*' => 'required|string|max:255',
+            'answer.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
             'meta_keywords.*' => 'nullable|string',
@@ -58,12 +61,11 @@ class FaqController extends GenericController
             'show_in_home' => 'boolean',
         ];
 
-        // Custom validation messages
         $this->validationMessages = [
-            // Define any custom messages if necessary
+            'order.required' => 'The display order field is required.',
+            'order.integer' => 'The display order must be a number.',
+            'order.min' => 'The display order must be at least 0.',
         ];
-
-        // Delegate to the generic controller's update function
         return parent::update($request, $id);
     }
 

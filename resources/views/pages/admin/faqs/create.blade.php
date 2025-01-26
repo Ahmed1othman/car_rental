@@ -79,7 +79,11 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <!-- General Data Tab Content -->
                                 <div class="tab-pane fade show active" id="custom-tabs-general" role="tabpanel" aria-labelledby="custom-tabs-general-tab">
-
+                                    <div class="form-group">
+                                        <label for="order" class="font-weight-bold">Display Order</label>
+                                        <input type="number" name="order" class="form-control form-control-lg shadow-sm" id="order" value="{{ old('order', 0) }}" min="0">
+                                        <small class="form-text text-muted">Lower numbers will be displayed first</small>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
