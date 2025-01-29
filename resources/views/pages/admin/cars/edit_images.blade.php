@@ -272,6 +272,8 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
     document.addEventListener('DOMContentLoaded', function() {
         const mediaUpload = document.getElementById('mediaUpload');
         const mediaPreviewContainer = document.getElementById('mediaPreviewContainer');
@@ -433,7 +435,12 @@
                     // Show loader while deleting
                     showLoader();
                     
-                    axios.delete(`/admin/cars/delete-image/${mediaId}`)
+                    axios.delete(`/admin/cars/delete-image/${mediaId}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
                         .then(response => {
                             if (response.data.success) {
                                 // Remove the media card from the DOM

@@ -20,8 +20,8 @@ class HomeResource extends JsonResource
         return [
             'header_section' => [
                 'hero_header_title' => $homeData->hero_header_title,
-                'hero_header_video_path' => $this->resource['homeData']->hero_header_video_path,
-                'hero_header_image_path' => $this->resource['homeData']->hero_header_image_path,
+                'hero_header_video_path' => $this->resource['homeData']->hero_header_video_path ? asset('storage/' . $this->resource['homeData']->hero_header_video_path) : null,
+                'hero_header_image_path' => $this->resource['homeData']->hero_header_image_path ? asset('storage/' . $this->resource['homeData']->hero_header_image_path) : null,
                 'hero_media_type' => $this->resource['homeData']->hero_type,
                 'social_media_links' => [
                     'facebook' => $contactData->facebook,
