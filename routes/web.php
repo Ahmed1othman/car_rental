@@ -40,3 +40,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::post('/cars/delete-all-images/{car}', [CarController::class, 'deleteAllImages'])
         ->name('admin.cars.delete-all-images');
 });
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    // Cars Routes
+});

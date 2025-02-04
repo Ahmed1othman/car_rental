@@ -36,7 +36,67 @@ class CarController extends GenericController
             'passenger_capacity', 'status', 'gear_type_id', 'insurance_included', 'free_delivery',
             'is_featured', 'crypto_payment_accepted', 'is_flash_sale', 'only_on_afandina','is_active'
         ];
+    }
+
+    public function index()
+    {
+        $request = request();
+        $query = $this->model::query()->with(['brand', 'category', 'year', 'carModel']);
+
+        // تطبيق الفلاتر
+        if ($request->filled('brand')) {
+            $query->where('brand_id', $request->brand);
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        if ($request->filled('year')) {
+            $query->where('year_id', $request->year);
+        }
+
+        if ($request->filled('model')) {
+            $query->where('car_model_id', $request->model);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('translations', function($query) use ($search) {
+                    $query->where('name', 'LIKE', "%{$search}%")
+                          ->orWhere('description', 'LIKE', "%{$search}%");
+                });
+            });
+        }
+
+        // جلب البيانات المطلوبة للفلتر
+        $this->data['brands'] = Brand::with('carModels.translations')->get();
+        $this->data['categories'] = Category::all();
+        $this->data['years'] = Year::all();
         
+        // إضافة نتائج البحث
+        $this->data['items'] = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        return view('pages.admin.cars.index', $this->data);
+    }
+
+    // دالة لجلب الموديلات حسب الماركة
+    public function getModelsByBrand($brandId)
+    {
+        $models = Car_model::where('brand_id', $brandId)
+            ->with('translations')
+            ->get()
+            ->map(function($model) {
+                $translation = $model->translations->where('locale', 'en')->first();
+                $name = $translation ? $translation->name : ($model->translations->first() ? $model->translations->first()->name : 'N/A');
+                return [
+                    'id' => $model->id,
+                    'name' => $name
+                ];
+            });
+        
+        return response()->json($models);
     }
 
     public function create()
