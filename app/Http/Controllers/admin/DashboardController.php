@@ -12,17 +12,38 @@ class DashboardController extends Controller
 {
     public function index()
     {
-//        $carCount = Car::count();
-        $carCount = 15;
+        // إحصائيات عامة
+        $carCount = Car::count();
         $categoryCount = Category::count();
         $brandCount = Brand::count();
-//        $userCount = User::count();
-        $userCount = 3;
+        
+        // السيارات حسب الفئات
+        $carsByCategory = Category::withCount('cars')
+            ->with('translations')
+            ->orderBy('cars_count', 'desc')
+            ->take(5)
+            ->get();
 
-        // Monthly revenue data example
-        $months = ['January', 'February', 'March', 'April'];
-        $revenueData = [1000, 2000, 1500, 3000];
+        // أحدث السيارات المضافة
+        $latestCars = Car::with(['brand', 'category', 'translations'])
+            ->latest()
+            ->take(5)
+            ->get();
 
-        return view('pages.admin.dashboard', compact('carCount', 'categoryCount', 'brandCount', 'userCount', 'months', 'revenueData'));
+        // أكثر العلامات التجارية التي لديها سيارات
+        $topBrands = Brand::withCount('cars')
+            ->with('translations')
+            ->orderBy('cars_count', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('pages.admin.dashboard', compact(
+            'carCount',
+            'categoryCount',
+            'brandCount',
+            'latestCars',
+            'topBrands',
+            'carsByCategory'
+        ));
     }
 }
