@@ -688,4 +688,96 @@ class CarController extends GenericController
             ], 500);
         }
     }
+
+    public function deleteMultipleImages(Request $request)
+    {
+        try {
+            $imageIds = $request->input('image_ids', []);
+            
+            if (empty($imageIds)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No images selected for deletion'
+                ], 400);
+            }
+
+            $successCount = 0;
+            $errors = [];
+
+            foreach ($imageIds as $id) {
+                try {
+                    $media = CarImage::findOrFail($id);
+                    $filePath = $media->file_path;
+
+                    // Delete the database record
+                    $media->delete();
+
+                    // Delete the file if it exists
+                    if ($filePath && Storage::disk('public')->exists($filePath)) {
+                        Storage::disk('public')->delete($filePath);
+                    }
+
+                    $successCount++;
+                } catch (\Exception $e) {
+                    $errors[] = "Failed to delete image ID {$id}: " . $e->getMessage();
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$successCount} images deleted successfully" . (count($errors) > 0 ? ". Errors: " . implode(', ', $errors) : "")
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting images: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteSelectedImages(Request $request)
+    {
+        $request->validate([
+            'mediaIds' => 'required|array',
+            'mediaIds.*' => 'exists:car_images,id'
+        ]);
+
+        try {
+            $images = CarImage::whereIn('id', $request->mediaIds)->get();
+            
+            foreach($images as $image) {
+                // حذف الملف من التخزين
+                if ($image->file_path && Storage::disk('public')->exists($image->file_path)) {
+                    Storage::disk('public')->delete($image->file_path);
+                }
+                // حذف السجل من قاعدة البيانات
+                $image->delete();
+            }
+
+            return response()->json(['success' => true, 'message' => 'Selected media deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error deleting media: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteAllImages($carId)
+    {
+        try {
+            $images = CarImage::where('car_id', $carId)->get();
+            
+            foreach($images as $image) {
+                // حذف الملف من التخزين
+                if ($image->file_path && Storage::disk('public')->exists($image->file_path)) {
+                    Storage::disk('public')->delete($image->file_path);
+                }
+                // حذف السجل من قاعدة البيانات
+                $image->delete();
+            }
+
+            return response()->json(['success' => true, 'message' => 'All media deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error deleting media: ' . $e->getMessage()], 500);
+        }
+    }
 }

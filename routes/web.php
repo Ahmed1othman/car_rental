@@ -31,4 +31,12 @@ Route::get('/test-queue', function () {
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     Route::delete('/cars/delete-image/{id}', [CarController::class, 'deleteImage'])->name('cars.delete-image');
+    // Car image management routes
+    Route::post('/cars/delete-selected-images', [CarController::class, 'deleteMultipleImages'])->name('cars.delete-selected-images');
+    Route::delete('/cars/delete-all-images/{carId}', [CarController::class, 'deleteAllImages'])->name('cars.delete-all-images');
+    Route::post('/cars/delete-selected-images', [CarController::class, 'deleteSelectedImages'])
+        ->name('admin.cars.delete-selected-images');
+
+    Route::post('/cars/delete-all-images/{car}', [CarController::class, 'deleteAllImages'])
+        ->name('admin.cars.delete-all-images');
 });

@@ -98,39 +98,110 @@
     }
 
     .media-card {
-        height: 250px;
-        margin-bottom: 15px;
-    }
-
-    .media-card .card-body {
-        padding: 10px;
-    }
-
-    .media-preview {
-        height: 180px;
-        object-fit: cover;
-        width: 100%;
-        border-radius: 4px;
-    }
-
-    .media-actions {
-        padding: 5px 0;
-    }
-
-    .media-alt {
-        font-size: 12px;
-        color: #666;
-        margin-bottom: 5px;
-        white-space: nowrap;
+        position: relative;
+        margin-bottom: 20px;
+        border-radius: 8px;
         overflow: hidden;
-        text-overflow: ellipsis;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .preview-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
+    .media-card .card-img-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 100%; /* 1:1 Aspect Ratio */
+        overflow: hidden;
+    }
+
+    .media-card img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .media-card .delete-btn {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px;
+        width: 100%;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .media-card .delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    .custom-checkbox {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 2;
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #fff;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark {
+        background-color: #2196F3;
+        border-color: #2196F3;
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 8px;
+        top: 4px;
+        width: 6px;
+        height: 12px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    .custom-checkbox input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .card-header {
+        background-color: #007bff;
         padding: 15px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .card-header .btn {
+        margin-left: 5px;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
     }
 </style>
 @endpush
@@ -176,34 +247,28 @@
 
             <!-- Existing Media -->
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h3 class="card-title">Current Media</h3>
+                    <div class="ml-auto">
+                        <button class="btn btn-danger btn-sm mr-2" id="delete-selected-btn" onclick="deleteSelected()" disabled>
+                            <i class="fas fa-trash"></i> Delete Selected
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAll()">
+                            <i class="fas fa-trash-alt"></i> Delete All
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body p-2">
                     <div class="row" id="media-container">
                         @foreach($item->images as $media)
                             <div class="col-md-3 col-sm-6">
-                                <div class="card media-card">
-                                    <div class="card-body p-2">
-                                        @if($media->type == 'video')
-                                            <video class="media-preview" controls>
-                                                <source src="{{ asset('storage/' . $media->file_path) }}" type="video/mp4">
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        @else
-                                            <img src="{{ asset('storage/' . $media->file_path) }}" 
-                                                 class="media-preview"
-                                                 alt="{{ $media->alt }}">
-                                        @endif
-                                        <div class="media-actions">
-                                            @if($media->alt)
-                                                <div class="media-alt">{{ $media->alt }}</div>
-                                            @endif
-                                            <button class="btn btn-danger btn-sm btn-block delete-media" 
-                                                    data-id="{{ $media->id }}">
-                                                Delete
-                                            </button>
-                                        </div>
+                                <div class="media-card">
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" class="media-checkbox" data-media-id="{{ $media->id }}">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <div class="card-img-wrapper">
+                                        <img src="{{ asset('storage/' . $media->file_path) }}" alt="Car Image">
                                     </div>
                                 </div>
                             </div>
@@ -274,6 +339,72 @@
 <script>
     axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
+    function showLoader() {
+        const loaderOverlay = document.getElementById('loader-overlay');
+        if (loaderOverlay) {
+            loaderOverlay.style.display = 'flex';
+        }
+    }
+
+    function hideLoader() {
+        const loaderOverlay = document.getElementById('loader-overlay');
+        if (loaderOverlay) {
+            loaderOverlay.style.display = 'none';
+        }
+    }
+
+    function deleteSelected() {
+        const selectedIds = Array.from(document.querySelectorAll('.media-checkbox:checked'))
+            .map(checkbox => checkbox.dataset.mediaId);
+
+        if (selectedIds.length === 0) {
+            alert('Please select at least one media item');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to delete the selected media?')) {
+            return;
+        }
+
+        showLoader();
+        
+        axios.post('/admin/cars/delete-selected-images', {
+            mediaIds: selectedIds
+        })
+        .then(response => {
+            if (response.data.success) {
+                window.location.reload();
+            } else {
+                alert(response.data.message || 'Error deleting selected media');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.response?.data?.message || 'Error deleting selected media');
+        })
+        .finally(() => hideLoader());
+    }
+
+    function deleteAll() {
+        if (!confirm('Are you sure you want to delete ALL media?')) return;
+        
+        showLoader();
+        
+        axios.post('/admin/cars/delete-all-images/' + {{ $item->id }})
+        .then(response => {
+            if (response.data.success) {
+                window.location.reload();
+            } else {
+                alert(response.data.message || 'Error deleting all media');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.response?.data?.message || 'Error deleting all media');
+        })
+        .finally(() => hideLoader());
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const mediaUpload = document.getElementById('mediaUpload');
         const mediaPreviewContainer = document.getElementById('mediaPreviewContainer');
@@ -507,6 +638,16 @@
             } finally {
                 hideLoader();
             }
+        });
+
+        const deleteSelectedBtn = document.getElementById('delete-selected-btn');
+        const checkboxes = document.querySelectorAll('.media-checkbox');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+                deleteSelectedBtn.disabled = !anyChecked;
+            });
         });
     });
 </script>
