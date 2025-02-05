@@ -67,12 +67,13 @@ class CarResource extends JsonResource
             'images' => collect([
                 [
                     'file_path' => $this->default_image_path,
-                    'alt' => 'Default Image',  // You can customize this
-                    'type' => 'image',         // Default type
+                    'thumbnail_path' => $this->default_image_path, 
+                    'alt' => 'Default Image',  
+                    'type' => 'image',         
                 ],
             ])->concat(
                 $this->images->map(fn($image) => [
-                    'file_path' => $image->file_path,
+                    'file_path' => $image->thumbnail_path ?? $image->file_path, 
                     'alt' => $image->alt,
                     'type' => $image->type,
                 ])

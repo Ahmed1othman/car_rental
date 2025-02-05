@@ -78,8 +78,9 @@ class ProcessFileJob implements ShouldQueue
                 // For images, process with Intervention Image
                 $extension = '.webp';
                 $finalPath = 'media/' . $filename . '_' . uniqid() . $extension;
+                $thumbnailPath = 'media/thumbnails/' . $filename . '_' . uniqid() . $extension;
                 
-                // Process image with Intervention Image
+                // Process original image with Intervention Image
                 $image = Image::make($file);
                 
                 // Resize if needed
@@ -90,19 +91,31 @@ class ProcessFileJob implements ShouldQueue
                     });
                 }
                 
-                // Convert to WebP and save
+                // Create thumbnail version (338 × 240 px)
+                $thumbnail = Image::make($file);
+                $thumbnail->fit(338, 240, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                
+                // Convert to WebP and save both versions
                 $image->encode('webp', $this->options['quality'] ?? 90);
+                $thumbnail->encode('webp', $this->options['quality'] ?? 90);
+                
                 Storage::disk('public')->put($finalPath, $image->stream());
+                Storage::disk('public')->put($thumbnailPath, $thumbnail->stream());
             }
             
             // Update model or create media record
             if ($this->isMultiple) {
                 // Create new CarImage record
                 $media = new CarImage();
+                $media->car_id = $this->modelId;
                 $media->file_path = $finalPath;
+                if (!$isVideo) {
+                    $media->thumbnail_path = $thumbnailPath;
+                }
                 $media->alt = $this->options['alt'] ?? null;
                 $media->type = $isVideo ? 'video' : 'image';
-                $media->car_id = $model->id;
                 $media->save();
             } else {
                 // Update model's image field directly

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('faqs', function (Blueprint $table) {
-            //$table->integer('order')->default(0)->after('is_active');
+        Schema::table('car_images', function (Blueprint $table) {
+            $table->string('thumbnail_path')->nullable()->after('file_path');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('faqs', function (Blueprint $table) {
-            $table->dropColumn('order');
+        Schema::table('car_images', function (Blueprint $table) {
+            $table->dropColumn('thumbnail_path');
         });
     }
 };
