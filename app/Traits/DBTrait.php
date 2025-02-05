@@ -190,6 +190,7 @@ trait DBTrait
                 'brand_translations.name as brand_name',
                 'category_translations.name as category_name',
                 'cars.default_image_path',
+                'cars.default_thumbnail_path',
                 'cars.slug',
                 'car_translations.name'
             )
@@ -220,17 +221,19 @@ trait DBTrait
 
         // Fetch all images separately
         $carImages = DB::table('car_images')
+            ->select('car_id', 'file_path', 'thumbnail_path', 'alt', 'type')
             ->whereIn('car_id', $cars->pluck('id'))
             ->get()
             ->groupBy('car_id');
 
         // Attach images to each car
-        $cars->transform(function ($car) use ($carImages, $currentCurrency,$currencyLanguage,$currency) {
+        $cars->transform(function ($car) use ($carImages, $currentCurrency, $currencyLanguage, $currency) {
             $defaultImage = collect([
                 [
                     'file_path' => $car->default_image_path,
-                    'alt' => 'Default Image',  // Customize if needed
-                    'type' => 'image',         // Default type
+                    'thumbnail_path' => $car->default_thumbnail_path ?? $car->default_image_path,
+                    'alt' => 'Default Image',
+                    'type' => 'image',
                 ]
             ]);
 
@@ -238,6 +241,7 @@ trait DBTrait
                 $carImages->get($car->id, collect())->map(function ($image) {
                     return [
                         'file_path' => $image->file_path,
+                        'thumbnail_path' => $image->thumbnail_path ?? $image->file_path,
                         'alt' => $image->alt,
                         'type' => $image->type
                     ];

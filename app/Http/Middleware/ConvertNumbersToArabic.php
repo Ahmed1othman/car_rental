@@ -85,7 +85,9 @@ class ConvertNumbersToArabic
                         'article',
                         'long_description',
                         'content',
-                        'schemas'
+                        'schemas',
+                        'thumbnail_path',
+                    
 
                     ], true) ||
                     filter_var($value, FILTER_VALIDATE_URL)

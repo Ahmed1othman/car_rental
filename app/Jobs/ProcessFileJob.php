@@ -98,8 +98,8 @@ class ProcessFileJob implements ShouldQueue
                 });
                 
                 // Convert to WebP and save both versions
-                $image->encode('webp', $this->options['quality'] ?? 90);
-                $thumbnail->encode('webp', $this->options['quality'] ?? 90);
+                $image->encode('webp', 100);
+                $thumbnail->encode('webp', 100);
                 
                 Storage::disk('public')->put($finalPath, $image->stream());
                 Storage::disk('public')->put($thumbnailPath, $thumbnail->stream());
@@ -121,6 +121,16 @@ class ProcessFileJob implements ShouldQueue
                 // Update model's image field directly
                 $model->{$this->field} = $finalPath;
                 $model->save();
+            }
+            
+            if ($this->options['is_default']) {
+                $car = \App\Models\Car::find($this->options['car_id']);
+                if ($car) {
+                    $car->update([
+                        'default_image_path' => $finalPath,
+                        'default_thumbnail_path' => $thumbnailPath
+                    ]);
+                }
             }
             
             // Clean up temp file
