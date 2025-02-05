@@ -66,9 +66,9 @@ class GenerateThumbnails extends Command
 
                 // Create thumbnail using Intervention Image
                 $thumbnail = Image::make($file);
-                $thumbnail->resize(338, 240, function ($constraint) {
+                $thumbnail->fit(330, 240, function ($constraint) {
                     $constraint->aspectRatio();
-                })->resizeCanvas(338, 240, 'center', false, '#ffffff');
+                });
 
                 // Convert to WebP and save
                 $thumbnail->encode('webp', 90);
