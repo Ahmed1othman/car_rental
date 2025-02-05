@@ -93,9 +93,9 @@ class ProcessFileJob implements ShouldQueue
                 
                 // Create thumbnail version (338 × 240 px)
                 $thumbnail = Image::make($file);
-                $thumbnail->fit(338, 240, function ($constraint) {
+                $thumbnail->resize(338, 240, function ($constraint) {
                     $constraint->aspectRatio();
-                });
+                })->resizeCanvas(338, 240, 'center', false, '#ffffff');
                 
                 // Convert to WebP and save both versions
                 $image->encode('webp', $this->options['quality'] ?? 90);

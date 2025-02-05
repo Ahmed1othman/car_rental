@@ -13,7 +13,7 @@ class GenerateThumbnails extends Command
      *
      * @var string
      */
-    protected $signature = 'images:generate-thumbnails';
+    protected $signature = 'images:generate-thumbnails {--force : Force regeneration of all thumbnails}';
 
     /**
      * The console command description.
@@ -30,9 +30,13 @@ class GenerateThumbnails extends Command
         $this->info('Starting thumbnail generation...');
 
         // Get all car images
-        $images = \App\Models\CarImage::whereNull('thumbnail_path')
-            ->where('type', 'image')
-            ->get();
+        $query = \App\Models\CarImage::where('type', 'image');
+        
+        if (!$this->option('force')) {
+            $query->whereNull('thumbnail_path');
+        }
+        
+        $images = $query->get();
 
         $totalImages = $images->count();
         $this->info("Found {$totalImages} images that need thumbnails");
@@ -62,9 +66,9 @@ class GenerateThumbnails extends Command
 
                 // Create thumbnail using Intervention Image
                 $thumbnail = Image::make($file);
-                $thumbnail->fit(338, 240, function ($constraint) {
+                $thumbnail->resize(338, 240, function ($constraint) {
                     $constraint->aspectRatio();
-                });
+                })->resizeCanvas(338, 240, 'center', false, '#ffffff');
 
                 // Convert to WebP and save
                 $thumbnail->encode('webp', 90);
