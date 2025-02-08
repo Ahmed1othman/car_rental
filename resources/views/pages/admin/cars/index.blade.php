@@ -55,11 +55,11 @@
         line-height: 38px;
         border: 1px solid #ced4da;
     }
-    
+
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 38px;
     }
-    
+
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 36px;
     }
@@ -81,7 +81,7 @@
         transform: scale(1.5);
         cursor: pointer;
     }
-    
+
     .btn-group {
         gap: 5px;
     }
@@ -187,8 +187,8 @@
 
                             <div class="col-md-2">
                                 <label for="search" class="form-label">Search</label>
-                                <input type="text" name="search" id="search" class="form-control" 
-                                       placeholder="Search by name..." 
+                                <input type="text" name="search" id="search" class="form-control"
+                                       placeholder="Search by name..."
                                        value="{{ request('search') }}">
                             </div>
 
@@ -216,7 +216,7 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>#</th>
                                     <th>Image</th>
                                     <th>Name</th>
                                     <th>Brand</th>
@@ -229,11 +229,11 @@
                                 <tbody>
                                 @forelse($items as $item)
                                     <tr>
-                                        <td>{{ $item->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             @if($item->default_image_path)
-                                                <img src="{{ asset('storage/' . $item->default_image_path) }}" 
-                                                     alt="Car Image" 
+                                                <img src="{{ asset('storage/' . $item->default_image_path) }}"
+                                                     alt="Car Image"
                                                      class="car-thumbnail"
                                                      data-toggle="tooltip"
                                                      title="Click to enlarge">
@@ -251,8 +251,8 @@
                                         <td>
                                             @php
                                                 $brand = $item->brand;
-                                                $brandName = $brand && $brand->translations ? 
-                                                    ($brand->translations->where('locale', 'en')->first()?->name ?? 
+                                                $brandName = $brand && $brand->translations ?
+                                                    ($brand->translations->where('locale', 'en')->first()?->name ??
                                                      $brand->translations->first()?->name ?? 'N/A') : 'N/A';
                                             @endphp
                                             {{ $brandName }}
@@ -260,8 +260,8 @@
                                         <td>
                                             @php
                                                 $model = $item->carModel;
-                                                $modelName = $model && $model->translations ? 
-                                                    ($model->translations->where('locale', 'en')->first()?->name ?? 
+                                                $modelName = $model && $model->translations ?
+                                                    ($model->translations->where('locale', 'en')->first()?->name ??
                                                      $model->translations->first()?->name ?? 'N/A') : 'N/A';
                                             @endphp
                                             {{ $modelName }}
@@ -269,8 +269,8 @@
                                         <td>
                                             @php
                                                 $category = $item->category;
-                                                $categoryName = $category && $category->translations ? 
-                                                    ($category->translations->where('locale', 'en')->first()?->name ?? 
+                                                $categoryName = $category && $category->translations ?
+                                                    ($category->translations->where('locale', 'en')->first()?->name ??
                                                      $category->translations->first()?->name ?? 'N/A') : 'N/A';
                                             @endphp
                                             {{ $categoryName }}
@@ -278,25 +278,25 @@
                                         <td>{{ optional($item->year)->year ?? 'N/A' }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('admin.cars.edit', $item->id) }}" 
+                                                <a href="{{ route('admin.cars.edit', $item->id) }}"
                                                    class="btn btn-sm btn-primary"
                                                    data-toggle="tooltip"
                                                    title="Edit Car">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="{{ route('admin.cars.edit_images', $item->id) }}" 
+                                                <a href="{{ route('admin.cars.edit_images', $item->id) }}"
                                                    class="btn btn-sm btn-info"
                                                    data-toggle="tooltip"
                                                    title="Manage Images">
                                                     <i class="fas fa-images"></i>
                                                 </a>
-                                                <form action="{{ route('admin.cars.destroy', $item->id) }}" 
-                                                      method="POST" 
+                                                <form action="{{ route('admin.cars.destroy', $item->id) }}"
+                                                      method="POST"
                                                       class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" 
-                                                            class="btn btn-sm btn-danger" 
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-danger"
                                                             data-toggle="tooltip"
                                                             title="Delete Car"
                                                             onclick="return confirm('Are you sure you want to delete this car?')">
@@ -314,7 +314,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <div class="mt-4">
                             {{ $items->links() }}
                         </div>
@@ -341,14 +341,14 @@
         $('#brand').on('change', function() {
             var brandId = $(this).val();
             var modelSelect = $('#model');
-            
+
             // إعادة تعيين قائمة الموديلات
             modelSelect.empty().append('<option value="">All Models</option>');
-            
+
             if (brandId) {
                 // تفعيل قائمة الموديلات
                 modelSelect.prop('disabled', false);
-                
+
                 // جلب الموديلات من السيرفر
                 $.get('/admin/cars/models/' + brandId, function(models) {
                     models.forEach(function(model) {

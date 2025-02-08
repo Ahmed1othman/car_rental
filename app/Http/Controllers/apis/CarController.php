@@ -107,7 +107,7 @@ class CarController extends Controller
         $query->orderBy($sortField, $sortDirection);
 
         // Handle pagination with validation
-        $perPage = min(max($request->input('per_page', 10), 1), 10);
+        $perPage = min(max($request->input('per_page', 100), 1), 100);
 
         // Return paginated resource collection
         return CarResource::collection(
@@ -142,9 +142,9 @@ class CarController extends Controller
         $query->orderBy($sortField, $sortDirection);
 
         // Handle pagination with validation
-        $perPage = min(max($request->input('per_page', 10), 1), 10);
+        $perPage = min(max($request->input('per_page', 100), 1), 100);
 
-        
+
         return [
             'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
             'brands' => new DetailedBrandResource($brand)
@@ -185,7 +185,7 @@ class CarController extends Controller
         $query->orderBy($sortField, $sortDirection);
 
         // Handle pagination with validation
-        $perPage = min(max($request->input('per_page', 10), 1), 10);
+        $perPage = min(max($request->input('per_page', 100), 1), 100);
 
         return [
             'cars' =>  CarResource::collection($query->paginate($perPage)->withQueryString()),
@@ -217,7 +217,7 @@ class CarController extends Controller
         $query->orderBy($sortField, $sortDirection);
 
         // Handle pagination with validation
-        $perPage = min(max($request->input('per_page', 10), 1), 10);
+        $perPage = min(max($request->input('per_page', 100), 1), 100);
 
 
         return [
