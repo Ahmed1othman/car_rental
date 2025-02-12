@@ -93,7 +93,7 @@ class ProcessFileJob implements ShouldQueue
                 
                 // Create thumbnail version (330 × 240 px)
                 $thumbnail = Image::make($file);
-                $thumbnail->fit(737, 536, function ($constraint) {
+                $thumbnail->resize(737, 536, function ($constraint) {
                     $constraint->aspectRatio();
                 });
                 
