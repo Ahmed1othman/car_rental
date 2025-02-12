@@ -39,7 +39,7 @@ class GenerateThumbnails extends Command
 
                 // Create thumbnail using Intervention Image
                 $thumbnail = Image::make($file);
-                $thumbnail->fit(720, 240, function ($constraint) {
+                $thumbnail->fit(737, 536, function ($constraint) {
                     $constraint->aspectRatio();
                 });
 
@@ -99,7 +99,7 @@ class GenerateThumbnails extends Command
                 // Create thumbnail using Intervention Image
                 $thumbnail = Image::make($file);
                 // $thumbnail->fit(330, 240, function ($constraint) {
-                $thumbnail->fit(720, 590, function ($constraint) {
+                $thumbnail->fit(737, 536, function ($constraint) {
 
                     $constraint->aspectRatio();
                 });
