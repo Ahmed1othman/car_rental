@@ -7,7 +7,6 @@ use App\Http\Controllers\admin\CurrencyController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\GenericController;
 use App\Http\Controllers\admin\MainSettingController;
-use App\Http\Controllers\Admin\SitemapController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\StaticTranslationController;

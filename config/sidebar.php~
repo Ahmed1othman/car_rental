@@ -28,7 +28,7 @@
           'title' => 'Static Translation',
           'route' => 'admin.static-translations.index',
         ),
-        3 =>
+        3 => 
         array (
           'title' => 'Manage Sitemap',
           'route' => 'admin.sitemap.index',
