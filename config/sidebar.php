@@ -31,7 +31,7 @@
         3 =>
         array (
           'title' => 'Manage Sitemap',
-          'route' => 'admin.sitemap.index',
+          'route' => 'admin.sitemap',
         ),
       ),
     ),

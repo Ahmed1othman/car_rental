@@ -110,7 +110,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('sitemap', function () {
         return view('pages.admin.sitemap.index');
-    })->name('admin.sitemap');
+    })->name('sitemap');
 
     Route::post('/sitemap/generate', [SitemapController::class, 'generate'])->name('sitemap.generate');
     Route::get('/sitemap/download', [SitemapController::class, 'download'])->name('sitemap.download');
