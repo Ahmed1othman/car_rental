@@ -15,6 +15,8 @@ class HomeController extends GenericController
             'hero_header_title',
             'car_only_section_title',
             'car_only_section_paragraph',
+            'blog_section_title',
+            'blog_section_paragraph',
             'special_offers_section_title',
             'special_offers_section_paragraph',
             'why_choose_us_section_title',
