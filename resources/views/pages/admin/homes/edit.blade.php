@@ -236,12 +236,21 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="contact_us_title_[{{ $lang->code }}]" class="font-weight-bold">FAQ Section Title ({{ $lang->name }})</label>
+                                                    <label for="contact_us_title_[{{ $lang->code }}]" class="font-weight-bold">Contact Us Section Title ({{ $lang->name }})</label>
                                                     <input type="text" name="contact_us_title[{{ $lang->code }}]" class="form-control shadow-sm" id="contact_us_title_[{{ $lang->code }}]" value="{{ old('contact_us_title.' . $lang->code ,$translation->contact_us_title??'') }}">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="contact_us_paragraph_{{ $lang->code }}" class="font-weight-bold">FAQ Section Paragraph({{ $lang->name }})</label>
+                                                    <label for="contact_us_paragraph_{{ $lang->code }}" class="font-weight-bold">Contact Us Section Paragraph({{ $lang->name }})</label>
                                                     <textarea name="contact_us_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="contact_us_paragraph_{{ $lang->code }}" rows="4">{{ old('contact_us_paragraph.' . $lang->code, $translation->contact_us_paragraph ?? '') }}</textarea>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="blog_section_title_[{{ $lang->code }}]" class="font-weight-bold">Blog Section Title ({{ $lang->name }})</label>
+                                                    <input type="text" name="blog_section_title[{{ $lang->code }}]" class="form-control shadow-sm" id="blog_section_title_[{{ $lang->code }}]" value="{{ old('blog_section_title.' . $lang->code ,$translation->blog_section_title??'') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="blog_section_paragraph_{{ $lang->code }}" class="font-weight-bold">Blog Section Paragraph({{ $lang->name }})</label>
+                                                    <textarea name="blog_section_paragraph[{{ $lang->code }}]" class="form-control form-control-lg shadow-sm" id="blog_section_paragraph_{{ $lang->code }}" rows="4">{{ old('blog_section_paragraph.' . $lang->code, $translation->blog_section_paragraph ?? '') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
