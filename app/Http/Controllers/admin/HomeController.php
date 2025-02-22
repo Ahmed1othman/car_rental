@@ -103,6 +103,8 @@ class HomeController extends GenericController
             'hero_type' => 'required|in:video,image',
             'car_only_section_title.*' => 'nullable|string',
             'car_only_section_paragraph.*' => 'nullable|string',
+            'blog_section_title.*' => 'nullable|string',
+            'blog_section_paragraph.*' => 'nullable|string',
             'special_offers_section_title.*' => 'nullable|string',
             'special_offers_section_paragraph.*' => 'nullable|string',
             'why_choose_us_section_title.*' => 'nullable|string',
