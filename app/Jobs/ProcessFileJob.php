@@ -123,7 +123,7 @@ class ProcessFileJob implements ShouldQueue
                 $model->save();
             }
             
-            if ($this->options['is_default']) {
+            if (($this->options['is_default'] ?? false) === true) {
                 $car = \App\Models\Car::find($this->options['car_id']);
                 if ($car) {
                     $car->update([
