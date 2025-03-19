@@ -79,7 +79,7 @@ class CarController extends GenericController
         // جلب البيانات المطلوبة للفلتر
         $this->data['brands'] = Brand::with('carModels.translations')->get();
         $this->data['categories'] = Category::all();
-        $this->data['periods'] = Period::all();
+        // $this->data['periods'] = Period::all();
         $this->data['years'] = Year::all();
         
         // إضافة نتائج البحث
