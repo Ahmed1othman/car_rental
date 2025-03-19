@@ -173,7 +173,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            {{-- <div class="col-md-2">
                                 <label for="rent_periods" class="form-label">Rent Periods</label>
                                 <select name="rent_periods" id="rent_periods" class="form-control select2">
                                     <option value="">All Rent Periods</option>
@@ -187,7 +187,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-2">
                                 <label for="year" class="form-label">Year</label>
