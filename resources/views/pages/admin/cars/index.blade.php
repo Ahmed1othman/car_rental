@@ -174,6 +174,22 @@
                             </div>
 
                             <div class="col-md-2">
+                                <label for="rent_periods" class="form-label">Rent Periods</label>
+                                <select name="rent_periods" id="rent_periods" class="form-control select2">
+                                    <option value="">All Rent Periods</option>
+                                    @foreach($periods as $rent_period)
+                                        @php
+                                            $translation = $rent_period->translations->where('locale', 'en')->first();
+                                            $name = $translation ? $translation->name : ($rent_period->translations->first() ? $rent_period->translations->first()->name : 'N/A');
+                                        @endphp
+                                        <option value="{{ $rent_period->id }}" {{ request('period') == $rent_period->id ? 'selected' : '' }}>
+                                            {{ $name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
                                 <label for="year" class="form-label">Year</label>
                                 <select name="year" id="year" class="form-control select2">
                                     <option value="">All Years</option>
@@ -222,6 +238,7 @@
                                     <th>Brand</th>
                                     <th>Model</th>
                                     <th>Category</th>
+                                    <th>Rent Periods</th>
                                     <th>Year</th>
                                     <th>Actions</th>
                                 </tr>
@@ -275,6 +292,18 @@
                                             @endphp
                                             {{ $categoryName }}
                                         </td>
+                                        <td>
+                                            @php
+                                                $rentPeriod = $item->periods;
+                                                foreach ($rentPeriod as $period) {
+                                                    $periodName = $period && $period->translations ?
+                                                        ($period->translations->where('locale', 'en')->first()?->name ??
+                                                         $period->translations->first()?->name ?? 'N/A') : 'N/A';
+                                                    echo '<span class="badge bg-warning">'.$periodName . '</span> <br>';
+                                                }
+                                            @endphp
+                                        </td>
+
                                         <td>{{ optional($item->year)->year ?? 'N/A' }}</td>
                                         <td>
                                             <div class="btn-group">

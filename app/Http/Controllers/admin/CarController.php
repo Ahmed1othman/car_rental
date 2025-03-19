@@ -34,14 +34,14 @@ class CarController extends GenericController
             'daily_main_price', 'daily_discount_price', 'weekly_main_price', 'weekly_discount_price',
             'monthly_main_price', 'monthly_discount_price', 'door_count', 'luggage_capacity',
             'passenger_capacity', 'status', 'gear_type_id', 'insurance_included', 'free_delivery',
-            'is_featured', 'crypto_payment_accepted', 'is_flash_sale', 'only_on_afandina','is_active'
+            'is_featured', 'crypto_payment_accepted', 'is_flash_sale', 'only_on_afandina','is_active','period_ids'
         ];
     }
 
     public function index()
     {
         $request = request();
-        $query = $this->model::query()->with(['brand', 'category', 'year', 'carModel']);
+        $query = $this->model::query()->with(['brand', 'category', 'year', 'carModel', 'periods']);
 
         // تطبيق الفلاتر
         if ($request->filled('brand')) {
@@ -50,6 +50,12 @@ class CarController extends GenericController
 
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
+        }
+
+        if ($request->filled('period')) {
+            $query->whereHas('periods', function($q) use ($request) {
+                $q->where('period_id', $request->period);
+            });
         }
 
         if ($request->filled('year')) {
@@ -73,6 +79,7 @@ class CarController extends GenericController
         // جلب البيانات المطلوبة للفلتر
         $this->data['brands'] = Brand::with('carModels.translations')->get();
         $this->data['categories'] = Category::all();
+        $this->data['periods'] = Period::all();
         $this->data['years'] = Year::all();
         
         // إضافة نتائج البحث
@@ -108,6 +115,11 @@ class CarController extends GenericController
         $this->data['categories'] = \App\Models\Category::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);
         }])->get();
+
+        $this->data['periods'] = \App\Models\Period::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+
         $this->data['colors'] = \App\Models\Color::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);
         }])->get();
@@ -131,6 +143,11 @@ class CarController extends GenericController
         $this->data['categories'] = \App\Models\Category::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);
         }])->get();
+
+        $this->data['periods'] = \App\Models\Period::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->get();
+
         $this->data['colors'] = \App\Models\Color::with(['translations' => function ($query) use ($locale) {
             $query->where('locale', $locale);
         }])->get();

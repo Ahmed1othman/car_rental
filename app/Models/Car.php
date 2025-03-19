@@ -67,4 +67,9 @@ class Car extends Model
         return $this->belongsToMany(Feature::class, CarFeature::class, 'car_id', 'feature_id');
     }
 
+    public function periods(): BelongsToMany
+    {
+        return $this->belongsToMany(Period::class, PeriodCar::class, 'car_id', 'period_id');
+    }
+
 }
