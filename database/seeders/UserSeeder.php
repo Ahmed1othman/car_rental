@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Afandina Admin',
             'email' => 'admin@afandina.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('@fandina&#865'),
         ]);
     }
 }
