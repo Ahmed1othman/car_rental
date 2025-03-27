@@ -114,6 +114,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/sitemap/generate', [SitemapController::class, 'generate'])->name('sitemap.generate');
     Route::get('/sitemap/download', [SitemapController::class, 'download'])->name('sitemap.download');
+    Route::get('/sitemap/download/{lang}/{type}', [SitemapController::class, 'downloadSpecific'])->name('sitemap.download.specific');
+    Route::get('/sitemap/list', [SitemapController::class, 'list'])->name('sitemap.list');
     Route::post('/sitemap/notify', [SitemapController::class, 'notify'])->name('sitemap.notify');
 
 
