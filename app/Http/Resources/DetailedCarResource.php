@@ -82,8 +82,11 @@ class DetailedCarResource extends JsonResource
             'brand' => $brandName,
             'car_model' => $carModel ? $carModel->name : null,
             'category' => $categoryName,
+            'category_slug' => $this->category->slug ?? null,
+            'brand_slug' => $this->brand->slug ?? null,
             'default_image_path' => $this->default_image_path,
             'slug' => $this->slug ?? null,
+            
             'name' => $translation->name ?? null,
             "description"=> $translation->description?? null,
             "long_description"=> $translation->long_description?? null,
