@@ -19,7 +19,7 @@ class GenerateSitemap extends Command
     protected $signature = 'sitemap:generate';
     protected $description = 'Generate the sitemap for the website';
 
-    protected $baseUrl = "https://www.afandinacarrental.com/";
+    protected $baseUrl = "https://afandinacarrental.com/";
 
     public function handle()
     {
@@ -59,14 +59,15 @@ class GenerateSitemap extends Command
             'home' => '',
             'about-us' => 'about-us',
             'contact-us' => 'contact-us',
-            '404' => '404'
+            '404' => '404',
+            'blogs' => 'blogs'
         ];
 
         foreach ($staticPages as $key => $path) {
             $sitemap->add(
                 Url::create($this->baseUrl.$lang.'/'.$path)
                     ->setPriority(1.0)
-                    ->setChangeFrequency('monthly')
+                    ->setChangeFrequency('daily')
             );
         }
 
@@ -84,9 +85,10 @@ class GenerateSitemap extends Command
 
         foreach ($categories as $category) {
             $sitemap->add(
-                Url::create($this->baseUrl.$lang.'/cars-rental-dubai/categories/'.$category->slug)
+                Url::create($this->baseUrl.$lang.'/category/'.$category->slug)
                     ->setPriority(0.7)
-                    ->setChangeFrequency('weekly')
+                    //dialy 
+                    ->setChangeFrequency('daily')
                     ->setLastModificationDate($category->updated_at)
             );
         }
@@ -105,9 +107,10 @@ class GenerateSitemap extends Command
 
         foreach ($brands as $brand) {
             $sitemap->add(
-                Url::create($this->baseUrl.$lang.'/cars-rental-dubai/brands/'.$brand->slug)
+                Url::create($this->baseUrl.$lang.'/brand/'.$brand->slug)
                     ->setPriority(0.7)
-                    ->setChangeFrequency('weekly')
+                    //dialy 
+                    ->setChangeFrequency('daily')
                     ->setLastModificationDate($brand->updated_at)
             );
         }
@@ -126,9 +129,10 @@ class GenerateSitemap extends Command
 
         foreach ($cars as $car) {
             $sitemap->add(
-                Url::create($this->baseUrl.$lang.'/'.$car->slug)
+                Url::create($this->baseUrl.$lang.'/product/'.$car->slug)
                     ->setPriority(0.9)
-                    ->setChangeFrequency('weekly')
+                    //dialy 
+                    ->setChangeFrequency('daily')
                     ->setLastModificationDate($car->updated_at)
             );
         }
@@ -147,9 +151,10 @@ class GenerateSitemap extends Command
 
         foreach ($locations as $location) {
             $sitemap->add(
-                Url::create($this->baseUrl.$lang.'/cars-rental-dubai/locations/'.$location->slug)
+                Url::create($this->baseUrl.$lang.'/location/'.$location->slug)
                     ->setPriority(0.8)
-                    ->setChangeFrequency('weekly')
+                    //dialy 
+                    ->setChangeFrequency('daily')
                     ->setLastModificationDate($location->updated_at)
             );
         }
@@ -168,9 +173,10 @@ class GenerateSitemap extends Command
 
         foreach ($blogs as $blog) {
             $sitemap->add(
-                Url::create($this->baseUrl.$lang.'/cars-rental-dubai/blogs/'.$blog->slug)
+                Url::create($this->baseUrl.$lang.'/blogs/'.$blog->slug)
                     ->setPriority(0.8)
-                    ->setChangeFrequency('weekly')
+                    //dialy 
+                    ->setChangeFrequency('daily')
                     ->setLastModificationDate($blog->updated_at)
             );
         }
