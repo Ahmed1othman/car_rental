@@ -22,6 +22,7 @@ class BrandResource extends JsonResource
             'id' => $this->id,
             'slug' => $this->slug,
             'name' => $translations->name,
+            'section_title' => $this->title,
             'description' => $translations->description,
             'image' => $this->logo_path,
             'car_count'=>$car_counts,
