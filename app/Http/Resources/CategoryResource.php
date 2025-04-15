@@ -23,7 +23,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $translations->name,
             'slug' => $this->slug,
-            'section_title' => $this->title,
+            'section_title' => $translations->title,
             'description' => $translations->description,
             'image' => $this->image_path,
             'car_count'=>$car_counts,
