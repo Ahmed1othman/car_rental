@@ -22,7 +22,7 @@ class FaqController extends GenericController
         ]);
         $this->validationRules = [
             'order' => 'required|integer|min:0',
-            'question.*' => 'required|string|max:255',
+            'question.*' => 'required|string',
             'answer.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
@@ -54,7 +54,7 @@ class FaqController extends GenericController
         // Define validation rules
         $this->validationRules = [
             'order' => 'required|integer|min:0',
-            'question.*' => 'required|string|max:255',
+            'question.*' => 'required|string',
             'answer.*' => 'nullable|string',
             'meta_title.*' => 'nullable|string|max:255',
             'meta_description.*' => 'nullable|string',
