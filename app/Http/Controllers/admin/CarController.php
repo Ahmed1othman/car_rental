@@ -220,7 +220,7 @@ class CarController extends GenericController
             'year_id' => 'required|exists:years,id',
             'category_id' => 'required|exists:categories,id',
             'seo_questions.*.*.question' => 'nullable|string',
-            'seo_questions.*.*.answer' => 'nullable|string|max:255',
+            'seo_questions.*.*.answer' => 'nullable|string',
             'default_image_path' => 'sometimes|nullable|image|mimes:jpeg,webp,png,jpg,gif|max:10048',
             'media.*' => 'somtimes|nullable|mimes:jpeg,webp,png,jpg,gif,svg,mp4,webm,ogg|max:102400',
             'insurance_included'=>'boolean',
