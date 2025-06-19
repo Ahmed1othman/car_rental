@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 
 class Kernel extends HttpKernel
 {
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'language' => \App\Http\Middleware\Language::class,
         'currency'=>\App\Http\Middleware\Currency::class,
         'cta'=>\App\Http\Middleware\ConvertNumbersToArabic::class,
+        'cache.response' => \Spatie\ResponseCache\Middlewares\CacheResponse::class,
     ];
 }

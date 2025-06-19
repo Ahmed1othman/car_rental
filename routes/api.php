@@ -13,6 +13,7 @@ use App\Http\Controllers\apis\LocationController;
 use App\Http\Controllers\apis\ServiceController;
 use App\Http\Controllers\apis\ShortVideoController;
 use Illuminate\Support\Facades\Route;
+use Spatie\ResponseCache\Middleware\CacheResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +28,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('get-main-settings', [GeneralController::class, 'getMainSetting']);
 
-Route::middleware(['language','currency','cta'])->group(function () {
+Route::middleware(['language','currency','cta', 'cache.response'])->group(function () {
     Route::get('get-footer', [GeneralController::class, 'getFooter']);
-    Route::get('home', [HomePageController::class, 'index']);
+    Route::get('home', [HomePageController::class, 'index'])->middleware('cache.response');
     Route::get('about-us', [AboutUsPageController::class, 'index']);
-    Route::get('contact-us', [ContactUsPageController::class, 'index']);
+    Route::get('contact-us', [ContactUsPageController::class, 'index'])->middleware('cache.response');
     Route::post('contact-us/send-message', [ContactUsPageController::class, 'storeContactMessage']);
     Route::post('search', [HomePageController::class, 'search']);
     Route::get('brands', [BrandController::class, 'index']);
@@ -39,10 +40,9 @@ Route::middleware(['language','currency','cta'])->group(function () {
     Route::get('short-videos', [ShortVideoController::class, 'index']);
     Route::get('locations', [LocationController::class, 'index']);
     Route::get('blogs', [BlogController::class, 'index']);
-    Route::get('blogs/{slug}', [BlogController::class, 'show']);
+    Route::get('blogs/{slug}', [BlogController::class, 'show'])->middleware('cache.response');
     Route::get('faqs', [FAQController::class, 'index']);
     Route::get('services', [ServiceController::class, 'index']);
-
 
     Route::get('/cars/brand/{brand}', [CarController::class, 'getBrandCars']);
     Route::get('cars/category/{category}', [CarController::class, 'getCategoryCars']);

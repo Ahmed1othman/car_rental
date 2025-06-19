@@ -44,7 +44,6 @@ class BlogController extends Controller
     {
         // Find blog by the single slug in the main table
         $blog = Blog::where('slug', $slug)->firstOrFail();
-        
         return new DetailedBlogResource($blog);
     }
 }
