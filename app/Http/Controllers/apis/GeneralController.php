@@ -56,6 +56,7 @@ class GeneralController extends Controller
     }
 
     public function getFooter(Request $request){
+        \Illuminate\Support\Facades\Log::info('GetFooter Controller executed - Timestamp: ' . now());
         $language = $request->header('Accept-Language') ?? 'en';
         $homeData = Home::with(['translations' => function ($query) use ($language) {
             $query->where('locale', $language);

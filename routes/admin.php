@@ -32,6 +32,10 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.post');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+    /**
+     * Define routes protected by 'auth' middleware for authenticated users.
+     * Includes dashboard, contacts, settings, cars, image management, models, and other resources.
+     */
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -59,7 +63,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::delete('cars/images/delete/{id}', [CarController::class, 'deleteImage'])->name('cars.delete_image');
 
-    Route::get('/cars/{car}/edit_images', [CarController::class, 'editImages'])->name('cars.edit_images');
+    // Route::get('/cars/{car}/edit_images', [CarController::class, 'editImages'])->name('cars.edit_images');
     Route::post('/cars/{car}/update_images', [CarController::class, 'updateImages'])->name('cars.update_images');
 
     Route::get('cars/edit_images/{id}', [CarController::class, 'edit_images'])->name('cars.edit_images');
